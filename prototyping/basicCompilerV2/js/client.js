@@ -9,7 +9,7 @@ socket.onopen = function(e) {
 socket.onmessage = function(event) {
     console.log(`[message] Data received from server: ${event.data}`);
 
-    document.getElementById("code-output").innerHTML = event.data;
+    document.getElementById("code-output").innerHTML = document.getElementById("code-output").innerHTML + "<br>" + event.data;
 };
 
 socket.onclose = function(event) {

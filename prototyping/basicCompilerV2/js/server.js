@@ -1,6 +1,6 @@
 const http = require('http');
 const ws = require('ws');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
 const wss = new ws.Server({noServer: true});
 
@@ -29,27 +29,25 @@ function onConnect(ws) {
         ws.send("playing program!");
 
         //use child process to start program?
-        const progStart = exec('./executable', function (error, stdout, stderr) {
-          if (error)
-          {
-            console.log(error.stack);
-            console.log('Error code: ' + error.code);
-            console.log('Signal received: ' + error.signal);
-          }
-          console.log('Child Process STDOUT: ' + stdout);
-          console.log('Child Process STDERR: ' + stderr);
+        const progStart = spawn('./executable');
 
-          ws.send(stdout);
-          }
-        )
+        progStart.stdout.on('data', function (data) {
+          console.log('stdout: ' + data.toString());
+          ws.send(data.toString());
 
-        progStart.on('exit', function(code) {
-          console.log('child process exited with exit code ' + code);
-        })
+        });
+        
+        progStart.stderr.on('data', function (data) {
+          console.log('stderr: ' + data.toString());
+        });
+        
+        progStart.on('exit', function (code) {
+          console.log('child process exited with code ' + code.toString());
+        });
     }
 
 
-    setTimeout(() => ws.close(1000, "Bye!"), 5000);
+    //setTimeout(() => ws.close(1000, "Bye!"), 5000);
   });
 }
 
