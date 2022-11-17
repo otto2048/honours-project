@@ -1,4 +1,6 @@
-let socket = new WebSocket("wss://192.168.17.50/honours/basicCompilerV2/debug.html");
+preparePage();
+
+let socket = new WebSocket("ws://192.168.17.50:8080");
 
 socket.onopen = function(e) {
     console.log("[open] Connection established");

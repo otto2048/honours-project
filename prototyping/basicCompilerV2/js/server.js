@@ -7,7 +7,7 @@ function accept(req, res) {
   // all incoming requests must be websockets
   if (!req.headers.upgrade || req.headers.upgrade.toLowerCase() != 'websocket') {
     res.end();
-    return;
+    return; 
   }
 
   // can be Connection: keep-alive, Upgrade
@@ -21,9 +21,15 @@ function accept(req, res) {
 
 function onConnect(ws) {
   ws.on('message', function (message) {
-    message = message.toString();
-    let name = message.match(/([\p{Alpha}\p{M}\p{Nd}\p{Pc}\p{Join_C}]+)$/gu) || "Guest";
-    ws.send(`Hello from server, ${name}!`);
+    const clientMsg = JSON.parse(message);
+
+    if (clientMsg.operation == "PLAY")
+    {
+        ws.send("playing program!");
+
+        //use child process to start program?
+    }
+
 
     setTimeout(() => ws.close(1000, "Bye!"), 5000);
   });
