@@ -17,8 +17,8 @@
     }
     else
     {
-        echo '<script type="text/javascript">window.open("output.html", name="_self")</script>'; 
-     //   echo shell_exec("./executable");
+     //   echo '<script type="text/javascript">window.open("output.html", name="_self")</script>'; 
+        echo shell_exec("./executable");
     }
 
 ?>
