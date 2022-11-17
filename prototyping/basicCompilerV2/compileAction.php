@@ -9,7 +9,7 @@
 
     fclose($tmpFile);
 
-    $compiled = shell_exec("g++ tmpFile.cpp -o executable 2>&1");
+    $compiled = shell_exec("g++ tmpFile.cpp -o js/executable 2>&1");
 
     if ($compiled)
     {
