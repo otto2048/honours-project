@@ -30,6 +30,7 @@ function preparePage()
 {
     //add event listener to play button
     document.getElementById("play-btn").addEventListener("click", startProgram);
+    document.getElementById("input-btn").addEventListener("click", sendProgramInput);
 }
 
 function startProgram()
@@ -37,5 +38,13 @@ function startProgram()
     var obj = new Object();
     obj.operation = "PLAY";
     obj.value = true;
+    socket.send(JSON.stringify(obj));
+}
+
+function sendProgramInput()
+{
+    var obj = new Object();
+    obj.operation = "INPUT";
+    obj.value = document.getElementById("input-field").value;
     socket.send(JSON.stringify(obj));
 }

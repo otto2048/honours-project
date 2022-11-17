@@ -1,8 +1,10 @@
 const http = require('http');
 const ws = require('ws');
-const { spawn } = require('child_process');
+const spawn = require('child_process').spawn;
 
 const wss = new ws.Server({noServer: true});
+
+var progProcess;
 
 function accept(req, res) {
   // all incoming requests must be websockets
@@ -24,26 +26,33 @@ function onConnect(ws) {
   ws.on('message', function (message) {
     const clientMsg = JSON.parse(message);
 
+
     if (clientMsg.operation == "PLAY")
     {
         ws.send("playing program!");
 
         //use child process to start program?
-        const progStart = spawn('./executable');
+        progProcess = spawn('./executable');
 
-        progStart.stdout.on('data', function (data) {
+        progProcess.stdout.on('data', function (data) {
           console.log('stdout: ' + data.toString());
           ws.send(data.toString());
 
         });
         
-        progStart.stderr.on('data', function (data) {
+        progProcess.stderr.on('data', function (data) {
           console.log('stderr: ' + data.toString());
         });
         
-        progStart.on('exit', function (code) {
+        progProcess.on('exit', function (code) {
           console.log('child process exited with code ' + code.toString());
         });
+    }
+    else if (clientMsg.operation == "INPUT")
+    {
+       //send input to child process
+       progProcess.stdin.write(clientMsg.value);
+       progProcess.stdin.end();
     }
 
 
