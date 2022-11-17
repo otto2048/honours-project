@@ -21,3 +21,17 @@ if (event.wasClean) {
 socket.onerror = function(error) {
     console.log(`[error]`);
 };
+
+function preparePage()
+{
+    //add event listener to play button
+    document.getElementById("play-btn").addEventListener("click", startProgram);
+}
+
+function startProgram()
+{
+    var obj = new Object();
+    obj.operation = "PLAY";
+    obj.value = true;
+    socket.send(JSON.stringify(obj));
+}
