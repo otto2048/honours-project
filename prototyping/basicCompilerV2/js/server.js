@@ -51,8 +51,8 @@ function onConnect(ws) {
     else if (clientMsg.operation == "INPUT")
     {
        //send input to child process
-       progProcess.stdin.write(clientMsg.value);
-       progProcess.stdin.end();
+       progProcess.stdin.write(clientMsg.value + "\n");
+       //progProcess.stdin.end();
     }
 
 
