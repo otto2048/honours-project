@@ -38,10 +38,13 @@ function preparePage()
     //set up jquery terminal
     $('body').terminal(function(command)
     {
-        var obj = new Object();
-        obj.operation = "INPUT";
-        obj.value = command;
-        socket.send(JSON.stringify(obj));
+        if (command !== '')
+        {
+            var obj = new Object();
+            obj.operation = "INPUT";
+            obj.value = command;
+            socket.send(JSON.stringify(obj));
+        }
     }, {
         height: 500,
         width: 500

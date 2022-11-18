@@ -29,8 +29,6 @@ function onConnect(ws) {
 
     if (clientMsg.operation == "PLAY")
     {
-        ws.send("playing program!");
-
         //use child process to start program?
         progProcess = spawn('./executable');
 
