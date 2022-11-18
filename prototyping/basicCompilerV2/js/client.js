@@ -1,4 +1,4 @@
-preparePage();
+window.onload = preparePage();
 
 let socket = new WebSocket("ws://192.168.17.50:8080");
 

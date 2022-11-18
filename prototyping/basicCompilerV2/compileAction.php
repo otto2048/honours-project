@@ -1,7 +1,7 @@
 <?php
 
     //get code sent to server
-    $input = $_POST["code"];
+    $input = $_POST["code-input"];
 
     $tmpFile = fopen("tmpFile.cpp", "w");
 

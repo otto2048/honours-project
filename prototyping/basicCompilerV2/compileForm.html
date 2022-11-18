@@ -2,26 +2,29 @@
 <html lang="en" >
     <head>
         <title>Create C++ Program</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js" integrity="sha512-IQmiIneKUJhTJElpHOlsrb3jpF7r54AzhCTi7BTDLiBVg0f7mrEqWVCmOeoqKv5hDdyf3rbbxBUgYf4u3O/QcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="style.css">
     </head>
 
     <body> 
         <form role="form" method="POST" action="compileAction.php">
             
             <label for="code">Enter program code:</label>
-
-            <textarea id="code" name="code" rows="10" cols="50">
-#include <iostream>
-
+            
+            <input type="hidden" name="code-input" class="code-input">
+            <div id="editor-container">
+                <div id="editor">#include &#60;iostream&#62;
 int main() {
     // Write C++ code here
     std::cout << "Hello world!";
 
     return 0;
-}
-            </textarea>
-
+}</div>
+        </div>
             <button class="btn" type="submit">Submit</button>
         
         </form>
+
+        <script src="js/aceEditor.js"></script>
     </body>
 </html>
