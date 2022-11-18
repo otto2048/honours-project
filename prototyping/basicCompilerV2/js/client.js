@@ -9,7 +9,11 @@ socket.onopen = function(e) {
 socket.onmessage = function(event) {
     console.log(`[message] Data received from server: ${event.data}`);
 
-    document.getElementById("code-output").innerHTML = document.getElementById("code-output").innerHTML + "<br>" + event.data;
+    //get active terminal
+    var term = $.terminal.active();
+
+    //output received message into terminal
+    term.echo(event.data);
 };
 
 socket.onclose = function(event) {
@@ -30,7 +34,18 @@ function preparePage()
 {
     //add event listener to play button
     document.getElementById("play-btn").addEventListener("click", startProgram);
-    document.getElementById("input-btn").addEventListener("click", sendProgramInput);
+
+    //set up jquery terminal
+    $('body').terminal(function(command)
+    {
+        var obj = new Object();
+        obj.operation = "INPUT";
+        obj.value = command;
+        socket.send(JSON.stringify(obj));
+    }, {
+        height: 500,
+        width: 500
+    });
 }
 
 function startProgram()
@@ -38,13 +53,5 @@ function startProgram()
     var obj = new Object();
     obj.operation = "PLAY";
     obj.value = true;
-    socket.send(JSON.stringify(obj));
-}
-
-function sendProgramInput()
-{
-    var obj = new Object();
-    obj.operation = "INPUT";
-    obj.value = document.getElementById("input-field").value;
     socket.send(JSON.stringify(obj));
 }

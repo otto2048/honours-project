@@ -8,10 +8,8 @@ int main() {
     std::cout << "Addition app" << std::endl;
     std::cout << "Enter first number: " << std::endl;
     std::cin >> a;
-    std::cout << a << std::endl;
     std::cout << "Enter second number: " << std::endl;
     std::cin >> b;
-    std::cout << b << std::endl;
 
     c = a + b;
 
