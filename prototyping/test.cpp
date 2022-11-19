@@ -6,9 +6,9 @@ int main() {
     int c = 0;
 
     std::cout << "Addition app" << std::endl;
-    std::cout << "Enter first number: " << std::endl;
+    std::cout << "Enter first number: ";
     std::cin >> a;
-    std::cout << "Enter second number: " << std::endl;
+    std::cout << "Enter second number: ";
     std::cin >> b;
 
     c = a + b;
@@ -17,4 +17,3 @@ int main() {
 
     return 0;
 }
-            
