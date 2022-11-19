@@ -2,21 +2,46 @@
 <html lang="en" >
     <head>
         <title>Debug C++ Program</title>
+
+        <!-- jquery -->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+        <!-- jquery terminal -->
         <script src="https://unpkg.com/jquery.terminal/js/jquery.terminal.min.js"></script>
+
+        <!-- ACE editor -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js" integrity="sha512-IQmiIneKUJhTJElpHOlsrb3jpF7r54AzhCTi7BTDLiBVg0f7mrEqWVCmOeoqKv5hDdyf3rbbxBUgYf4u3O/QcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
+        <!-- jquery terminal styles -->
         <link rel="stylesheet" href="https://unpkg.com/jquery.terminal/css/jquery.terminal.min.css"/>
+
+        <!-- bootstrap -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- custom styles -->
         <link rel="stylesheet" href="style.css">
+
     </head>
 
     <body>
-        
-
-        <!-- container for terminal -->
-        <div id="code-output"></div>
+        <div class="row">
+            <div class="col">
+                <!-- container for terminal -->
+                <div id="code-output"></div>
+            </div>
+            <div class="col">
+                <!-- container for editor -->
+                <div id="editor-container">
+                    <div id="editor"></div>
+                </div>
+            </div>
+        </div>
 
         <!-- play button to run code -->
-        <button id="play-btn">Run Program</button>
+        <button id="play-btn" class="btn btn-dark">Run Program</button>
     </body>
 
     <script src="js/client.js"></script>
+    <script src="js/aceEditorDebug.js"></script>
 </html>

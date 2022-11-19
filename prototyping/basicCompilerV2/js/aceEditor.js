@@ -7,11 +7,22 @@ function preparePage()
     editor.setTheme("ace/theme/tomorrow_night_bright");
     editor.session.setMode("ace/mode/c_cpp");
 
-    var input = document.getElementsByName("code-input")[0];
-
-    input.value = editor.getSession().getValue();
+    saveEditorInput();
 
     editor.getSession().on("change", function () {
-    input.value = editor.getSession().getValue();
+        saveEditorInput();
     });
+}
+
+function saveEditorInput()
+{
+    var editor = ace.edit("editor");
+
+    var input = document.getElementsByName("code-input")[0];
+
+    //set hidden input field to editor contents
+    input.value = editor.getSession().getValue();
+
+    //save input into local storage
+    localStorage.setItem("code-input", editor.getSession().getValue());
 }

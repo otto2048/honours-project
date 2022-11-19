@@ -46,7 +46,7 @@ function preparePage()
             socket.send(JSON.stringify(obj));
         }
     }, {
-        height: 350
+        height: 500
     });
 }
 
