@@ -1,6 +1,5 @@
 #editor { 
     position: absolute;
-    width: 50%;
     left: 0;
     bottom: 0;
     top: 0;
@@ -14,4 +13,14 @@
 
 .code-input {
     display: none;
+}
+
+.compile-btn {
+    margin-top: 5px;
+    float: right;
+}
+
+#play-btn {
+    margin: 5px 5px 5px;
+    float: right;
 }

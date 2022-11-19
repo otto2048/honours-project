@@ -7,21 +7,21 @@
     </head>
 
     <body> 
-        <form role="form" method="POST" action="compileAction.php">
+        <form method="POST" action="compileAction.php">
             
-            <label for="code">Enter program code:</label>
+            <label for="code-input">Enter program code:</label>
             
             <input type="hidden" name="code-input" class="code-input">
             <div id="editor-container">
                 <div id="editor">#include &#60;iostream&#62;
 int main() {
     // Write C++ code here
-    std::cout << "Hello world!";
+    std::cout &lt;&lt; "Hello world!";
 
     return 0;
 }</div>
-        </div>
-            <button class="btn" type="submit">Submit</button>
+            </div>
+            <button class="btn compile-btn" type="submit">Compile</button>
         
         </form>
 

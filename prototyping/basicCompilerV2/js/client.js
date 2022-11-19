@@ -36,7 +36,7 @@ function preparePage()
     document.getElementById("play-btn").addEventListener("click", startProgram);
 
     //set up jquery terminal
-    $('body').terminal(function(command)
+    $('#code-output').terminal(function(command)
     {
         if (command !== '')
         {
@@ -46,8 +46,7 @@ function preparePage()
             socket.send(JSON.stringify(obj));
         }
     }, {
-        height: 500,
-        width: 500
+        height: 350
     });
 }
 
