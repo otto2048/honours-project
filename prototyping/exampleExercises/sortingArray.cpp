@@ -1,4 +1,4 @@
-// FIRST EXERCISE - STEPPING THROUGH ARRAY, SHOWING VARIABLES
+// FIRST PART - STEPPING THROUGH ARRAY, SHOWING VARIABLES
 #include <iostream>
 
 using std::cout;
@@ -14,12 +14,12 @@ int main()
     //looping through an array
     for (int i = 0; i < arraySize; i++)
     {
-        //breakpoint - show contents of array as you step through
+        // BREAKPOINT HERE - SHOW CONTENTS OF ARRAY AS YOU STEP THROUGH IT
         cout << "Element " << i << ": " << array[i] << endl;
     }
 }
 
-// SECOND EXERCISE, DEFINING A FUNCTION AND STEPPING INTO IT
+// SECOND PART, DEFINING A FUNCTION AND STEPPING INTO IT
 #include <iostream>
 
 using std::cout;
@@ -60,7 +60,7 @@ int main()
     return 0;
 }
 
-// THIRD EXERCISE, SORTING THE ARRAY WITH FUNCTION WE DEFINED
+// THIRD PART, SORTING THE ARRAY WITH FUNCTION WE DEFINED
 #include <iostream>
 
 using std::cout;
