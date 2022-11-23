@@ -5,13 +5,16 @@ using std::endl;
 
 bool testFactors(int a, int factor, int factorTwo)
 {
+    // NEED TO CORRECT THIS LINE
     //if (a % factor || a % factorTwo)
     if (a % factor && a % factorTwo)
     {
+        // NEED TO CORRECT THIS LINE
         //return false;
         return true;
     }
 
+    // NEED TO CORRECT THIS LINE
     //return true;
     return false;
 }
