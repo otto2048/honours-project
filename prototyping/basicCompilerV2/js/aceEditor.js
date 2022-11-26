@@ -7,7 +7,16 @@ function preparePage()
     editor.setTheme("ace/theme/tomorrow_night_bright");
     editor.session.setMode("ace/mode/c_cpp");
 
-    saveEditorInput();
+    //if existing input exists, put that into editor
+    if (localStorage.getItem("code-input"))
+    {
+        editor.setValue(localStorage.getItem("code-input"));
+        editor.getSession().selection.clearSelection();
+    }
+    else
+    {
+        saveEditorInput();
+    }
 
     //listen to change event
     editor.getSession().on("change", function () {
