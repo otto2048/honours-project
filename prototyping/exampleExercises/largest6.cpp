@@ -15,7 +15,7 @@ int largest(int a, int b)
 }
 
 //find the largest of 3 numbers
-int largest(int a, int b, int c)
+int largest3(int a, int b, int c)
 {
     // NEED TO CORRECT THIS LINE
     //if (a >= b && a >= c)
@@ -36,10 +36,9 @@ int largest(int a, int b, int c)
 }
 
 //find the largest of 6 numbers
-//COULD USE DEBUGGER TO STEP INTO LARGEST FUNCTION TO FIND ERROR
 int largest6(int a, int b, int c, int d, int e, int f)
 {
-    return largest(largest(a, b, c), largest(d, e, f));
+    return largest(largest3(a, b, c), largest3(d, e, f));
 }
 
 int main()

@@ -16,8 +16,10 @@
 
     if ($compiled)
     {
-        //echo any error message from compilation
+        //echo any error message from compilation, this functionality will be moved to the compileForm page
         echo $compiled;
+
+        echo '<a class="btn btn-primary" href="compileForm.html">Back</a>';
     }
     else
     {

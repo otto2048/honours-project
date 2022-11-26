@@ -9,11 +9,13 @@ function preparePage()
 
     saveEditorInput();
 
+    //listen to change event
     editor.getSession().on("change", function () {
         saveEditorInput();
     });
 }
 
+//save the input from the ace editor
 function saveEditorInput()
 {
     var editor = ace.edit("editor");
