@@ -1,0 +1,18 @@
+{
+    "Steps:" : [
+        {
+            "Actor": "COMP",
+            "Action": {
+                "Type": "BREAKPOINT",
+                "Value": 42
+            }
+        },
+        {
+            "Actor": "COMP",
+            "Action": {
+                "Type": "OUTPUT",
+                "Value": "Placing a breakpoint here lets you do this thing"
+            }
+        }
+    ]
+}
