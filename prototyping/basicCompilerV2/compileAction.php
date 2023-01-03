@@ -18,7 +18,7 @@
     {
         //echo any error message from compilation, this functionality will be moved to the compileForm page
         echo $compiled;
-
+        echo "<br>";
         echo '<a class="btn btn-primary" href="compileForm.html">Back</a>';
     }
     else

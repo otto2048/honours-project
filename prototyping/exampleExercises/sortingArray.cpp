@@ -114,22 +114,7 @@ int main()
 
     int array[arraySize] = { 2, 4, 3, 1, 10};
 
-    //looping through an array
-    for (int i = 0; i < arraySize; i++)
-    {
-        cout << "Element " << i << ": " << array[i] << endl;
-    }
-
-    // BREAKPOINT HERE, STEP INTO SWAP FUNCTION, STEP THROUGH SWAP FUNCTION
-    //swap elements 0 and 4
-    swapElement(array[0], array[4]);
-
-    // LOOK INTO ARRAY TO SEE IF VALUES HAVE SWAPPED
-
-    //sort array (ascending)
-
     // CHECK HOW MANY TIMES SWAPELEMENT WAS CALLED
-    // USE VARIABLE INSPECTOR TO SEE IF ARRAY HAS SORTED
     bubbleSort(array, arraySize);
 
     for (int i = 0; i < arraySize; i++)

@@ -1,0 +1,8 @@
+/*Colours*/
+:root {
+    --theme-darker: #00663F;
+}
+
+.theme-darker {
+    background-color: var(--theme-darker);
+}
