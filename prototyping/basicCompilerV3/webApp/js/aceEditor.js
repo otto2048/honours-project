@@ -8,7 +8,7 @@ function preparePage()
     editor.session.setMode("ace/mode/c_cpp");
 
     //if existing input exists, put that into editor
-    if (localStorage.getItem("code-input"))
+    if (localStorage.getItem("code-input") != null)
     {
         editor.setValue(localStorage.getItem("code-input"));
         editor.getSession().selection.clearSelection();
