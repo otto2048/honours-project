@@ -8,6 +8,9 @@
 const http = require('http');
 const ws = require('ws');
 const spawn = require('child_process').spawn;
+const exec = require('child_process').exec;
+
+const fs = require('fs');
 
 const wss = new ws.Server({noServer: true});
 
@@ -38,47 +41,60 @@ function onConnect(ws) {
     ws.on('message', function (message) {
         const clientMsg = JSON.parse(message);
 
+        console.log(clientMsg);
+
         //check which operation client has requested
-        if (clientMsg.operation == "PLAY")
-        {
-            //use child process to start program
-            progProcess = spawn('./executable');
-
-            progProcess.stdout.on('data', function (data) {
-                console.log('stdout: ' + data.toString());
-                ws.send(data.toString());
-            });
-
-            progProcess.stderr.on('data', function (data) {
-                console.log('stderr: ' + data.toString());
-				ws.send(data.toString());
-            });
-
-            progProcess.on('exit', function (code) {
-				var data = 'Program exited with code ' + code.toString();
-                console.log();
-				ws.send(data);
-            });
-        }
-        else if (clientMsg.operation == "INPUT")
+        if (clientMsg.operation == "INPUT")
         {
             //send input to child process
             progProcess.stdin.write(clientMsg.value + "\n");
         }
         else if (clientMsg.operation == "COMPILE")
         {
-            //create cpp file and compile it with php (ajax)
-
-            $.ajax({
-                url: "compile.php",
-                async: false,
-                type: "POST",
-                data: {codeinput: clientMsg.value},
-                success: function(result)
+            //create cpp file and compile it
+            fs.writeFile("tmpFile.cpp", clientMsg.value, function(err) {
+                if (err)
                 {
-				    ws.send(result);
+                    //failed to write to file
+                    console.log("Failed to write to file");
                 }
+                
+                console.log("File was saved!");
+
+                //compile file
+                exec("g++ tmpFile.cpp -o executable", function(err, stdout, stderr)
+                {
+                    if (stdout)
+                    {
+                        //give compilation errors
+                        console.log(stdout);
+                    }
+                    else
+                    {
+                        //use child process to start program
+                        progProcess = spawn('./executable');
+
+                        progProcess.stdout.on('data', function (data) {
+                            console.log('stdout: ' + data.toString());
+                            ws.send(data.toString());
+                        });
+
+                        progProcess.stderr.on('data', function (data) {
+                            console.log('stderr: ' + data.toString());
+                            ws.send(data.toString());
+                        });
+
+                        progProcess.on('exit', function (code) {
+                            var data = 'Program exited with code ' + code.toString();
+                            console.log();
+                            ws.send(data);
+                        });
+                    }
+                });
             });
+
+
+            
         }
     });
 }

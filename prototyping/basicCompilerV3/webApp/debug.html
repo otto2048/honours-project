@@ -28,8 +28,16 @@
         <div class="row">
             <div class="col">
                 <!-- container for editor -->
+                <input type="hidden" name="code-input" class="code-input">
+                
                 <div id="editor-container">
-                    <div id="editor"></div>
+                    <div id="editor">#include &#60;iostream&#62;
+    int main() {
+        // Write C++ code here
+        std::cout &lt;&lt; "Hello world!";
+    
+        return 0;
+    }</div>
                 </div>
             </div>
             <div class="col">
@@ -43,5 +51,5 @@
     </body>
 
     <script src="js/client.js"></script>
-    <script src="js/aceEditorDebug.js"></script>
+    <script src="js/aceEditor.js"></script>
 </html>
