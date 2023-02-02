@@ -2,7 +2,7 @@
 
 window.onload = preparePage();
 
-let socket = new WebSocket("ws://192.168.17.50:8080");
+let socket = new WebSocket("ws://192.168.17.50:5000");
 
 //set up socket
 socket.onopen = function(e) {
