@@ -1,7 +1,7 @@
 <?php
 
     //get code sent to server
-    $input = $_POST["code-input"];
+    $input = $_POST["codeinput"];
 
     //create cpp file
     $tmpFile = fopen("tmpFile.cpp", "w");
@@ -12,7 +12,7 @@
     fclose($tmpFile);
 
     //compile cpp into exe
-    $compiled = shell_exec("g++ tmpFile.cpp -o js/executable 2>&1");
+    $compiled = shell_exec("g++ tmpFile.cpp -o executable 2>&1");
 
     if ($compiled)
     {

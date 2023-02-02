@@ -1,3 +1,8 @@
+//users need to be able to:
+    //create a cpp file through this server
+    //create an executable through this server
+    //run the executable through this server, sending input and getting output
+
 // Socket setup based on tutorial: https://javascript.info/websocket
 //include required modules
 const http = require('http');
@@ -59,6 +64,21 @@ function onConnect(ws) {
         {
             //send input to child process
             progProcess.stdin.write(clientMsg.value + "\n");
+        }
+        else if (clientMsg.operation == "COMPILE")
+        {
+            //create cpp file and compile it with php (ajax)
+
+            $.ajax({
+                url: "compile.php",
+                async: false,
+                type: "POST",
+                data: {codeinput: clientMsg.value},
+                success: function(result)
+                {
+				    ws.send(result);
+                }
+            });
         }
     });
 }
