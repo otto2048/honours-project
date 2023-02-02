@@ -18,6 +18,8 @@ function preparePage()
         saveEditorInput();
     }
 
+    saveEditorInput();
+
     //listen to change event
     editor.getSession().on("change", function () {
         saveEditorInput();
