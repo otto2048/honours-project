@@ -33,6 +33,8 @@ socket.onerror = function(error) {
 
 function preparePage()
 {
+    launchCompiler();
+    
     //add event listener to play button
     document.getElementById("play-btn").addEventListener("click", startProgram);
 
@@ -64,4 +66,17 @@ function sendInput(input)
     obj.operation = "INPUT";
     obj.value = input;
     socket.send(JSON.stringify(obj));
+}
+
+//use ajax to launch compiler
+function launchCompiler()
+{
+    $.ajax({
+        url: "launchCompiler.php",
+        async: false,
+        success: function(result)
+        {
+            console.log(result);
+        }
+    });
 }

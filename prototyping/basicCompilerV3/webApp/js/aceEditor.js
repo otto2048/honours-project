@@ -7,16 +7,7 @@ function preparePage()
     editor.setTheme("ace/theme/tomorrow_night_bright");
     editor.session.setMode("ace/mode/c_cpp");
 
-    //if existing input exists, put that into editor
-    if (localStorage.getItem("code-input") != null)
-    {
-        editor.setValue(localStorage.getItem("code-input"));
-        editor.getSession().selection.clearSelection();
-    }
-    else
-    {
-        saveEditorInput();
-    }
+    saveEditorInput();
 
     //listen to change event
     editor.getSession().on("change", function () {
@@ -33,7 +24,4 @@ function saveEditorInput()
 
     //set hidden input field to editor contents
     input.value = editor.getSession().getValue();
-
-    //save input into local storage
-    localStorage.setItem("code-input", editor.getSession().getValue());
 }
