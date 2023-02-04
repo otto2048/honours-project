@@ -147,59 +147,30 @@
         //creates a record
         //parameters: json encoded record data & the types of the data being inserted, eg "iss", optional parameter to hold the error code of the query executed
         //the order of the json data and the params must match up so that the data is unpacked correctly
-        //on success, return the new record primary key
-        //on failure, return -1
+        //on success, return true
+        //on failure, return false
         public function create($jsonData, $paramTypes, &$errorCode = 0)
         {
             //run query
             $querySuccess = $this->runQuery($jsonData, $paramTypes, false);
-            
-            //return value
-            $retValue = -1;
-
-            //if insert succeeded
-            if ($querySuccess)
-            {
-                //get insert ID
-                //TODO: update this to work with composite primary keys
-                $retValue = $stmt->insert_id;
-            }
 
             $errorCode = mysqli_errno($this->conn->getConnection());
 
             //close prepared statement
             mysqli_stmt_close($stmt);
 
-            //return ID
-            return $retValue;
+            return $querySuccess;
         }
 
         //updates a record
         //parameters: json encoded record data & the types of the data being updated, eg "iss"
         //the order of the json data and the params must match up so that the data is unpacked correctly
-        //on success, return the primary key of the updated record
-        //on failure, return -1
+        //on success, return true
+        //on failure, return false
         public function update($jsonData, $paramTypes)
         {
             //run query
-            $querySuccess = $this->runQuery($jsonData, $paramTypes, false);
-            
-            //return value
-            $retValue = -1;
-
-            //if update succeeded
-            if ($querySuccess)
-            {
-                //get ID
-                //TODO: change this since not all tables are identified by one id column
-                $retValue = $data["id"];
-            }
-
-            //close prepared statement
-            mysqli_stmt_close($stmt);
-
-            //return ID
-            return $retValue;
+            return $this->runQuery($jsonData, $paramTypes);
         }
     }
 
