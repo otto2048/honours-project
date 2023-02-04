@@ -3,6 +3,8 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Controller.php");
 
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
+
     class UserController extends Controller
     {
         //function to handle user login
@@ -17,7 +19,7 @@
             $username = $this->validationObj->cleanInput($usernameInput);
 
             //check username is valid
-            if (!$this->validationObj->validatePK(Validation::USER, $username))
+            if (!$this->validationObj->validatePK(ModelClassTypes::USER, $username))
             {
                 //end session
                 session_destroy();

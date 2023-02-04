@@ -2,8 +2,6 @@
 
     class Validation
     {
-        const USER = "user";
-
         public function validate($modelClassType, &$jsonData)
         {
             return true;
