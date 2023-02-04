@@ -1,0 +1,8 @@
+/*Colours*/
+:root {
+    --green: #00663F;
+}
+
+.theme-darker {
+    background-color: var(--green);
+}
