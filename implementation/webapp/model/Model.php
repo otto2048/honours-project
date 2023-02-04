@@ -11,6 +11,8 @@
         //SQL string
         protected $sqlStmt;
 
+        private $stmt;
+
         public function __construct()
         {
             //set up connection
@@ -29,12 +31,12 @@
             $variables = json_decode($jsonVariables, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //bind parameters with user input
-            $bindResult = mysqli_stmt_bind_param($stmt, $paramTypes, ...array_values($variables));
+            $bindResult = mysqli_stmt_bind_param($this->stmt, $paramTypes, ...array_values($variables));
 
             if (!$bindResult)
             {
                 //close prepared statement
-                mysqli_stmt_close($stmt);
+                mysqli_stmt_close($this->stmt);
 
                 return false;
             }
@@ -44,14 +46,14 @@
 
         private function executeQuery($closeStatementOnFailure = true)
         {
-            $querySuccess = mysqli_stmt_execute($stmt);
+            $querySuccess = mysqli_stmt_execute($this->stmt);
 
             if (!$querySuccess)
             {
                 if ($closeStatementOnFailure)
                 {
                     //close prepared statement
-                    mysqli_stmt_close($stmt);
+                    mysqli_stmt_close($this->stmt);
                 }
 
                 return false;
@@ -63,9 +65,9 @@
         private function runQuery($jsonVariables = null, $paramTypes = null, $closeStatementOnFailure = true)
         {
             //prepare query
-            $stmt = mysqli_prepare($this->conn->getConnection(), $this->sqlStmt);
+            $this->stmt = mysqli_prepare($this->conn->getConnection(), $this->sqlStmt);
 
-            if (!$stmt)
+            if (!$this->stmt)
             {
                 return null;
             }
@@ -102,10 +104,10 @@
             }
 
             //get the result
-            $result = mysqli_stmt_get_result($stmt);
+            $result = mysqli_stmt_get_result($this->stmt);
 
             //close prepared statement
-            mysqli_stmt_close($stmt);
+            mysqli_stmt_close($this->stmt);
 
             if ($result != false)
             {
@@ -138,7 +140,7 @@
 
             //deal with the results of the query
             //close prepared statement
-            mysqli_stmt_close($stmt);
+            mysqli_stmt_close($this->stmt);
 
             //return true/false based on whether query succeeded
             return true;
@@ -157,7 +159,7 @@
             $errorCode = mysqli_errno($this->conn->getConnection());
 
             //close prepared statement
-            mysqli_stmt_close($stmt);
+            mysqli_stmt_close($this->stmt);
 
             return $querySuccess;
         }

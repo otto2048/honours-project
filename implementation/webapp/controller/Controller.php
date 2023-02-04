@@ -5,10 +5,10 @@
     abstract class Controller
     {
         //validation object
-        private $validationObj;
+        protected $validationObj;
 
         //model object
-        private $modelObj;
+        protected $modelObj;
         private $modelObjClass;
 
         protected $successPath;
@@ -24,7 +24,7 @@
             $this->validationObj = new Validation();
 
             //init model object
-            $this->modelObj = new \ReflectionClass($modelClassName);
+            $this->modelObj = new $modelClassName;
             $this->modelObjClass = $modelClassName;
 
             //begin the session
