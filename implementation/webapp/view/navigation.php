@@ -27,7 +27,7 @@
                         </li>
 
                         <?php 
-                            require_once("../model/PermissionLevels.php");
+                            require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
 
                             //check if user is logged in
                             if (isset($_SESSION["userId"]))
@@ -38,10 +38,10 @@
                         ?>
 
                                     <li class="nav-item">
-                                        <a class="nav-link" href="adminArea/userDashboard.php">Manage Users</a>
+                                        <a class="nav-link" href="/honours/webapp/view/adminArea/userDashboard.php">Manage Users</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="adminArea/exerciseDashboard.php">Manage Exercises</a>
+                                        <a class="nav-link" href="/honours/webapp/view/adminArea/exerciseDashboard.php">Manage Exercises</a>
                                     </li>
                        
 
@@ -50,7 +50,7 @@
                         ?>
                         
                                 <li class="nav-item">
-                                    <a class="nav-link" href="logout.php">Logout</a>
+                                    <a class="nav-link" href="/honours/webapp/view/userArea/logout.php">Logout</a>
                                 </li>
 
                         <?php
@@ -59,7 +59,7 @@
                             {
                         ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="login.php">Login</a>
+                            <a class="nav-link" href="/honours/webapp/view/login.php">Login</a>
                         </li>
 
                         <?php
