@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
 
     class Validation
@@ -84,6 +80,7 @@ error_reporting(E_ALL);
 
             $data["username"] = $this->cleanInput($data["username"]);
 
+            //IMPORTANT: make sure jsonData is set to the sanitized version of the data
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             return $this->validateString($data["username"], Validation::USERNAME_LENGTH);
