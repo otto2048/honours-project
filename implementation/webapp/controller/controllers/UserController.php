@@ -12,14 +12,14 @@
         public function loginUser()
         {
             //user input
-            $usernameInput=$_POST['username'];
             $passwordInput=$_POST['password'];
 
-            //sanitize user input
-            $username = $this->validationObj->cleanInput($usernameInput);
+            $data = new \stdClass();
+            $data -> username = $_POST['username'];
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //check username is valid
-            if (!$this->validationObj->validatePK(ModelClassTypes::USER, $username))
+            if (!$this->validationObj->validatePK(ModelClassTypes::USER, $jsonData))
             {
                 //end session
                 session_destroy();
@@ -33,7 +33,10 @@
             //variable to hold user data
             $userData = null;
 
-            $authenticated = $this->modelObj->loginUser($userData, $username, $passwordInput);
+            //get the santized and validated version of the data
+            $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            $authenticated = $this->modelObj->loginUser($userData, $data["username"], $passwordInput);
 
             if ($authenticated)
             {
