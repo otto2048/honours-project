@@ -38,10 +38,10 @@
                         ?>
 
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/honours/webapp/view/adminArea/userDashboard.php">Manage Users</a>
+                                        <a class="nav-link" href="/honours/webapp/view/adminArea/users/userDashboard.php">Manage Users</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/honours/webapp/view/adminArea/exerciseDashboard.php">Manage Exercises</a>
+                                        <a class="nav-link" href="/honours/webapp/view/adminArea/exercises/exerciseDashboard.php">Manage Exercises</a>
                                     </li>
                        
 
@@ -50,7 +50,7 @@
                         ?>
                         
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/honours/webapp/view/userArea/logout.php">Logout</a>
+                                    <a class="nav-link" href="/honours/webapp/view/logout.php">Logout</a>
                                 </li>
 
                         <?php
