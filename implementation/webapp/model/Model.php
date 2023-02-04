@@ -82,7 +82,7 @@
             }
 
             //execute
-            $querySuccess = $this->executeQuery();
+            $querySuccess = $this->executeQuery($closeStatementOnFailure);
 
             return $querySuccess;
         }
