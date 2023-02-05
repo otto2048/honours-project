@@ -35,7 +35,7 @@
         {
             if ($validated)
             {
-                echo '<script type="text/javascript">window.open('.$successPath.', name="_self")</script>';
+                echo '<script type="text/javascript">window.open("'.$successPath.'", name="_self")</script>';
             }
             else
             {
@@ -55,11 +55,11 @@
 
                 if ($result)
                 {
-                    echo '<script type="text/javascript">window.open('.$successPath.', name="_self")</script>';
+                    echo '<script type="text/javascript">window.open("'.$successPath.'", name="_self")</script>';
                 }
                 else
                 {
-                    echo '<script type="text/javascript">window.open('.$failurePath.', name="_self")</script>';
+                    echo '<script type="text/javascript">window.open("'.$failurePath.'", name="_self")</script>';
                 }
             }  
         }
