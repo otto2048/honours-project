@@ -34,6 +34,29 @@
             return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
 
+        //get a page of users
+        public function getUsers($pageNum, $pageSize)
+        {
+            $this->sqlStmt = 'SELECT honours_user.username, honours_user.userId, honours_user.permissionLevel, honours_user.containerPort
+                FROM honours_user LIMIT ? OFFSET ?';
+
+            $variables = new \stdClass();
+            $variables -> limit = $pageSize;
+
+            $skipValue = 0;
+
+            if ($pageNum > 1)
+            {
+                $skipValue = ($pageNum - 1) * $pageSize;
+            }
+
+            $variables -> skip = $skipValue;
+
+            $paramTypes = "ii";
+
+            return parent::retrieve(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+        }
+
         //login user
         public function loginUser(&$userData, $username, $password)
         {
