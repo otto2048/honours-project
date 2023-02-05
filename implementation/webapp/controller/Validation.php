@@ -41,7 +41,7 @@
         }
 
         //sanitizing input
-        private function cleanInput($input)
+        public function cleanInput($input)
         {
             $retValue = trim($input);
             $retValue = stripslashes($retValue);

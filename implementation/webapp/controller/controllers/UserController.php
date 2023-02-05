@@ -18,14 +18,18 @@
             $data -> username = $_POST['username'];
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
+            //prepare error message
+            $message[0]["success"] = false;
+            $message[0]["content"] = "Login failed, invalid username or password";
+
             //check username is valid
             if (!$this->validationObj->validatePK(ModelClassTypes::USER, $jsonData))
             {
                 //end session
                 session_destroy();
 
-                //return to the login page
-                header("location: /honours/webapp/view/login.php"."?error_message=login_failed");
+                //return to the login page with error message
+                header("location: /honours/webapp/view/login.php"."?message=".urlencode(json_encode($message)));
 
                 return;
             }
@@ -53,8 +57,8 @@
                 //end session
                 session_destroy();
 
-                //return to login page
-                header("location: /honours/webapp/view/login.php"."?error_message=login_failed");
+                //return to the login page with error message
+                header("location: /honours/webapp/view/login.php"."?message=".urlencode(json_encode($message)));
             }
         }
     }

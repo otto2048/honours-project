@@ -26,11 +26,28 @@
             }
 
             getHeader();
+
+            
         ?>
 
         <div class="container">
             <div class="border border-dark rounded m-auto mt-5 p-4 col-8 overflow-auto">
                 <h1 class="h2">Login:</h1>
+
+                <hr>
+
+                <?php
+                    //check for errors on this page
+                    if (isset($_GET["message"]))
+                    {
+                        $message = $_GET["message"];
+                    
+                        require_once("printErrorMessages.php");
+
+                        printErrorMessage($message);
+                    }
+                ?>
+
                 <form id="form" name="form" method="post" action="../controller/actionScripts/login.php">
                     <div class="form-group"> 
                         <label for="username">Enter Username:</label>
