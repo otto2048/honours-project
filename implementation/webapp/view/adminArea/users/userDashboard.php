@@ -40,7 +40,7 @@
             //get first page of users
             require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
 
-            $pageSize = 2;
+            $pageSize = 1;
             $pageLimit = 0;
 
             $userModel = new UserModel();
@@ -98,6 +98,8 @@
             <button class="btn theme-darker text-light float-end" id="nextPageBtn">Next page</button>
 
             <p class="text-center">Page: <span id="pageNum">1</span>/<span id="totalPages"><?php echo $pageLimit ?></span></p>
+
+            <p>Page Size: <span id="pageSize"><?php echo $pageSize ?></span></p>
         <?php
 
             }
@@ -108,16 +110,19 @@
         ?>
 
 
-         <!-- create new user -->
+        <!-- create new user -->
 
-         <!-- update user -->
+        <!-- update user -->
 
-         <!-- delete user -->
+        <!-- delete user -->
 
-         <!-- Auto tables plugin -->
         
         </div>
+        
+        <!-- Auto tables plugin -->
         <script src="../../js/auto-sorter-filter/auto-tables.js"></script>
+
+        <!-- Pagination -->
         <script src="../../js/pagination.js"></script>
     </body>
 </html>

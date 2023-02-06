@@ -6,13 +6,15 @@ function preparePage()
     $("#previousPageBtn")[0].disabled = true;
     $("#previousPageBtn")[0].ariaDisabled = true;
 
+    pageSize = parseInt($("#pageSize")[0].textContent);
+
     document.getElementById("previousPageBtn").addEventListener("click", function() {
         //get latest page
         latestPage = parseInt($("#pageNum")[0].textContent);
 
         if (latestPage > 1)
         {
-            loadPage(latestPage - 1, $(".paginateTable")[0].getAttribute("id"));
+            loadPage(latestPage - 1, pageSize, $(".paginateTable")[0].getAttribute("id"));
         }
     });
 
@@ -27,12 +29,12 @@ function preparePage()
 
         if (nextPage <= totalPages)
         {
-            loadPage(nextPage, $(".paginateTable")[0].getAttribute("id"));
+            loadPage(nextPage, pageSize, $(".paginateTable")[0].getAttribute("id"));
         }
     });
 }
 
-function loadPage(page, type)
+function loadPage(page, pageSize_, type)
 {
     // load a page of results and output them in the table
 
@@ -52,7 +54,7 @@ function loadPage(page, type)
     $.ajax({
         url: scriptURL,
         type: "POST",
-        data: {pageNum: page},
+        data: {pageNum: page, pageSize: pageSize_},
         success: function(result)
         {
             if (result != 0)
@@ -105,7 +107,7 @@ function loadPage(page, type)
     {
         $("#nextPageBtn")[0].disabled = false;
         $("#nextPageBtn")[0].ariaDisabled = false;
-        
+
         $("#previousPageBtn")[0].disabled = false;
         $("#previousPageBtn")[0].ariaDisabled = false;
     }

@@ -10,19 +10,19 @@
         $validate = new Validation();
 
         //validate and sanitize input
-        $input = $validate->cleanInput($_POST["pageNum"]);
+        $pageNumInput = $validate->cleanInput($_POST["pageNum"]);
+        $pageSizeInput = $validate->cleanInput($_POST["pageSize"]);
         
-        if (!$validate->validateInt($input))
+        if (!$validate->validateInt($pageNumInput) || !$validate->validateInt($pageSizeInput))
         {
             return;
         }
-
-        $pageSize = 2;
+        
         $pageLimit = 0;
     
         $userModel = new UserModel();
     
-        $jsonUserData = $userModel->getUsers(intval($input), $pageSize, $pageLimit);
+        $jsonUserData = $userModel->getUsers(intval($pageNumInput), intval($pageSizeInput), $pageLimit);
 
         
         $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
