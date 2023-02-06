@@ -11,11 +11,17 @@
         protected $modelObj;
         private $modelObjClass;
 
+        //urls to send the user to
         protected $successPath;
         protected $failurePath;
 
+        //url variables
         protected $successPathVariables;
         protected $failurePathVariables;
+
+        //message json objects to add as a url variable before the user is send somewhere
+        protected $successMessageJson;
+        protected $failureMessageJson;
 
         const UPDATE_OPERATION = 0;
         const CREATE_OPERATION = 1;
@@ -39,6 +45,9 @@
             if (!$validated)
             {
                 $path = $this->failurePath;
+
+                //add failureMessageJson to other url variables
+                $failurePathVariables .= "&?message=".urlencode($this->failureMessageJson);
 
                 if ($this->failurePathVariables)
                 {
@@ -67,6 +76,9 @@
                 {
                     $path = $this->successPath;
 
+                    //add successMessageJson to other url variables
+                    $successPathVariables .= "&?message=".urlencode($this->successMessageJson);
+                    
                     if ($this->successPathVariables)
                     {
                         $path .= $this->successPathVariables;
@@ -78,6 +90,9 @@
                 {
                     $path = $this->failurePath;
 
+                    //add failureMessageJson to other url variables
+                    $failurePathVariables .= "&?message=".urlencode($this->failureMessageJson);
+
                     if ($this->failurePathVariables)
                     {
                         $path .= $this->failurePathVariables;
@@ -88,8 +103,7 @@
             }  
         }
 
-        //parameters: object as json string with data labels and data values to be inserted into the database
-        public function create($jsonData)
+        private function prepareCreateUpdate(&$jsonData)
         {
             //sanitize and validate input
             $errorMessagesJSON = null;
@@ -98,9 +112,24 @@
 
             if ($errorMessagesJSON)
             {
-                //add error messages to failure path
-                $this->failurePathVariables .= "&?message=".urlencode($errorMessagesJSON);
+                //add error messages to failure message json
+                $errorMessages = json_decode($errorMessagesJSON, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                $failureMessage = json_decode($this->failureMessageJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                for ($errorMessages as $error)
+                {
+                    array_push($failureMessage, $error);
+                }
+
+                $this->failureMessageJson = json_encode($failureMessage);
             }
+        }
+
+        //parameters: object as json string with data labels and data values to be inserted into the database
+        public function create($jsonData)
+        {
+            prepareCreateUpdate($jsonData);
 
             $this->genericControllerOperation(Controller::CREATE_OPERATION, $jsonData, $validated);
         }
@@ -108,16 +137,7 @@
         //parameters: object as json string with data labels and data values to be inserted into the database
         public function update($jsonData)
         {
-            //sanitize and validate input
-            $errorMessagesJSON = null;
-
-            $validated = $this->validationObj->validate($this->modelObjClass, $jsonData, $errorMessagesJSON);
-
-            if ($errorMessagesJSON)
-            {
-                //add error messages to failure path
-                $this->failurePathVariables .= "&?message=".urlencode($errorMessagesJSON);
-            }
+            prepareCreateUpdate($jsonData);
 
             $this->genericControllerOperation(Controller::UPDATE_OPERATION, $jsonData, $validated);
         }
