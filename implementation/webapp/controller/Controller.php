@@ -14,6 +14,9 @@
         protected $successPath;
         protected $failurePath;
 
+        protected $successPathVariables;
+        protected $failurePathVariables;
+
         const UPDATE_OPERATION = 0;
         const CREATE_OPERATION = 1;
         const DELETE_OPERATION = 2;
@@ -35,7 +38,14 @@
         {
             if (!$validated)
             {
-                echo '<script type="text/javascript">window.open("'.$this->failurePath.'", name="_self")</script>';
+                $path = $this->failurePath;
+
+                if ($this->failurePathVariables)
+                {
+                    $path .= $this->failurePathVariables;
+                }
+
+                echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
             }
             else
             {
@@ -55,11 +65,25 @@
 
                 if ($result)
                 {
-                    echo '<script type="text/javascript">window.open("'.$this->successPath.'", name="_self")</script>';
+                    $path = $this->successPath;
+
+                    if ($this->successPathVariables)
+                    {
+                        $path .= $this->successPathVariables;
+                    }
+
+                    echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
                 }
                 else
                 {
-                    echo '<script type="text/javascript">window.open("'.$this->failurePath.'", name="_self")</script>';
+                    $path = $this->failurePath;
+
+                    if ($this->failurePathVariables)
+                    {
+                        $path .= $this->failurePathVariables;
+                    }
+
+                    echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
                 }
             }  
         }
@@ -75,7 +99,7 @@
             if ($errorMessagesJSON)
             {
                 //add error messages to failure path
-                $this->failurePath."&?message=".$errorMessagesJSON;
+                $this->failurePathVariables .= "&?message=".urlencode($errorMessagesJSON);
             }
 
             $this->genericControllerOperation(Controller::CREATE_OPERATION, $jsonData, $validated);

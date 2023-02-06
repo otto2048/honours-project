@@ -73,8 +73,10 @@
             $successMessage[0]["content"] = "Successfully deleted user";
 
             //set success and failure paths
-            $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php?message=".urlencode(json_encode($successMessage));
-            $this->failurePath = "/honours/webapp/view/adminArea/users/user.php?id=".$this->validationObj->cleanInput($data->userId)."&?message=".urlencode(json_encode($failureMessage));
+            $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php";
+            $this->successPathVariables = "?message=".urlencode(json_encode($successMessage));
+            $this->failurePath = "/honours/webapp/view/adminArea/users/user.php";
+            $this->failurePathVariables = "?id=".$this->validationObj->cleanInput($data->userId)."&?message=".urlencode(json_encode($failureMessage));
 
             return parent::delete($jsonData);
         }
@@ -96,9 +98,15 @@
             $successMessage[0]["success"] = true;
             $successMessage[0]["content"] = "Successfully created user";
 
+            //prepare error message
+            $failureMessage[0]["success"] = false;
+            $failureMessage[0]["content"] = "Failed to create user. Try again?";
+
             //set success and failure paths
-            $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php?message=".urlencode(json_encode($successMessage));
+            $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php";
+            $this->successPathVariables = "?message=".urlencode(json_encode($successMessage));
             $this->failurePath = "/honours/webapp/view/adminArea/users/userDashboard.php";
+            $this->failurePathVariables = "?message=".urlencode(json_encode($failureMessage));
  
             return parent::create($jsonData);
         }
