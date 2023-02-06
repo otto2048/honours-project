@@ -1,7 +1,9 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
-
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
+
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
@@ -40,7 +42,6 @@
             <?php
 
                 //get first page of users
-                require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
 
                 $pageSize = 10;
                 $pageLimit = 0;
@@ -80,12 +81,12 @@
                                     echo '<tr>';
                                     echo '<td>'.$row["userId"].'</td>';
 
-                                    echo '<td><u><a href="user.php?id='.$row["id"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
+                                    echo '<td><u><a href="user.php?id='.$row["userId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
                                     echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["containerPort"].'</td>';
 
                                     echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
 
-                                    echo '<td><a href="user.php?id='.$row["id"].'" class="btn theme-darker text-light" role="button">More info...</a></td>';
+                                    echo '<td><a href="user.php?id='.$row["userId"].'" class="btn theme-darker text-light" role="button">More info...</a></td>';
                                     echo '</tr>';
                                 }
                             ?>

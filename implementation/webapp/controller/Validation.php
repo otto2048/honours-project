@@ -74,6 +74,7 @@
         }
 
         //validate user PK
+        //TODO: change this, its not using the primary key
         private function validateUserPK(&$jsonData)
         {
             $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
