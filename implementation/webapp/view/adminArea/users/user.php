@@ -107,5 +107,27 @@
 
         
         </div>
+
+        <!-- delete user modal -->
+        <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="h5 modal-title">Are you sure you want to delete this user?</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        <p>Confirm deletion</p>
+                        <p>All user data will be lost!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-dark btn" data-bs-dismiss="modal">Close</button>
+                        <a href="../controller/actionScripts/deleteUser.php?SongTitle=<?php echo $song["SongTitle"]; ?>" class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../../js/deleteConfirmation.js"></script>
     </body>
 </html>
