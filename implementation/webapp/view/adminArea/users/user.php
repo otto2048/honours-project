@@ -36,8 +36,7 @@
         ?>
         
         <div class="container p-3">
-            <h1>View User</h1>
-            <hr>
+            
             <?php
 
                 $validation = new Validation();
@@ -63,11 +62,20 @@
                             
                             //display current permission
                             $permission = new PermissionLevels();
-
-                            //display user data
                         ?>
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h1>View User - <?php echo $userData[0]["username"]?></h1>
+                                </div>
+                                <div class="col">
 
-                            <h2>User: <?php echo $userData[0]["username"]?></h2>
+                                    <button class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></button>
+
+                                    <a href="updateUser.php?id=<?php echo $userData[0]["userId"] ?>" class="btn btn-dark ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="edit-btn">Edit <span class="mdi mdi-lead-pencil"></span></a>
+                                    
+                                </div>
+                            </div>
+                            <hr class="mt-0">
                             <ul>
                                 <li>User ID: <?php echo $userData[0]["userId"] ?></li>
                                 <li>Username: <?php echo $userData[0]["username"] ?></li>
@@ -82,11 +90,17 @@
                     }
                     else
                     {
+                ?>
+                        <h1>View User</h1>
+                <?php
                         echo "Failed to load user data";
                     }
                 }
                 else
                 {
+                ?>
+                        <h1>View User</h1>
+                <?php
                     echo "Failed to load user data";
                 }             
             ?>
