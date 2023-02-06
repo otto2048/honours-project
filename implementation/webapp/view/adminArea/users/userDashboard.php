@@ -89,8 +89,9 @@
                         </tbody>
                     </table>
 
-                    <button class="btn theme-darker text-light">Previous page</button>
-                    <button class="btn theme-darker text-light float-end">Next page</button>
+                    <button class="btn theme-darker text-light" id="previousPageBtn">Previous page</button>
+                    <p>Page: </p>
+                    <button class="btn theme-darker text-light float-end" id="nextPageBtn">Next page</button>
                 </div>
 
         <?php
