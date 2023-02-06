@@ -1,20 +1,21 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
 
     class Validation
     {
         //database data constraints
         const USERNAME_LENGTH = 50;
 
-        public function validate($modelClassType, &$jsonData)
+        public function validate($modelClassType, &$jsonData, &$errorMessageJson)
         {
             switch ($modelClassType)
             {
                 case ModelClassTypes::USER:
-                    return $this->validateUser($jsonData);
+                    return $this->validateUser($jsonData, $errorMessageJson);
                     break;
                 case ModelClassTypes::EXERCISE:
-                    return $this->validateExercise($jsonData);
+                    return $this->validateExercise($jsonData, $errorMessageJson);
                     break;
                 default:
                     return false;
@@ -68,9 +69,67 @@
         }
 
         //validate user object
-        private function validateUser(&$jsonData)
+        private function validateUser(&$jsonData, &$errorMessageJson)
         {
+            $errorMessage = array();
+
+            $user = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //validate id
+            if (!$this->validateInt($user["userId"]))
+            {
+                $errorMessage[0]["content"] = "Invalid user id";
+                $errorMessage[0]["success"] = false;
+            }
+
+            //validate username
+            if (!$this->validateString($user["username"], Validation::USERNAME_LENGTH))
+            {
+                $errorMessage[1]["content"] = "Invalid username";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //validate container port
+            if (!$this->validateInt($user["containerPort"]))
+            {
+                $errorMessage[2]["content"] = "Invalid container port";
+                $errorMessage[2]["success"] = false;
+            }
+
+            //validate permission level
+            if (!$this->validateUserPermissionLevel($user["permissionLevel"]))
+            {
+                $errorMessage[3]["content"] = "Invalid permission level";
+                $errorMessage[3]["success"] = false;
+            }
+
+            //check if we found any errors
+            if (count($errorMessage) == 0)
+            {
+                return true;
+            }
+
+            $errorMessageJson = json_encode($errorMessage);
             return false;
+        }
+
+        private function validateUserPermissionLevel($input)
+        {
+            //check if this permission is a valid int
+            if (!$this->validateInt($input))
+            {
+                return false;
+            }
+
+            //check if this permission level is an actual permission level in the system
+            $permissions = new PermissionLevels();
+
+            if ($permissions->getPermissionLevel(intval($input)) == "Error finding status")
+            {
+                return false;
+            }
+
+            return true;
         }
 
         //validate user PK

@@ -78,6 +78,27 @@
 
             return parent::delete($jsonData);
         }
+
+        public function createUser()
+        {
+            //user input into json object
+            $data = new \stdClass();
+            $data -> userId = $_GET['userId'];
+            $data -> username = $_GET['username'];
+            $data -> permissionLevel = $_GET['permissionLevel'];
+            $data -> containerPort = $_GET['containerPort'];
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //prepare success message
+            $successMessage[0]["success"] = true;
+            $successMessage[0]["content"] = "Successfully created user";
+
+            //set success and failure paths
+            $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php?message=".urlencode(json_encode($successMessage));
+            $this->failurePath = "/honours/webapp/view/adminArea/users/userDashboard.php";
+ 
+            return parent::delete($jsonData);
+        }
     }
 
 ?>

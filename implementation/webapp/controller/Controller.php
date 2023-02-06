@@ -68,7 +68,15 @@
         public function create($jsonData)
         {
             //sanitize and validate input
-            $validated = $this->validationObj->validate($this->modelObjClass, $jsonData);
+            $errorMessagesJSON = null;
+
+            $validated = $this->validationObj->validate($this->modelObjClass, $jsonData, $errorMessagesJSON);
+
+            if ($errorMessagesJSON)
+            {
+                //add error messages to failure path
+                $this->failurePath."&?message=".$errorMessagesJSON;
+            }
 
             $this->genericControllerOperation(Controller::CREATE_OPERATION, $jsonData, $validated);
         }
