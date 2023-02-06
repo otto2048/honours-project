@@ -1,5 +1,4 @@
 <?php
-
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Controller.php");
 
@@ -13,17 +12,16 @@
         {
             //user input
             $passwordInput=$_POST['password'];
+            $usernameInput = $_POST["username"];
 
-            $data = new \stdClass();
-            $data -> username = $_POST['username'];
-            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+            $username = $this->validationObj->cleanInput($usernameInput);
 
             //prepare error message
             $message[0]["success"] = false;
             $message[0]["content"] = "Login failed, invalid username or password";
 
             //check username is valid
-            if (!$this->validationObj->validatePK(ModelClassTypes::USER, $jsonData))
+            if (!$this->validationObj->validateString($username, Validation::USERNAME_LENGTH))
             {
                 //end session
                 session_destroy();
@@ -37,10 +35,7 @@
             //variable to hold user data
             $userData = null;
 
-            //get the santized and validated version of the data
-            $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
-
-            $authenticated = $this->modelObj->loginUser($userData, $data["username"], $passwordInput);
+            $authenticated = $this->modelObj->loginUser($userData, $username, $passwordInput);
 
             if ($authenticated)
             {

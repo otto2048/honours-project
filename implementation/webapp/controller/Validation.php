@@ -74,17 +74,16 @@
         }
 
         //validate user PK
-        //TODO: change this, its not using the primary key
         private function validateUserPK(&$jsonData)
         {
             $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-            $data["username"] = $this->cleanInput($data["username"]);
+            $data["userId"] = $this->cleanInput($data["userId"]);
 
             //IMPORTANT: make sure jsonData is set to the sanitized version of the data
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
-            return $this->validateString($data["username"], Validation::USERNAME_LENGTH);
+            return $this->validateInt($data["userId"]);
         }
 
         //validate exercise object
