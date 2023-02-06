@@ -6,6 +6,15 @@ function preparePage()
     $("#previousPageBtn")[0].disabled = true;
     $("#previousPageBtn")[0].ariaDisabled = true;
 
+    //disable next button if there is only one page
+    totalPages = parseInt($("#totalPages")[0].textContent);
+
+    if (totalPages == 1)
+    {
+        $("#nextPageBtn")[0].disabled = true;
+        $("#nextPageBtn")[0].ariaDisabled = true;
+    }
+
     pageSize = parseInt($("#pageSize")[0].textContent);
 
     document.getElementById("previousPageBtn").addEventListener("click", function() {
