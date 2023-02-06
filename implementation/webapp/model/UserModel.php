@@ -35,8 +35,14 @@
         }
 
         //get a page of users
-        public function getUsers($pageNum, $pageSize)
+        public function getUsers($pageNum, $pageSize, &$pageLimit)
         {
+            //count the total number of users to find the max page size
+            $this->sqlStmt = 'SELECT COUNT(honours_user.userId) as totalUsers FROM honours_user';
+
+            $pageLimit = ceil(floatval(json_decode(parent::retrieve(), JSON_OBJECT_AS_ARRAY)[0]["totalUsers"]) / $pageSize);
+
+            //get the page of users
             $this->sqlStmt = 'SELECT honours_user.username, honours_user.userId, honours_user.permissionLevel, honours_user.containerPort
                 FROM honours_user LIMIT ? OFFSET ?';
 

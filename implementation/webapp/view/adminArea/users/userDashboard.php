@@ -40,11 +40,12 @@
             //get first page of users
             require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
 
-            $pageSize = 10;
+            $pageSize = 1;
+            $pageLimit = 0;
 
             $userModel = new UserModel();
 
-            $jsonUserData = $userModel->getUsers(1, $pageSize);
+            $jsonUserData = $userModel->getUsers(1, $pageSize, $pageLimit);
 
             if ($jsonUserData != null)
             {
@@ -55,7 +56,7 @@
                 <!-- view users table -->
                 <p class="pb-1 pt-3 mb-0">Click on column headings to sort Users by this column</p>
                 <div class="table-responsive">
-                    <table class="table tablesort tablesearch-table" id="userInfoTable">
+                    <table class="table tablesort tablesearch-table paginateTable" id="userInfoTable">
                         <thead>
                             <tr>
                                 <th scope="col" data-tablesort-type="int">ID</th>
@@ -65,7 +66,7 @@
                                 <th scope="col">Link to User page</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="paginateTableBody" id="userInfoTableBody">
                             <?php
 
                                 //display current permission
@@ -90,7 +91,7 @@
                     </table>
 
                     <button class="btn theme-darker text-light" id="previousPageBtn">Previous page</button>
-                    <p>Page: </p>
+                    <p>Page: <span id="pageNum">1</span>/<span id="totalPages"><?php echo $pageLimit ?></span></p>
                     <button class="btn theme-darker text-light float-end" id="nextPageBtn">Next page</button>
                 </div>
 
@@ -114,5 +115,6 @@
         
         </div>
         <script src="../../js/auto-sorter-filter/auto-tables.js"></script>
+        <script src="../../js/pagination.js"></script>
     </body>
 </html>

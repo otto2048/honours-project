@@ -62,7 +62,7 @@
         }
  
         //validating an integer
-        private function validateInt($input)
+        public function validateInt($input)
         {
             return ctype_digit($input);
         }
