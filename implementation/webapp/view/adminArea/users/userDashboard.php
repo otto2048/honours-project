@@ -40,7 +40,7 @@
             //get first page of users
             require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
 
-            $pageSize = 1;
+            $pageSize = 2;
             $pageLimit = 0;
 
             $userModel = new UserModel();

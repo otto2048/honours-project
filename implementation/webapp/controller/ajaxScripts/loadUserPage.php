@@ -17,7 +17,7 @@
             return;
         }
 
-        $pageSize = 1;
+        $pageSize = 2;
         $pageLimit = 0;
     
         $userModel = new UserModel();

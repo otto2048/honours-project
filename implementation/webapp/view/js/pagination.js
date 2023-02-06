@@ -2,6 +2,10 @@ window.onload = preparePage();
 
 function preparePage()
 {
+    //disable back button as we always load in on the first page
+    $("#previousPageBtn")[0].disabled = true;
+    $("#previousPageBtn")[0].ariaDisabled = true;
+
     document.getElementById("previousPageBtn").addEventListener("click", function() {
         //get latest page
         latestPage = parseInt($("#pageNum")[0].textContent);
@@ -75,4 +79,34 @@ function loadPage(page, type)
             }
         }
     });
+
+    pageMax = $("#totalPages")[0].textContent;
+
+    //if this is the first page, disable back button
+    if (page == 1)
+    {
+        $("#previousPageBtn")[0].disabled = true;
+        $("#previousPageBtn")[0].ariaDisabled = true;
+
+        $("#nextPageBtn")[0].disabled = false;
+        $("#nextPageBtn")[0].ariaDisabled = false;
+    }
+    //if this is the last page, disable next button
+    else if (page == pageMax)
+    {
+        $("#nextPageBtn")[0].disabled = true;
+        $("#nextPageBtn")[0].ariaDisabled = true;
+
+        $("#previousPageBtn")[0].disabled = false;
+        $("#previousPageBtn")[0].ariaDisabled = false;
+    }
+    //if this is in between, make sure both buttons are enabled
+    else
+    {
+        $("#nextPageBtn")[0].disabled = false;
+        $("#nextPageBtn")[0].ariaDisabled = false;
+        
+        $("#previousPageBtn")[0].disabled = false;
+        $("#previousPageBtn")[0].ariaDisabled = false;
+    }
 }
