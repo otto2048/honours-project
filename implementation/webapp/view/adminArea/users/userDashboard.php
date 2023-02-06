@@ -4,6 +4,8 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
@@ -39,6 +41,17 @@
         <div class="container p-3">
             <h1>Manage Users</h1>
             <hr>
+
+            <?php
+                //check for errors on this page
+                if (isset($_GET["message"]))
+                {
+                    $message = $_GET["message"];
+                
+                    printErrorMessage($message);
+                }
+            ?>
+
             <?php
 
                 //get first page of users
