@@ -51,7 +51,7 @@
         }
 
         //validating a string in terms of a length
-        private function validateString($input, $length)
+        public function validateString($input, $length)
         {
             if (strlen($input) <= $length)
             {
