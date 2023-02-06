@@ -90,11 +90,14 @@
                     </tbody>
                 </table>
 
-                <button class="btn theme-darker text-light" id="previousPageBtn">Previous page</button>
-                <p>Page: <span id="pageNum">1</span>/<span id="totalPages"><?php echo $pageLimit ?></span></p>
-                <button class="btn theme-darker text-light float-end" id="nextPageBtn">Next page</button>
+                
             </div>
 
+
+            <button class="btn theme-darker text-light" id="previousPageBtn">Previous page</button>
+            <button class="btn theme-darker text-light float-end" id="nextPageBtn">Next page</button>
+
+            <p class="text-center">Page: <span id="pageNum">1</span>/<span id="totalPages"><?php echo $pageLimit ?></span></p>
         <?php
 
             }
