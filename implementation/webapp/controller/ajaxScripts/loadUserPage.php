@@ -24,24 +24,32 @@
     
         $jsonUserData = $userModel->getUsers(intval($input), $pageSize, $pageLimit);
 
+        
         $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-        //display current permission
-        $permission = new PermissionLevels();
-
-        //display user data
-        foreach ($userData as $row)
+        if (!isset($userData["isempty"]))
         {
-            echo '<tr>';
-            echo '<td>'.$row["userId"].'</td>';
+            //display current permission
+            $permission = new PermissionLevels();
 
-            echo '<td><u><a href="user.php?id='.$row["id"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
-            echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["containerPort"].'</td>';
+            //display user data
+            foreach ($userData as $row)
+            {
+                echo '<tr>';
+                echo '<td>'.$row["userId"].'</td>';
 
-            echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
+                echo '<td><u><a href="user.php?id='.$row["id"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
+                echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["containerPort"].'</td>';
 
-            echo '<td><a href="user.php?id='.$row["id"].'" class="btn theme-darker text-light" role="button">More info...</a></td>';
-            echo '</tr>';
+                echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
+
+                echo '<td><a href="user.php?id='.$row["id"].'" class="btn theme-darker text-light" role="button">More info...</a></td>';
+                echo '</tr>';
+            }
+        }
+        else
+        {
+            echo "Failed to load user data";
         }
     }
 
