@@ -78,12 +78,12 @@
             //sanitize data
             if (isset($user["userId"]))
             {
-                $user["userId"] = cleanInput($user["userId"]);
+                $user["userId"] = $this->cleanInput($user["userId"]);
             }
 
-            $user["username"] = cleanInput($user["username"]);
-            $user["containerPort"] = cleanInput($user["containerPort"]);
-            $user["permissionLevel"] = cleanInput($user["permissionLevel"]);
+            $user["username"] = $this->cleanInput($user["username"]);
+            $user["containerPort"] = $this->cleanInput($user["containerPort"]);
+            $user["permissionLevel"] = $this->cleanInput($user["permissionLevel"]);
 
             //validate id if its set
             if (isset($user["userId"]))
