@@ -127,11 +127,41 @@
 
 
         <!-- create new user -->
+            <hr>
+            <h2>Create a new user</h2>
+            <form role="form" method="POST" action="../../../controller/actionScripts/createUser.php">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" name="username" required id="username">
+                </div>
+                <div class="form-group">
+                    <label for="containerPort">Container Port:</label>
+                    <input type="text" class="form-control" name="containerPort" id="containerPort">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" name="password" required id="password">
+                </div>
+                <div class="form-group pt-1">
+                    <label for="permissionLevel">User group:</label>
+                    <select name="permissionLevel" id="permissionLevel">
+                        <?php
+                            $permissionReflection = new \ReflectionClass("PermissionLevels");
+                            $values = $permissionReflection->getConstants();
 
-        <!-- update user -->
+                            foreach ($values as $value)
+                            {
+                                $optionString = '<option value = "';
+                                $optionString .= $value.'"';
+                                $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
 
-        <!-- delete user -->
-
+                                echo $optionString;
+                            }
+                        ?>
+                    </select>
+                </div>
+                <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
+            </form>
         
         </div>
         
