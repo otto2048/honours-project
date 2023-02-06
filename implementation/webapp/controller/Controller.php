@@ -35,7 +35,7 @@
         {
             if (!$validated)
             {
-                echo '<script type="text/javascript">window.open("'.$this->successPath.'", name="_self")</script>';
+                echo '<script type="text/javascript">window.open("'.$this->failurePath.'", name="_self")</script>';
             }
             else
             {
