@@ -89,6 +89,16 @@
             return parent::create($jsonData, $paramTypes);
         }
 
+        //update a user
+        public function updateData($jsonData)
+        {
+            $this->sqlStmt = 'UPDATE honours_user SET username = ?, permissionLevel = ?, containerPort = ? WHERE userId = ?';
+
+            $paramTypes = "siii";
+
+            return parent::create($jsonData, $paramTypes);
+        }
+
         //login user
         public function loginUser(&$userData, $username, $password)
         {

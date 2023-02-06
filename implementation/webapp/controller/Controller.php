@@ -109,7 +109,15 @@
         public function update($jsonData)
         {
             //sanitize and validate input
-            $validated = $this->validationObj->validate($this->modelObjClass, $jsonData);
+            $errorMessagesJSON = null;
+
+            $validated = $this->validationObj->validate($this->modelObjClass, $jsonData, $errorMessagesJSON);
+
+            if ($errorMessagesJSON)
+            {
+                //add error messages to failure path
+                $this->failurePathVariables .= "&?message=".urlencode($errorMessagesJSON);
+            }
 
             $this->genericControllerOperation(Controller::UPDATE_OPERATION, $jsonData, $validated);
         }
