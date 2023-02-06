@@ -63,7 +63,7 @@
             return parent::retrieve(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
 
-        public function delete($jsonData)
+        public function deleteData($jsonData)
         {
             //get the primary key passed through json data
             $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE|JSON_OBJECT_AS_ARRAY);
@@ -75,7 +75,9 @@
 
             $paramTypes = "i";
 
-            return parent::delete($json_encode($WHERE_variables), $paramTypes);
+            echo "deleting";
+
+            return parent::delete(json_encode($WHERE_variables), $paramTypes);
         }
 
         //login user

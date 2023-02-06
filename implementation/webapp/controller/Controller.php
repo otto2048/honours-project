@@ -33,9 +33,9 @@
 
         private function genericControllerOperation($type, $jsonData, $validated)
         {
-            if ($validated)
+            if (!$validated)
             {
-                echo '<script type="text/javascript">window.open("'.$successPath.'", name="_self")</script>';
+                echo '<script type="text/javascript">window.open("'.$this->successPath.'", name="_self")</script>';
             }
             else
             {
@@ -43,23 +43,23 @@
                 switch ($type)
                 {
                     case Controller::UPDATE_OPERATION:
-                        $result = $this->modelObj->update($jsonData);
+                        $result = $this->modelObj->updateData($jsonData);
                         break;
                     case Controller::CREATE_OPERATION:
-                        $result = $this->modelObj->create($jsonData);
+                        $result = $this->modelObj->createData($jsonData);
                         break;
                     case Controller::DELETE_OPERATION:
-                        $result = $this->modelObj->delete($jsonData);
+                        $result = $this->modelObj->deleteData($jsonData);
                         break;   
                 }
 
                 if ($result)
                 {
-                    echo '<script type="text/javascript">window.open("'.$successPath.'", name="_self")</script>';
+                    echo '<script type="text/javascript">window.open("'.$this->successPath.'", name="_self")</script>';
                 }
                 else
                 {
-                    echo '<script type="text/javascript">window.open("'.$failurePath.'", name="_self")</script>';
+                    echo '<script type="text/javascript">window.open("'.$this->failurePath.'", name="_self")</script>';
                 }
             }  
         }
@@ -83,7 +83,7 @@
         }
 
         //parameters: object as json string with data labels and data values that represent the primary key of this record
-        public function delete()
+        public function delete($jsonData)
         {
             //sanitize and validate primary key input
             $validated = $this->validationObj->validatePK($this->modelObjClass, $jsonData);

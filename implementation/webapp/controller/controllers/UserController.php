@@ -56,6 +56,20 @@
                 header("location: /honours/webapp/view/login.php"."?message=".urlencode(json_encode($message)));
             }
         }
+
+        public function deleteUser()
+        {
+            //user input into json object
+            $data = new \stdClass();
+            $data -> userId = $_GET['userId'];
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //set success and failure paths
+            $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php";
+            $this->failurePath = "/honours/webapp/view/adminArea/users/user?id=".$this->validationObj->cleanInput($data->userId).".php";
+
+            return parent::delete($jsonData);
+        }
     }
 
 ?>

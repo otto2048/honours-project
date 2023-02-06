@@ -122,7 +122,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn-dark btn" data-bs-dismiss="modal">Close</button>
-                        <a href="../controller/actionScripts/deleteUser.php?SongTitle=<?php echo $song["SongTitle"]; ?>" class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></a>
+                        <a href="../../../controller/actionScripts/deleteUser.php?userId=<?php echo $input; ?>" class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></a>
                     </div>
                 </div>
             </div>
