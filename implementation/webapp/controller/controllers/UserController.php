@@ -66,7 +66,7 @@
 
             //set success and failure paths
             $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php";
-            $this->failurePath = "/honours/webapp/view/adminArea/users/user?id=".$this->validationObj->cleanInput($data->userId).".php";
+            $this->failurePath = "/honours/webapp/view/adminArea/users/user.php?id=".$this->validationObj->cleanInput($data->userId);
 
             return parent::delete($jsonData);
         }

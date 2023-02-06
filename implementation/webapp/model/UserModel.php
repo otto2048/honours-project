@@ -75,8 +75,6 @@
 
             $paramTypes = "i";
 
-            echo "deleting";
-
             return parent::delete(json_encode($WHERE_variables), $paramTypes);
         }
 
