@@ -63,6 +63,7 @@
             return parent::retrieve(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
 
+        //delete a user
         public function deleteData($jsonData)
         {
             //get the primary key passed through json data
@@ -76,6 +77,16 @@
             $paramTypes = "i";
 
             return parent::delete(json_encode($WHERE_variables), $paramTypes);
+        }
+
+        //create a user
+        public function createData($jsonData)
+        {
+            $this->sqlStmt = 'INSERT INTO honours_user (username, password, permissionLevel, containerPort) VALUES (?, ?, ?, ?)';
+
+            $paramTypes = "ssii";
+
+            return parent::create($jsonData, $paramTypes);
         }
 
         //login user

@@ -75,11 +75,24 @@
 
             $user = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-            //validate id
-            if (!$this->validateInt($user["userId"]))
+            //sanitize data
+            if (isset($user["userId"]))
             {
-                $errorMessage[0]["content"] = "Invalid user id";
-                $errorMessage[0]["success"] = false;
+                $user["userId"] = cleanInput($user["userId"]);
+            }
+
+            $user["username"] = cleanInput($user["username"]);
+            $user["containerPort"] = cleanInput($user["containerPort"]);
+            $user["permissionLevel"] = cleanInput($user["permissionLevel"]);
+
+            //validate id if its set
+            if (isset($user["userId"]))
+            {
+                if (!$this->validateInt($user["userId"]))
+                {
+                    $errorMessage[0]["content"] = "Invalid user id";
+                    $errorMessage[0]["success"] = false;
+                }
             }
 
             //validate username
@@ -110,6 +123,10 @@
             }
 
             $errorMessageJson = json_encode($errorMessage);
+
+            //repack sanitized data
+            $jsonData = json_encode($user, JSON_INVALID_UTF8_SUBSTITUTE);
+
             return false;
         }
 

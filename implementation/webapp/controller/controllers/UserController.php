@@ -81,12 +81,15 @@
 
         public function createUser()
         {
+            //hash password
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
             //user input into json object
             $data = new \stdClass();
-            $data -> userId = $_GET['userId'];
-            $data -> username = $_GET['username'];
-            $data -> permissionLevel = $_GET['permissionLevel'];
-            $data -> containerPort = $_GET['containerPort'];
+            $data -> username = $_POST['username'];
+            $data -> password = $password;
+            $data -> permissionLevel = $_POST['permissionLevel'];
+            $data -> containerPort = $_POST['containerPort'];
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //prepare success message
@@ -97,7 +100,7 @@
             $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php?message=".urlencode(json_encode($successMessage));
             $this->failurePath = "/honours/webapp/view/adminArea/users/userDashboard.php";
  
-            return parent::delete($jsonData);
+            return parent::create($jsonData);
         }
     }
 
