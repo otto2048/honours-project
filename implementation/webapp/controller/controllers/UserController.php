@@ -68,18 +68,18 @@
             $failureMessage[0]["success"] = false;
             $failureMessage[0]["content"] = "Failed to delete user. Try again?";
 
-            $this->failureMessageJson = json_encode($failureMessage);
+            $this->failurePathVariables["message"] = json_encode($failureMessage);
+            $this->failurePathVariables["id"] = $this->validationObj->cleanInput($data->userId);
 
             //prepare success message
             $successMessage[0]["success"] = true;
             $successMessage[0]["content"] = "Successfully deleted user";
 
-            $this->successMessageJson = json_encode($successMessage);
+            $this->successPathVariables["message"] = json_encode($successMessage);
 
             //set success and failure paths
             $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php";
             $this->failurePath = "/honours/webapp/view/adminArea/users/user.php";
-            $this->failurePathVariables = "?id=".$this->validationObj->cleanInput($data->userId);
 
             return parent::delete($jsonData);
         }
@@ -101,13 +101,13 @@
             $successMessage[0]["success"] = true;
             $successMessage[0]["content"] = "Successfully created user";
 
-            $this->successMessageJson = json_encode($successMessage);
+            $this->successPathVariables["message"] = json_encode($successMessage);
 
             //prepare error message
             $failureMessage[0]["success"] = false;
             $failureMessage[0]["content"] = "Failed to create user. Try again?";
 
-            $this->failureMessageJson = json_encode($failureMessage);
+            $this->failurePathVariables["message"] = json_encode($failureMessage);
 
             //set success and failure paths
             $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php";
@@ -130,15 +130,19 @@
             $successMessage[0]["success"] = true;
             $successMessage[0]["content"] = "Successfully updated user";
 
+            $this->successPathVariables["message"] = json_encode($successMessage);
+            $this->successPathVariables["id"] = $this->validationObj->cleanInput($data->userId);
+
             //prepare error message
             $failureMessage[0]["success"] = false;
             $failureMessage[0]["content"] = "Failed to update user. Try again?";
 
+            $this->failurePathVariables["message"] = json_encode($failureMessage);
+            $this->failurePathVariables["id"] = $this->validationObj->cleanInput($data->userId);
+
             //set success and failure paths
             $this->successPath = "/honours/webapp/view/adminArea/users/user.php";
-            $this->successPathVariables = "?id=".$this->validationObj->cleanInput($data->userId);
             $this->failurePath = "/honours/webapp/view/adminArea/users/updateUser.php";
-            $this->failurePathVariables = "?id=".$this->validationObj->cleanInput($data->userId);
 
             return parent::update($jsonData);
         }

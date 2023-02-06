@@ -1,4 +1,5 @@
 <?php
+
     //include validation
     require_once("Validation.php");
 
@@ -15,13 +16,9 @@
         protected $successPath;
         protected $failurePath;
 
-        //url variables
+        //url variables, as objects
         protected $successPathVariables;
         protected $failurePathVariables;
-
-        //message json objects to add as a url variable before the user is send somewhere
-        protected $successMessageJson;
-        protected $failureMessageJson;
 
         const UPDATE_OPERATION = 0;
         const CREATE_OPERATION = 1;
@@ -38,6 +35,10 @@
 
             //begin the session
             session_start();
+
+            //init path variables
+            $this->successPathVariables = array();
+            $this->failurePathVariables = array();
         }
 
         private function genericControllerOperation($type, $jsonData, $validated)
@@ -46,12 +47,14 @@
             {
                 $path = $this->failurePath;
 
-                //add failureMessageJson to other url variables
-                $failurePathVariables .= "&?message=".urlencode($this->failureMessageJson);
-
-                if ($this->failurePathVariables)
+                //add failure path variables to path
+                if (count($this->failurePathVariables))
                 {
-                    $path .= $this->failurePathVariables;
+                    $path .= "?";
+                }
+                foreach ($this->failurePathVariables as $key => $variable)
+                {
+                    $path .= $key."=".urlencode($variable)."&";
                 }
 
                 echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
@@ -76,12 +79,14 @@
                 {
                     $path = $this->successPath;
 
-                    //add successMessageJson to other url variables
-                    $successPathVariables .= "&?message=".urlencode($this->successMessageJson);
-                    
-                    if ($this->successPathVariables)
+                    //add success path variables to path
+                    if (count($this->successPathVariables))
                     {
-                        $path .= $this->successPathVariables;
+                        $path .= "?";
+                    }
+                    foreach ($this->successPathVariables as $key => $variable)
+                    {
+                        $path .= $key."=".urlencode($variable)."&";
                     }
 
                     echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
@@ -90,12 +95,14 @@
                 {
                     $path = $this->failurePath;
 
-                    //add failureMessageJson to other url variables
-                    $failurePathVariables .= "&?message=".urlencode($this->failureMessageJson);
-
-                    if ($this->failurePathVariables)
+                    //add failure path variables to path
+                    if (count($this->failurePathVariables))
                     {
-                        $path .= $this->failurePathVariables;
+                        $path .= "?";
+                    }
+                    foreach ($this->failurePathVariables as $key => $variable)
+                    {
+                        $path .= $key."=".urlencode($variable)."&";
                     }
 
                     echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
@@ -103,7 +110,7 @@
             }  
         }
 
-        private function prepareCreateUpdate(&$jsonData)
+        private function prepareCreateUpdate(&$jsonData, &$validated)
         {
             //sanitize and validate input
             $errorMessagesJSON = null;
@@ -115,21 +122,22 @@
                 //add error messages to failure message json
                 $errorMessages = json_decode($errorMessagesJSON, JSON_INVALID_UTF8_SUBSTITUTE);
 
-                $failureMessage = json_decode($this->failureMessageJson, JSON_INVALID_UTF8_SUBSTITUTE);
+                $failureMessage = json_decode($this->failurePathVariables["message"], JSON_INVALID_UTF8_SUBSTITUTE);
 
-                for ($errorMessages as $error)
+                foreach ($errorMessages as $error)
                 {
                     array_push($failureMessage, $error);
                 }
 
-                $this->failureMessageJson = json_encode($failureMessage);
+                $this->failurePathVariables["message"] = json_encode($failureMessage);
             }
         }
 
         //parameters: object as json string with data labels and data values to be inserted into the database
         public function create($jsonData)
         {
-            prepareCreateUpdate($jsonData);
+            $validated = false;
+            $this->prepareCreateUpdate($jsonData, $validated);
 
             $this->genericControllerOperation(Controller::CREATE_OPERATION, $jsonData, $validated);
         }
@@ -137,7 +145,8 @@
         //parameters: object as json string with data labels and data values to be inserted into the database
         public function update($jsonData)
         {
-            prepareCreateUpdate($jsonData);
+            $validated = false;
+            $this->prepareCreateUpdate($jsonData, $validated);
 
             $this->genericControllerOperation(Controller::UPDATE_OPERATION, $jsonData, $validated);
         }
