@@ -13,10 +13,10 @@ function preparePage() {
 
 function addSelected (page) {
     var link = document.getElementsByClassName("nav-link");
+
     for (var i=0; i<link.length; i++)
     {
-        console.log(link[i].textContent);
-        if (link[i].getAttribute("href") == page) {
+        if (link[i].getAttribute("href").substring(link[i].getAttribute("href").lastIndexOf('/') + 1) == page) {
             link[i].classList.add("active");
             link[i].setAttribute("aria-current", "page");
             break;
