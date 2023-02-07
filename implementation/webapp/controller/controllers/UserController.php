@@ -3,17 +3,14 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Controller.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
 
     class UserController extends Controller
     {
         //function to handle user login
         //return void
-        public function loginUser()
+        public function loginUser($usernameInput, $passwordInput)
         {
-            //user input
-            $passwordInput=$_POST['password'];
-            $usernameInput = $_POST["username"];
-
             $username = $this->validationObj->cleanInput($usernameInput);
 
             //prepare error message
@@ -118,12 +115,61 @@
 
         public function signUpUser()
         {
+            //hash password
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+            //user input into json object
+            $data = new \stdClass();
+            $data -> username = $_POST['username'];
+            $data -> password = $password;
+            
             if (isset($_POST["consentFormCheck"]))
             {
+                //set this as experimental or control group
+                $data -> permissionLevel = PermissionLevels::CONTROL;
             }
             else
             {
+                //guest user
+                $data -> permissionLevel = PermissionLevels::GUEST;
             }
+
+            //TODO: set container port based on some validation metric
+            
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //prepare error message
+            $failureMessage[0]["success"] = false;
+            $failureMessage[0]["content"] = "Sign up failed. Try again?";
+
+            $this->failurePathVariables["message"] = json_encode($failureMessage);
+
+            //set failure path
+            $this->failurePath = "/honours/webapp/view/userArea/signUp.php";
+
+            //set success path to null, dont want to go anywhere on success
+            $this->successPath = null;
+ 
+            //create user
+            $creation = parent::create($jsonData);
+
+            var_dump($creation);
+
+            if ($creation)
+            {
+                //login user
+                $this->loginUser($_POST["username"], $_POST['password']);
+            }
+            else
+            {
+                $path = $this->constructPath($this->failurePath, $this->failurePathVariables);
+
+                echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
+            }
+
+            //prepare error message
+            $message[0]["success"] = false;
+            $message[0]["content"] = "Login failed, invalid username or password";
         }
 
         public function updateUser()

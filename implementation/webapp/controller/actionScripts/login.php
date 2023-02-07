@@ -8,7 +8,7 @@
     {
         $loginController = new UserController(ModelClassTypes::USER);
 
-        $loginController -> loginUser();
+        $loginController -> loginUser($_POST["username"], $_POST["password"]);
     }
 
     actionLoginUser();

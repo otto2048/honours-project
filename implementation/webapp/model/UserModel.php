@@ -80,11 +80,14 @@
         }
 
         //create a user
+        //TODO: update this once container port is sorted
         public function createData($jsonData)
         {
-            $this->sqlStmt = 'INSERT INTO honours_user (username, password, permissionLevel, containerPort) VALUES (?, ?, ?, ?)';
+          //  $this->sqlStmt = 'INSERT INTO honours_user (username, password, permissionLevel, containerPort) VALUES (?, ?, ?, ?)';
+            $this->sqlStmt = 'INSERT INTO honours_user (username, password, permissionLevel) VALUES (?, ?, ?)';
 
-            $paramTypes = "ssii";
+           // $paramTypes = "ssii";
+            $paramTypes = "ssi";
 
             return parent::create($jsonData, $paramTypes);
         }

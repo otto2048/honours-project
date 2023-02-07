@@ -45,19 +45,14 @@
         {
             if (!$validated)
             {
-                $path = $this->failurePath;
-
-                //add failure path variables to path
-                if (count($this->failurePathVariables))
+                if ($this->failurePath)
                 {
-                    $path .= "?";
-                }
-                foreach ($this->failurePathVariables as $key => $variable)
-                {
-                    $path .= $key."=".urlencode($variable)."&";
+                    $path = $this->constructPath($this->failurePath, $this->failurePathVariables);
+    
+                    echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
                 }
 
-                echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
+                return false;
             }
             else
             {
@@ -77,37 +72,44 @@
 
                 if ($result)
                 {
-                    $path = $this->successPath;
-
-                    //add success path variables to path
-                    if (count($this->successPathVariables))
+                    if ($this->successPath)
                     {
-                        $path .= "?";
-                    }
-                    foreach ($this->successPathVariables as $key => $variable)
-                    {
-                        $path .= $key."=".urlencode($variable)."&";
+                        $path = $this->constructPath($this->successPath, $this->successPathVariables);
+    
+                        echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
                     }
 
-                    echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
+                    return true;
                 }
                 else
                 {
-                    $path = $this->failurePath;
+                    if ($this->failurePath)
+                    {
+                        $path = $this->constructPath($this->failurePath, $this->failurePathVariables);
 
-                    //add failure path variables to path
-                    if (count($this->failurePathVariables))
-                    {
-                        $path .= "?";
-                    }
-                    foreach ($this->failurePathVariables as $key => $variable)
-                    {
-                        $path .= $key."=".urlencode($variable)."&";
+                        echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
                     }
 
-                    echo '<script type="text/javascript">window.open("'.$path.'", name="_self")</script>';
+                    return false;
                 }
             }  
+        }
+
+        protected function constructPath($pathUrl, $variables)
+        {
+            $path = $pathUrl;
+
+            //add path variables to path
+            if (count($variables))
+            {
+                $path .= "?";
+            }
+            foreach ($variables as $key => $variable)
+            {
+                $path .= $key."=".urlencode($variable)."&";
+            }
+
+            return $path;
         }
 
         private function prepareCreateUpdate(&$jsonData, &$validated)
@@ -139,7 +141,7 @@
             $validated = false;
             $this->prepareCreateUpdate($jsonData, $validated);
 
-            $this->genericControllerOperation(Controller::CREATE_OPERATION, $jsonData, $validated);
+            return $this->genericControllerOperation(Controller::CREATE_OPERATION, $jsonData, $validated);
         }
 
         //parameters: object as json string with data labels and data values to be inserted into the database
@@ -148,7 +150,7 @@
             $validated = false;
             $this->prepareCreateUpdate($jsonData, $validated);
 
-            $this->genericControllerOperation(Controller::UPDATE_OPERATION, $jsonData, $validated);
+            return $this->genericControllerOperation(Controller::UPDATE_OPERATION, $jsonData, $validated);
         }
 
         //parameters: object as json string with data labels and data values that represent the primary key of this record
@@ -157,7 +159,7 @@
             //sanitize and validate primary key input
             $validated = $this->validationObj->validatePK($this->modelObjClass, $jsonData);
 
-            $this->genericControllerOperation(Controller::DELETE_OPERATION, $jsonData, $validated);
+            return $this->genericControllerOperation(Controller::DELETE_OPERATION, $jsonData, $validated);
         }
     }
 

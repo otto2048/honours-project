@@ -82,7 +82,6 @@
             }
 
             $user["username"] = $this->cleanInput($user["username"]);
-            $user["containerPort"] = $this->cleanInput($user["containerPort"]);
             $user["permissionLevel"] = $this->cleanInput($user["permissionLevel"]);
 
             //validate id if its set
@@ -103,11 +102,24 @@
             }
 
             //validate container port
-            if (!$this->validateInt($user["containerPort"]))
+            // if (!$this->validateInt($user["containerPort"]))
+            // {
+            //     $errorMessage[2]["content"] = "Invalid container port";
+            //     $errorMessage[2]["success"] = false;
+            // }
+
+            //TODO: replace temp container port code once all users are being assigned a port
+            if (isset($user["containerPort"]))
             {
-                $errorMessage[2]["content"] = "Invalid container port";
-                $errorMessage[2]["success"] = false;
+            $user["containerPort"] = $this->cleanInput($user["containerPort"]);
+
+                if (!$this->validateInt($user["containerPort"]))
+                {
+                    $errorMessage[2]["content"] = "Invalid container port";
+                    $errorMessage[2]["success"] = false;
+                }
             }
+            
 
             //validate permission level
             if (!$this->validateUserPermissionLevel($user["permissionLevel"]))
