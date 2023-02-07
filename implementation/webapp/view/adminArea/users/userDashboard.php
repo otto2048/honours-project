@@ -135,10 +135,6 @@
                             <input type="text" class="form-control" name="username" required id="username">
                         </div>
                         <div class="form-group">
-                            <label for="containerPort">Container Port:</label>
-                            <input type="text" class="form-control" name="containerPort" id="containerPort">
-                        </div>
-                        <div class="form-group">
                             <label for="password">Password:</label>
                             <input type="password" class="form-control" name="password" required id="password">
                         </div>

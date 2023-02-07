@@ -95,7 +95,6 @@
             $data -> username = $_POST['username'];
             $data -> password = $password;
             $data -> permissionLevel = $_POST['permissionLevel'];
-            $data -> containerPort = $_POST['containerPort'];
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //prepare success message
