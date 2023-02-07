@@ -16,7 +16,7 @@
         public function __construct()
         {
             //set up connection
-            $this->conn = new Connection();
+            $this->conn = new Connection();            
         }
 
         public function __destruct()
@@ -64,6 +64,12 @@
 
         private function runQuery($jsonVariables = null, $paramTypes = null, $closeStatementOnFailure = true)
         {
+            //check db conn
+            if ($this->conn->getConnection() == null)
+            {
+                return false;
+            }
+
             //prepare query
             $this->stmt = mysqli_prepare($this->conn->getConnection(), $this->sqlStmt);
 
@@ -100,7 +106,7 @@
 
             if (!$querySuccess)
             {
-                return null;
+                return json_encode(array("isempty"=>$emptyMessage), JSON_INVALID_UTF8_SUBSTITUTE);
             }
 
             //get the result
@@ -127,7 +133,7 @@
                 }
             }
 
-            return null;
+            return json_encode(array("isempty"=>$emptyMessage), JSON_INVALID_UTF8_SUBSTITUTE);
         }
 
         //deletes a record specified by primary key
@@ -143,7 +149,7 @@
             mysqli_stmt_close($this->stmt);
 
             //return true/false based on whether query succeeded
-            return true;
+            return $querySuccess;
         }
 
         //creates a record
