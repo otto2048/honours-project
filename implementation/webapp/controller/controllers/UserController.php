@@ -116,6 +116,16 @@
             return parent::create($jsonData);
         }
 
+        public function signUpUser()
+        {
+            if (isset($_POST["consentFormCheck"]))
+            {
+            }
+            else
+            {
+            }
+        }
+
         public function updateUser()
         {
             //user input into json object

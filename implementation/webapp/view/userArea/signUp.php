@@ -81,18 +81,19 @@
                         <label class="form-check-label" for="consentFormCheck">
                             I Consent
                         </label>
-                        <input class="form-check-input" type="checkbox" value="" id="consentFormCheck" checked>
+                        <input class="form-check-input" type="checkbox" name="consentFormCheck" id="consentFormCheck" checked>
 
                     </div>
 
+                    <div class="form-group"> 
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" name="username" id="username" required readonly>
+                    </div>
+                        
                     <div id="getUserDetails">
-                        <div class="form-group"> 
-                            <label for="username">Username:</label>
-                            <input type="text" class="form-control" name="username" id="username" required readonly>
-                        </div>
                         <div class="form-group">
                             <label for="password">Enter Password:</label>
-                            <input type="password" class="form-control" name="password" id="password" required/>
+                            <input type="password" class="form-control" name="password" id="password" required />
                         </div>
                     </div>
                     <input type="submit" id="signUpBtn" class="btn theme-darker text-light mt-2 float-end" name="button" value="Sign up with username and password"/>
