@@ -24,6 +24,8 @@
                         echo 'You have been logged out.';
                     }
                 ?>
+
+                <!-- TODO: participant debrief form here -->
             </div>
         </div>
     </body>

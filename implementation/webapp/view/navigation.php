@@ -61,6 +61,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/honours/webapp/view/login.php">Login</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/honours/webapp/view/userArea/signUp.php">Sign up</a>
+                        </li>
 
                         <?php
                             }
