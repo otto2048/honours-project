@@ -54,29 +54,33 @@
             }
         }
 
-        public function deleteUser()
+        public function deleteUser($userId, $automated = false)
         {
             //user input into json object
             $data = new \stdClass();
-            $data -> userId = $_GET['userId'];
+            $data -> userId = $userId;
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //prepare error message
-            $failureMessage[0]["success"] = false;
-            $failureMessage[0]["content"] = "Failed to delete user. Try again?";
-
-            $this->failurePathVariables["message"] = json_encode($failureMessage);
-            $this->failurePathVariables["id"] = $this->validationObj->cleanInput($data->userId);
-
-            //prepare success message
-            $successMessage[0]["success"] = true;
-            $successMessage[0]["content"] = "Successfully deleted user";
-
-            $this->successPathVariables["message"] = json_encode($successMessage);
-
-            //set success and failure paths
-            $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php";
-            $this->failurePath = "/honours/webapp/view/adminArea/users/user.php";
+            if (!$automated)
+            {
+                $failureMessage[0]["success"] = false;
+                $failureMessage[0]["content"] = "Failed to delete user. Try again?";
+    
+                $this->failurePathVariables["message"] = json_encode($failureMessage);
+                $this->failurePathVariables["id"] = $this->validationObj->cleanInput($data->userId);
+    
+                //prepare success message
+                $successMessage[0]["success"] = true;
+                $successMessage[0]["content"] = "Successfully deleted user";
+    
+                $this->successPathVariables["message"] = json_encode($successMessage);
+    
+                //set success and failure paths
+                $this->successPath = "/honours/webapp/view/adminArea/users/userDashboard.php";
+                $this->failurePath = "/honours/webapp/view/adminArea/users/user.php";
+            }
+            
 
             return parent::delete($jsonData);
         }
@@ -152,8 +156,6 @@
  
             //create user
             $creation = parent::create($jsonData);
-
-            var_dump($creation);
 
             if ($creation)
             {
