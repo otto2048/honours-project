@@ -1,6 +1,7 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/AnswerTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
@@ -112,8 +113,6 @@
 
                                 <li>Availability: <?php echo $permission->getPermissionLevel($exerciseData[0]["availability"]) ?> and down</li>
                             </ul>
-                        
-                    </div>
 
                 <?php
 
@@ -124,6 +123,54 @@
                         <h1>View Exercise</h1>
                 <?php
                         echo "Failed to load exercise data";
+                    }
+
+                    //get exercise answers
+                    $jsonExerciseAnswerData = $exerciseModel->getExerciseAnswers($input);
+                
+                    $exerciseAnswerData = json_decode($jsonExerciseAnswerData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                    if (!isset($exerciseAnswerData["isempty"]))
+                    {
+                ?>
+                        <p class="pb-1 pt-3 mb-0">Click on column headings to sort Exercise Answers by this column</p>
+                        <div class="table-responsive">
+                            <table class="table tablesort tablesearch-table" id="exerciseAnswerInfoTable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-tablesort-type="int">ID</th>
+                                        <th scope="col" data-tablesort-type="string">Input</th>
+                                        <th scope="col" data-tablesort-type="string">Input Type</th>
+                                        <th scope="col" data-tablesort-type="string">Output</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+
+                                        $answerType = new AnswerTypes();
+
+                                        //display exercise data
+                                        foreach ($exerciseAnswerData as $row)
+                                        {
+                                            echo '<tr>';
+                                            echo '<td>'.$row["codeAnswerId"].'</td>';
+                                            echo '<td>'.$row["input"].'</td>';
+                                            echo '<td>'.$answerType->getAnswerType($row["inputType"]).'</td>';
+                                            echo '<td>'.$row["output"].'</td>';
+                                            echo '</tr>';
+                                        }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                <?php
+                    }
+                    else
+                    {
+                ?>
+                        <h1>View Exercise Answers</h1>
+                <?php
+                        echo "Failed to load exercise answers";
                     }
                 }
                 else
@@ -159,5 +206,8 @@
         </div>
 
         <script src="../../js/deleteConfirmation.js"></script>
+
+        <!-- Auto tables plugin -->
+        <script src="../../js/auto-sorter-filter/auto-tables.js"></script>
     </body>
 </html>
