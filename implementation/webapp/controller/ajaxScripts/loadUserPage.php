@@ -43,7 +43,6 @@
 
                 echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
 
-                echo '<td><a href="user.php?id='.$row["userId"].'" class="btn theme-darker text-light" role="button">More info...</a></td>';
                 echo '</tr>';
             }
         }
