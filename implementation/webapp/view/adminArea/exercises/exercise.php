@@ -135,7 +135,7 @@
                 ?>
                         <p class="pb-1 pt-3 mb-0">Click on column headings to sort Exercise Answers by this column</p>
                         <div class="table-responsive">
-                            <table class="table tablesort tablesearch-table" id="exerciseAnswerInfoTable">
+                            <table class="table tablesort tablesearch-table modifyRowsTable" id="exerciseAnswerInfoTable">
                                 <thead>
                                     <tr>
                                         <th scope="col" data-tablesort-type="int">ID</th>
@@ -153,12 +153,12 @@
                                         //display exercise data
                                         foreach ($exerciseAnswerData as $row)
                                         {
-                                            echo '<tr>';
+                                            echo '<tr id="row'.$row["codeAnswerId"].'">';
                                             echo '<td>'.$row["codeAnswerId"].'</td>';
                                             echo '<td>'.$row["input"].'</td>';
                                             echo '<td>'.$answerType->getAnswerType($row["inputType"]).'</td>';
                                             echo '<td>'.$row["output"].'</td>';
-                                            echo '<td><button class="btn btn-danger remove" role="button"><span class="id">'.$row["codeAnswerId"].'</span>Remove</button></td>';
+                                            echo '<td><button class="btn btn-danger remove" role="button"><span class="id d-none">'.$row["codeAnswerId"].'</span>Remove</button></td>';
                                             echo '</tr>';
                                         }
                                     ?>
@@ -208,7 +208,7 @@
         </div>
 
         <script src="../../js/deleteConfirmation.js"></script>
-        <script src="../../js/modifyExerciseAnswers.js"></script>
+        <script src="../../js/modifyTableRows.js"></script>
 
         <!-- Auto tables plugin -->
         <script src="../../js/auto-sorter-filter/auto-tables.js"></script>

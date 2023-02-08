@@ -48,19 +48,6 @@
             return parent::retrieve(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
 
-        //get the answers for an exercise
-        public function getExerciseAnswers($codeId)
-        {
-            $this->sqlStmt = "SELECT * FROM honours_code_answer INNER JOIN honours_code_exercise ON codeId_fk = honours_code_exercise.codeId WHERE codeId_fk = ?";
-
-            $WHERE_variables = new \stdClass();
-            $WHERE_variables -> codeId_fk = $codeId;
-
-            $paramTypes = "i";
-
-            return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
-        }
-
         //delete an exercise
         public function deleteData($jsonData)
         {
@@ -95,6 +82,32 @@
             $paramTypes = "ssssiii";
 
             return parent::update($jsonData, $paramTypes);
+        }
+
+        //get the answers for an exercise
+        public function getExerciseAnswers($codeId)
+        {
+            $this->sqlStmt = "SELECT * FROM honours_code_answer INNER JOIN honours_code_exercise ON codeId_fk = honours_code_exercise.codeId WHERE codeId_fk = ?";
+
+            $WHERE_variables = new \stdClass();
+            $WHERE_variables -> codeId_fk = $codeId;
+
+            $paramTypes = "i";
+
+            return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+        }
+
+        //delete an answer for an exercise
+        public function deleteExerciseAnswer($answerId)
+        {
+            $this->sqlStmt = 'DELETE FROM honours_code_answer WHERE codeAnswerId = ?';
+
+            $WHERE_variables = new \stdClass();
+            $WHERE_variables->answerId = $answerId;
+
+            $paramTypes = "i";
+
+            return parent::delete(json_encode($WHERE_variables), $paramTypes);
         }
     }
 
