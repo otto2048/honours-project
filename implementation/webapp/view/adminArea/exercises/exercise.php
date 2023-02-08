@@ -91,9 +91,22 @@
                             <ul>
                                 <li>Exercise ID: <?php echo $exerciseData[0]["codeId"] ?></li>
                                 <li>Title: <?php echo $exerciseData[0]["title"] ?></li>
-                                <li>Description: <?php echo $exerciseData[0]["description"] ?></li>
-                                <li>Exercise File: <?php echo $exerciseData[0]["exerciseFile"] ?></li>
-                                <li>Instructions File: <?php echo $exerciseData[0]["instructionsFile"] ?></li>
+
+                                <?php
+                                    if ($exerciseData[0]["description"])
+                                    {
+                                ?>
+                                        <li>Description: <?php echo $exerciseData[0]["description"] ?></li>
+                                <?php } ?>
+
+                                <li><a href="/honours/webapp/view/adminArea/exercises/exerciseFiles/<?php echo $exerciseData[0]["exerciseFile"]; ?>">Exercise File: <?php echo $exerciseData[0]["exerciseFile"] ?></a></li>
+                                
+                                <?php
+                                    if ($exerciseData[0]["instructionsFile"])
+                                    {
+                                ?>
+                                        <li><a href="/honours/webapp/view/adminArea/exercises/exerciseFiles/<?php echo $exerciseData[0]["instructionsFile"]; ?>">Instructions File: <?php echo $exerciseData[0]["instructionsFile"] ?></a></li>
+                                <?php } ?>
 
                                 <li>Visibility: <?php if ($exerciseData[0]["visible"]) {echo "True";} else {echo "False";} ?></li>
 

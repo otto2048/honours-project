@@ -101,8 +101,8 @@
 
                                                 echo '<td><u><a href="exercise.php?id='.$row["codeId"].'" class="moreInfoLink">'.$row["title"].'</a></u></td>';
                                                 echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["description"].'</td>';
-                                                echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
-                                                echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
+                                                echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/adminArea/exercises/exerciseFiles/'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
+                                                echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/adminArea/exercises/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
 
                                                 echo '<td>';
                                                 if ($row["visible"])
