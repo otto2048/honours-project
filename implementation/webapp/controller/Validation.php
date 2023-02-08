@@ -184,8 +184,14 @@
         //validate exercise PK
         private function validateExercisePK(&$jsonData)
         {
-            return false;
+            $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
 
+            $data["codeId"] = $this->cleanInput($data["codeId"]);
+
+            //IMPORTANT: make sure jsonData is set to the sanitized version of the data
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            return $this->validateInt($data["codeId"]);
         }
     }
 
