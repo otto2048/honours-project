@@ -39,18 +39,10 @@
             //user input into json object
             $data = new \stdClass();
             $data -> title = $_POST['title'];
-
-            if (isset($_POST['description']))
-            {
-                $data -> description = $_POST['description'];
-            }
-
+            $data -> description = $_POST['description'];
+            
             $data -> exerciseFile = $_POST['exerciseFile'];
-
-            if (isset($_POST['instructionsFile']))
-            {
-                $data -> instructionsFile = $_POST['instructionsFile'];
-            }
+            $data -> instructionsFile = $_POST['instructionsFile'];
 
             if (isset($_POST['visible']))
             {

@@ -180,7 +180,7 @@
         }
 
         //validate exercise object
-        private function validateExercise(&$jsonData)
+        private function validateExercise(&$jsonData, &$errorMessageJson)
         {
             $errorMessage = array();
 
@@ -201,9 +201,9 @@
 
             $exercise["exerciseFile"] = $this->cleanInput($exercise["exerciseFile"]);
 
-            if (isset($exercise["instructionsFlie"]))
+            if (isset($exercise["instructionsFile"]))
             {
-                $exercise["instructionsFlie"] = $this->cleanInput($exercise["instructionsFlie"]);
+                $exercise["instructionsFile"] = $this->cleanInput($exercise["instructionsFile"]);
             }
 
             $exercise["visible"] = $this->cleanInput($exercise["visible"]);
@@ -231,53 +231,53 @@
             {
                 if (!$this->validateString($exercise["description"], Validation::EXERCISE_DESCRIPTION_LENGTH))
                 {
-                    $errorMessage[1]["content"] = "Invalid description";
-                    $errorMessage[1]["success"] = false;
+                    $errorMessage[2]["content"] = "Invalid description";
+                    $errorMessage[2]["success"] = false;
                 }
             }
 
             //validate exercise file
             if (!$this->validateFileName($exercise["exerciseFile"], Validation::EXERCISE_EXERCISEFILE_LENGTH, "json"))
             {
-                $errorMessage[1]["content"] = "Invalid exercise file location";
-                $errorMessage[1]["success"] = false;
+                $errorMessage[3]["content"] = "Invalid exercise file location";
+                $errorMessage[3]["success"] = false;
             }
 
             //validate instructions file if its set
-            if (isset($exercise["instructionsFlie"]))
+            if (isset($exercise["instructionsFile"]))
             {
-                if (!$this->validateFileName($exercise["instructionsFlie"], Validation::EXERCISE_EXERCISEFILE_LENGTH, "json"))
+                if (strlen($exercise["instructionsFile"]) != 0 && !$this->validateFileName($exercise["instructionsFile"], Validation::EXERCISE_INSTRUCTIONSFILE_LENGTH, "json"))
                 {
-                    $errorMessage[1]["content"] = "Invalid instructions file location";
-                    $errorMessage[1]["success"] = false;
+                    $errorMessage[4]["content"] = "Invalid instructions file location";
+                    $errorMessage[4]["success"] = false;
                 }
-            }
-
-            //validate visibility
-            if (!is_bool($exercise["visible"]))
-            {
-                $errorMessage[1]["content"] = "Invalid visibility value";
-                $errorMessage[1]["success"] = false;
             }
 
             //validate availability
             if (!$this->validateUserPermissionLevel($exercise["availability"]))
             {
-                $errorMessage[3]["content"] = "Invalid availability";
-                $errorMessage[3]["success"] = false;
+                $errorMessage[5]["content"] = "Invalid availability";
+                $errorMessage[5]["success"] = false;
             }
+
+            //check if we found any errors
+            if (count($errorMessage) == 0)
+            {
+                return true;
+            }
+
+            $errorMessageJson = json_encode($errorMessage);
+
+            //repack sanitized data
+            $jsonData = json_encode($exercise, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            return false;
         }
 
         private function validateFileName($input, $length, $extension)
         {
             //check length
             if (!$this->validateString($input, $length))
-            {
-                return false;
-            }
-
-            //check this is a valid url
-            if (!filter_var($input, FILTER_VALIDATE_URL)) 
             {
                 return false;
             }
