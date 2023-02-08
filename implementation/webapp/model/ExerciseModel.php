@@ -63,6 +63,16 @@
 
             return parent::delete(json_encode($WHERE_variables), $paramTypes);
         }
+
+        //create an exercise
+        public function createData($jsonData)
+        {
+            $this->sqlStmt = 'INSERT INTO honours_code_exercise (title, description, exerciseFile, instructionsFile, visible, availability) VALUES (?, ?, ?, ?, ?, ?)';
+
+            $paramTypes = "ssssii";
+
+            return parent::create($jsonData, $paramTypes);
+        }
     }
 
 ?>

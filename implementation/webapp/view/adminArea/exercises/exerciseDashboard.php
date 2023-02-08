@@ -162,7 +162,7 @@
                             <input type="text" class="form-control" name="instructionsFile" id="instructionsFile">
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" required id="visible" name="visible">
+                            <input class="form-check-input" type="checkbox" value="" id="visible" name="visible">
                             <label class="form-check-label" for="visible">
                                 Visible to users
                             </label>
