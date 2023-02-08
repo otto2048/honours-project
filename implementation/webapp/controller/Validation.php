@@ -7,6 +7,11 @@
         //database data constraints
         const USERNAME_LENGTH = 50;
 
+        const EXERCISE_TITLE_LENGTH = 100;
+        const EXERCISE_DESCRIPTION_LENGTH = 250;
+        const EXERCISE_EXERCISEFILE_LENGTH = 250;
+        const EXERCISE_INSTRUCTIONSFILE_LENGTH = 250;
+
         public function validate($modelClassType, &$jsonData, &$errorMessageJson)
         {
             switch ($modelClassType)
@@ -177,8 +182,113 @@
         //validate exercise object
         private function validateExercise(&$jsonData)
         {
-            return false;
+            $errorMessage = array();
 
+            $exercise = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //sanitize data
+            if (isset($exercise["codeId"]))
+            {
+                $exercise["codeId"] = $this->cleanInput($exercise["codeId"]);
+            }
+
+            $exercise["title"] = $this->cleanInput($exercise["title"]);
+
+            if (isset($exercise["description"]))
+            {
+                $exercise["description"] = $this->cleanInput($exercise["description"]);
+            }
+
+            $exercise["exerciseFile"] = $this->cleanInput($exercise["exerciseFile"]);
+
+            if (isset($exercise["instructionsFlie"]))
+            {
+                $exercise["instructionsFlie"] = $this->cleanInput($exercise["instructionsFlie"]);
+            }
+
+            $exercise["visible"] = $this->cleanInput($exercise["visible"]);
+            $exercise["availability"] = $this->cleanInput($exercise["availability"]);
+
+            //validate id if its set
+            if (isset($exercise["codeId"]))
+            {
+                if (!$this->validateInt($exercise["codeId"]))
+                {
+                    $errorMessage[0]["content"] = "Invalid exerise id";
+                    $errorMessage[0]["success"] = false;
+                }
+            }
+
+            //validate title
+            if (!$this->validateString($exercise["title"], Validation::EXERCISE_TITLE_LENGTH))
+            {
+                $errorMessage[1]["content"] = "Invalid title";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //validate description if its set
+            if (isset($exercise["description"]))
+            {
+                if (!$this->validateString($exercise["description"], Validation::EXERCISE_DESCRIPTION_LENGTH))
+                {
+                    $errorMessage[1]["content"] = "Invalid description";
+                    $errorMessage[1]["success"] = false;
+                }
+            }
+
+            //validate exercise file
+            if (!$this->validateFileName($exercise["exerciseFile"], Validation::EXERCISE_EXERCISEFILE_LENGTH, "json"))
+            {
+                $errorMessage[1]["content"] = "Invalid exercise file location";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //validate instructions file if its set
+            if (isset($exercise["instructionsFlie"]))
+            {
+                if (!$this->validateFileName($exercise["instructionsFlie"], Validation::EXERCISE_EXERCISEFILE_LENGTH, "json"))
+                {
+                    $errorMessage[1]["content"] = "Invalid instructions file location";
+                    $errorMessage[1]["success"] = false;
+                }
+            }
+
+            //validate visibility
+            if (!is_bool($exercise["visible"]))
+            {
+                $errorMessage[1]["content"] = "Invalid visibility value";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //validate availability
+            if (!$this->validateUserPermissionLevel($exercise["availability"]))
+            {
+                $errorMessage[3]["content"] = "Invalid availability";
+                $errorMessage[3]["success"] = false;
+            }
+        }
+
+        private function validateFileName($input, $length, $extension)
+        {
+            //check length
+            if (!$this->validateString($input, $length))
+            {
+                return false;
+            }
+
+            //check this is a valid url
+            if (!filter_var($input, FILTER_VALIDATE_URL)) 
+            {
+                return false;
+            }
+
+            //check extension
+            if (pathinfo($input, PATHINFO_EXTENSION) != $extension)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         //validate exercise PK
