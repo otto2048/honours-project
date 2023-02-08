@@ -142,6 +142,7 @@
                                         <th scope="col" data-tablesort-type="string">Input</th>
                                         <th scope="col" data-tablesort-type="string">Input Type</th>
                                         <th scope="col" data-tablesort-type="string">Output</th>
+                                        <th scope="col">Delete Answer</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -157,6 +158,7 @@
                                             echo '<td>'.$row["input"].'</td>';
                                             echo '<td>'.$answerType->getAnswerType($row["inputType"]).'</td>';
                                             echo '<td>'.$row["output"].'</td>';
+                                            echo '<td><button class="btn btn-danger remove" role="button"><span class="id">'.$row["codeAnswerId"].'</span>Remove</button></td>';
                                             echo '</tr>';
                                         }
                                     ?>
@@ -206,6 +208,7 @@
         </div>
 
         <script src="../../js/deleteConfirmation.js"></script>
+        <script src="../../js/modifyExerciseAnswers.js"></script>
 
         <!-- Auto tables plugin -->
         <script src="../../js/auto-sorter-filter/auto-tables.js"></script>
