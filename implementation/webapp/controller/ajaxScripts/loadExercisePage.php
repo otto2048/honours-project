@@ -52,7 +52,7 @@
                     echo "False";
                 }
                 echo '</td>';
-                echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and up</td>';
+                echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and down</td>';
                 echo '</tr>';
             }
         }

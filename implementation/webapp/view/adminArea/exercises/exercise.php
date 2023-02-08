@@ -110,7 +110,7 @@
 
                                 <li>Visibility: <?php if ($exerciseData[0]["visible"]) {echo "True";} else {echo "False";} ?></li>
 
-                                <li>Availability: <?php echo $permission->getPermissionLevel($exerciseData[0]["availability"]) ?> and up</li>
+                                <li>Availability: <?php echo $permission->getPermissionLevel($exerciseData[0]["availability"]) ?> and down</li>
                             </ul>
                         
                     </div>
