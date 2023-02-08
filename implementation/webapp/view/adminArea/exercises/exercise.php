@@ -51,6 +51,7 @@
                 {
                     //get exercise
                     $exerciseModel = new ExerciseModel();
+                    $answerType = new AnswerTypes();
 
                     $jsonExerciseData = $exerciseModel->getExercise($input);
 
@@ -161,7 +162,6 @@
                                     <tbody>
                                         <?php
 
-                                            $answerType = new AnswerTypes();
 
                                             //display exercise data
                                             foreach ($exerciseAnswerData as $row)
@@ -205,6 +205,38 @@
                 }             
             ?>
 
+            <!-- add new exercise answers -->
+            <h1>Add new Exercise Answer</h1>
+            <form role="form">
+                <input type="text" required hidden id="codeId" value="<?php echo $input ?>">
+                <div class="form-group">
+                    <label for="input">Input:</label>
+                    <input type="text" class="form-control" name="input" required id="input">
+                </div>
+                <div class="form-group pt-1">
+                    <label for="inputType">Input Type:</label>
+                    <select name="inputType" id="inputType">
+                        <?php
+                            $answerTypeRef = new \ReflectionClass("AnswerTypes");
+                            $values = $answerTypeRef->getConstants();
+
+                            foreach ($values as $value)
+                            {
+                                $optionString = '<option value = "';
+                                $optionString .= $value.'"';
+                                $optionString .= ">".$answerType->getAnswerType($value)."</option>";
+
+                                echo $optionString;
+                            }
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="output">Output:</label>
+                    <input type="text" class="form-control" name="output" required id="output">
+                </div>
+                <button class="btn btn-dark float-end mt-2" id="addRowBtn" role="button">Submit</button>
+            </form>
         
         </div>
 

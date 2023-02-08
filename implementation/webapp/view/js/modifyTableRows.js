@@ -13,6 +13,12 @@ function preparePage() {
                 deleteRow(id, $(".modifyRowsTable")[0].getAttribute("id"));
             }
     }(i));
+
+    //add add row event to submit button in form
+    $("#addRowBtn").onclick = function()
+    {
+        addRow($(".modifyRowsTable")[0].getAttribute("id"));
+    }
 }
 
 function deleteRow(id, type)
@@ -44,6 +50,42 @@ function deleteRow(id, type)
             {
                 //add message that row failed to delete
                 console.log("failed to delete");
+            }
+        }
+    });
+}
+
+function addRow(type)
+{
+    scriptURL = "";
+
+    switch(type)
+    {
+        case "exerciseAnswerInfoTable":
+            scriptURL = "/honours/webapp/controller/ajaxScripts/addExerciseAnswer.php";
+            itemData = {codeId: $("codeId")[0], input: $("#input")[0].value, inputType: $("#inputType")[0].value, output: $("#output")[0].value};
+            break;
+        default:
+            return;
+    }
+
+    $.ajax({
+        url: scriptURL,
+        type: "POST",
+        data: itemData,
+        dataType: JSON,
+        success: function(result)
+        {
+            if (result != 0)
+            {
+                //add the row
+                body = $(".modifyRowsTable")[0];
+                body.insertAdjacentHTML("beforeend", result);
+            }
+            else
+            {
+                //add message that row failed to add
+                console.log("failed to add");
             }
         }
     });

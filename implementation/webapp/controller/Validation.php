@@ -1,6 +1,7 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/AnswerTypes.php");
 
     class Validation
     {
@@ -12,6 +13,9 @@
         const EXERCISE_EXERCISEFILE_LENGTH = 250;
         const EXERCISE_INSTRUCTIONSFILE_LENGTH = 250;
 
+        const EXERCISE_ANSWER_INPUT = 50;
+        const EXERCISE_ANSWER_OUTPUT = 50;
+
         public function validate($modelClassType, &$jsonData, &$errorMessageJson)
         {
             switch ($modelClassType)
@@ -21,6 +25,9 @@
                     break;
                 case ModelClassTypes::EXERCISE:
                     return $this->validateExercise($jsonData, $errorMessageJson);
+                    break;
+                case ModelClassTypes::EXERCISE_ANSWER:
+                    return $this->validateExerciseAnswer($jsonData, $errorMessageJson);
                     break;
                 default:
                     return false;
@@ -133,6 +140,9 @@
                 $errorMessage[3]["success"] = false;
             }
 
+            //repack sanitized data
+            $jsonData = json_encode($user, JSON_INVALID_UTF8_SUBSTITUTE);
+
             //check if we found any errors
             if (count($errorMessage) == 0)
             {
@@ -141,8 +151,7 @@
 
             $errorMessageJson = json_encode($errorMessage);
 
-            //repack sanitized data
-            $jsonData = json_encode($user, JSON_INVALID_UTF8_SUBSTITUTE);
+            
 
             return false;
         }
@@ -166,6 +175,25 @@
             return true;
         }
 
+        private function validateInputType($input)
+        {
+            //check if this input type is a valid int
+            if (!$this->validateInt($input))
+            {
+                return false;
+            }
+
+            //check if this answer type is an actual answer type in the system
+            $answerTypes = new AnswerTypes();
+
+            if ($answerTypes->getAnswerType(intval($input)) == "Error finding status")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         //validate user PK
         private function validateUserPK(&$jsonData)
         {
@@ -177,6 +205,62 @@
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             return $this->validateInt($data["userId"]);
+        }
+
+        private function validateExerciseAnswer(&$jsonData, &$errorMessageJson)
+        {
+            $errorMessage = array();
+
+            $exerciseAnswer = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //sanitize data
+            $exerciseAnswer["codeId_fk"] = $this->cleanInput($exerciseAnswer["codeId_fk"]);
+            $exerciseAnswer["input"] = $this->cleanInput($exerciseAnswer["input"]);
+            $exerciseAnswer["inputType"] = $this->cleanInput($exerciseAnswer["inputType"]);
+            $exerciseAnswer["output"] = $this->cleanInput($exerciseAnswer["output"]);
+
+            //validate code id
+            if (!$this->validateInt($exerciseAnswer["codeId_fk"]))
+            {
+                $errorMessage[1]["content"] = "Invalid code ID";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //validate input
+            if (!$this->validateString($exerciseAnswer["input"], Validation::EXERCISE_ANSWER_INPUT))
+            {
+                $errorMessage[1]["content"] = "Invalid input";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //validate input type
+            if (!$this->validateInputType($exerciseAnswer["inputType"]))
+            {
+                $errorMessage[3]["content"] = "Invalid input type";
+                $errorMessage[3]["success"] = false;
+            }
+
+            //validate output
+            if (!$this->validateString($exerciseAnswer["output"], Validation::EXERCISE_ANSWER_OUTPUT))
+            {
+                $errorMessage[1]["content"] = "Invalid output";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //repack sanitized data
+            $jsonData = json_encode($user, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //check if we found any errors
+            if (count($errorMessage) == 0)
+            {
+                return true;
+            }
+
+            $errorMessageJson = json_encode($errorMessage);
+
+            
+
+            return false;
         }
 
         //validate exercise object
@@ -260,6 +344,9 @@
                 $errorMessage[5]["success"] = false;
             }
 
+            //repack sanitized data
+            $jsonData = json_encode($exercise, JSON_INVALID_UTF8_SUBSTITUTE);
+
             //check if we found any errors
             if (count($errorMessage) == 0)
             {
@@ -268,8 +355,7 @@
 
             $errorMessageJson = json_encode($errorMessage);
 
-            //repack sanitized data
-            $jsonData = json_encode($exercise, JSON_INVALID_UTF8_SUBSTITUTE);
+           
 
             return false;
         }

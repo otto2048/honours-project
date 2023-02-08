@@ -109,6 +109,16 @@
 
             return parent::delete(json_encode($WHERE_variables), $paramTypes);
         }
+
+        //add an exercise answer
+        public function addExerciseAnswer($jsonData)
+        {
+            $this->sqlStmt = 'INSERT INTO honours_code_answer (codeId_fk, input, inputType, output) VALUES (?, ?, ?, ?)';
+            
+            $paramTypes = "isis";
+
+            return parent::create($jsonData, $paramTypes);
+        }
     }
 
 ?>
