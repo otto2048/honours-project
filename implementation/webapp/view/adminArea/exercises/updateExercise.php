@@ -78,6 +78,7 @@
 
                             <!-- update exercise -->
                             <form role="form" method="POST" action="../../../controller/actionScripts/updateExercise.php">
+                                <input type="text" name="codeId" value=<?php echo $exerciseData[0]["codeId"] ?> required hidden readonly>
                                 <div class="form-group">
                                     <label for="title">Title:</label>
                                     <input type="text" class="form-control" name="title" required id="title" value="<?php echo $exerciseData[0]["title"]; ?>">

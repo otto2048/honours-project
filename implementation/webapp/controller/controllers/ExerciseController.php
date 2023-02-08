@@ -36,7 +36,7 @@
 
         public function createExercise()
         {
-            //user input into json object
+            //exercise input into json object
             $data = new \stdClass();
             $data -> title = $_POST['title'];
             $data -> description = $_POST['description'];
@@ -74,6 +74,51 @@
             $this->failurePath = "/honours/webapp/view/adminArea/exercises/exerciseDashboard.php";
 
             return parent::create($jsonData);
+        }
+
+        public function updateExercise()
+        {
+            //exercise input into json object
+            $data = new \stdClass();
+            $data -> title = $_POST['title'];
+            $data -> description = $_POST['description'];
+            
+            $data -> exerciseFile = $_POST['exerciseFile'];
+            $data -> instructionsFile = $_POST['instructionsFile'];
+            $data -> codeId = $_POST['codeId'];
+
+            if (isset($_POST['visible']))
+            {
+                $data -> visible = true;
+            }
+            else
+            {
+                $data -> visible = false;
+            }
+
+            $data -> availability = $_POST['availability'];
+
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //prepare success message
+            $successMessage[0]["success"] = true;
+            $successMessage[0]["content"] = "Successfully updated exercise";
+
+            $this->successPathVariables["message"] = json_encode($successMessage);
+            $this->successPathVariables["id"] = $this->validationObj->cleanInput($data->codeId);
+
+            //prepare error message
+            $failureMessage[0]["success"] = false;
+            $failureMessage[0]["content"] = "Failed to update exercise. Try again?";
+
+            $this->failurePathVariables["message"] = json_encode($failureMessage);
+            $this->failurePathVariables["id"] = $this->validationObj->cleanInput($data->codeId);
+
+            //set success and failure paths
+            $this->successPath = "/honours/webapp/view/adminArea/exercises/exercise.php";
+            $this->failurePath = "/honours/webapp/view/adminArea/exercises/updateExercise.php";
+
+            return parent::update($jsonData);
         }
     }
 
