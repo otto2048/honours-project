@@ -79,8 +79,8 @@
                                     <thead>
                                         <tr>
                                             <th scope="col" data-tablesort-type="int">ID</th>
-                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Username</th>
-                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Container port</th>
+                                            <th scope="col" data-tablesort-type="string">Username</th>
+                                            <th scope="col" data-tablesort-type="string">Container port</th>
                                             <th scope="col" data-tablesort-type="string">User Group</th>
                                         </tr>
                                     </thead>
