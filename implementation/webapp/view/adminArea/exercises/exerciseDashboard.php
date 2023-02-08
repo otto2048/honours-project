@@ -146,16 +146,30 @@
                     <h2>Create a new exercise</h2>
                     <form role="form" method="POST" action="../../../controller/actionScripts/createExercise.php">
                         <div class="form-group">
-                            <label for="username">Username:</label>
-                            <input type="text" class="form-control" name="username" required id="username">
+                            <label for="title">Title:</label>
+                            <input type="text" class="form-control" name="title" required id="title">
                         </div>
                         <div class="form-group">
-                            <label for="password">Password:</label>
-                            <input type="password" class="form-control" name="password" required id="password">
+                            <label for="description">Description:</label>
+                            <input type="text" class="form-control" name="description" id="description">
+                        </div>
+                        <div class="form-group">
+                            <label for="exerciseFile">Exercise file location:</label>
+                            <input type="text" class="form-control" name="exerciseFile" required id="exerciseFile">
+                        </div>
+                        <div class="form-group">
+                            <label for="instructionsFile">Instructions file location:</label>
+                            <input type="text" class="form-control" name="instructionsFile" id="instructionsFile">
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" required id="visible" name="visible">
+                            <label class="form-check-label" for="visible">
+                                Visible to users
+                            </label>
                         </div>
                         <div class="form-group pt-1">
-                            <label for="permissionLevel">User group:</label>
-                            <select name="permissionLevel" id="permissionLevel">
+                            <label for="availability">Availability Level:</label>
+                            <select name="availability" id="availability">
                                 <?php
                                     $permissionReflection = new \ReflectionClass("PermissionLevels");
                                     $values = $permissionReflection->getConstants();
