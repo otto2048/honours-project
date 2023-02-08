@@ -10,8 +10,6 @@ function preparePage() {
         buttons[i].onclick = function(){
                 var id = $(".remove > .id")[i].innerHTML;
 
-                console.log($(".remove > .id")[i]);
-
                 deleteRow(id, $(".modifyRowsTable")[0].getAttribute("id"));
             }
     }(i));

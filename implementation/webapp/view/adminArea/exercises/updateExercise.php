@@ -52,93 +52,104 @@
                     $exerciseModel = new ExerciseModel();
 
                     $jsonExerciseData = $exerciseModel->getExercise($input);
-                
-                    $exerciseData = json_decode($jsonExerciseData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-                    if (!isset($exerciseData["isempty"]))
+                    if ($jsonExerciseData)
                     {
-                ?>
-                        <?php
-                            //display exercise details 
-                            
-                            //display current permission
-                            $permission = new PermissionLevels();
-                        ?>
-                            <h1>Update Exercise - <?php echo $exerciseData[0]["title"]?></h1>
+                
+                        $exerciseData = json_decode($jsonExerciseData, JSON_INVALID_UTF8_SUBSTITUTE);
 
+                        if (!isset($exerciseData["isempty"]))
+                        {
+                    ?>
                             <?php
-                                //check for errors on this page
-                                if (isset($_GET["message"]))
-                                {
-                                    $message = $_GET["message"];
+                                //display exercise details 
                                 
-                                    printErrorMessage($message);
-                                }
+                                //display current permission
+                                $permission = new PermissionLevels();
                             ?>
+                                <h1>Update Exercise - <?php echo $exerciseData[0]["title"]?></h1>
 
-                            <!-- update exercise -->
-                            <form role="form" method="POST" action="../../../controller/actionScripts/updateExercise.php">
-                                <input type="text" name="codeId" value=<?php echo $exerciseData[0]["codeId"] ?> required hidden readonly>
-                                <div class="form-group">
-                                    <label for="title">Title:</label>
-                                    <input type="text" class="form-control" name="title" required id="title" value="<?php echo $exerciseData[0]["title"]; ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="description">Description:</label>
-                                    <input type="text" class="form-control" name="description" id="description" value="<?php echo $exerciseData[0]["description"]; ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exerciseFile">Exercise file location:</label>
-                                    <input type="text" class="form-control" name="exerciseFile" required id="exerciseFile" value="<?php echo $exerciseData[0]["exerciseFile"]; ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="instructionsFile">Instructions file location:</label>
-                                    <input type="text" class="form-control" name="instructionsFile" id="instructionsFile" value="<?php echo $exerciseData[0]["instructionsFile"]; ?>">
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="visible" name="visible" <?php if ($exerciseData[0]["visible"]) {echo "checked";} ?>>
-                                    <label class="form-check-label" for="visible">
-                                        Visible to users
-                                    </label>
-                                </div>
-                                <div class="form-group pt-1">
-                                    <label for="availability">Availability Level:</label>
-                                    <select name="availability" id="availability">
-                                        <?php
-                                            $permissionReflection = new \ReflectionClass("PermissionLevels");
-                                            $values = $permissionReflection->getConstants();
+                                <?php
+                                    //check for errors on this page
+                                    if (isset($_GET["message"]))
+                                    {
+                                        $message = $_GET["message"];
+                                    
+                                        printErrorMessage($message);
+                                    }
+                                ?>
 
-                                            foreach ($values as $value)
-                                            {
-                                                $optionString = '<option value = "';
-                                                $optionString .= $value.'"';
+                                <!-- update exercise -->
+                                <form role="form" method="POST" action="../../../controller/actionScripts/updateExercise.php">
+                                    <input type="text" name="codeId" value=<?php echo $exerciseData[0]["codeId"] ?> required hidden readonly>
+                                    <div class="form-group">
+                                        <label for="title">Title:</label>
+                                        <input type="text" class="form-control" name="title" required id="title" value="<?php echo $exerciseData[0]["title"]; ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Description:</label>
+                                        <input type="text" class="form-control" name="description" id="description" value="<?php echo $exerciseData[0]["description"]; ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exerciseFile">Exercise file location:</label>
+                                        <input type="text" class="form-control" name="exerciseFile" required id="exerciseFile" value="<?php echo $exerciseData[0]["exerciseFile"]; ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="instructionsFile">Instructions file location:</label>
+                                        <input type="text" class="form-control" name="instructionsFile" id="instructionsFile" value="<?php echo $exerciseData[0]["instructionsFile"]; ?>">
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="visible" name="visible" <?php if ($exerciseData[0]["visible"]) {echo "checked";} ?>>
+                                        <label class="form-check-label" for="visible">
+                                            Visible to users
+                                        </label>
+                                    </div>
+                                    <div class="form-group pt-1">
+                                        <label for="availability">Availability Level:</label>
+                                        <select name="availability" id="availability">
+                                            <?php
+                                                $permissionReflection = new \ReflectionClass("PermissionLevels");
+                                                $values = $permissionReflection->getConstants();
 
-                                                if ($value == $exerciseData[0]["availability"])
+                                                foreach ($values as $value)
                                                 {
-                                                    $optionString.='selected="selected"';
+                                                    $optionString = '<option value = "';
+                                                    $optionString .= $value.'"';
+
+                                                    if ($value == $exerciseData[0]["availability"])
+                                                    {
+                                                        $optionString.='selected="selected"';
+                                                    }
+
+                                                    $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
+
+                                                    echo $optionString;
                                                 }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
+                                </form>
+                            
+                        </div>
 
-                                                $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
+                    <?php
 
-                                                echo $optionString;
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
-                                <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
-                            </form>
-                        
-                    </div>
-
-                <?php
-
+                        }
+                        else
+                        {
+                    ?>
+                            <h1>View Exercise</h1>
+                    <?php
+                            echo "Failed to load exercise data";
+                        }
                     }
                     else
                     {
-                ?>
-                        <h1>View Exercise</h1>
-                <?php
-                        echo "Failed to load exercise data";
+                        ?>
+                            <h1>View Exercise</h1>
+                    <?php
+                            echo "Failed to load exercise data";
                     }
                 }
                 else

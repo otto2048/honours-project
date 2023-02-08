@@ -24,36 +24,43 @@
 
         $jsonExerciseData = $exerciseModel->getExercises(intval($pageNumInput), intval($pageSizeInput), $pageLimit);
 
-        $exerciseData = json_decode($jsonExerciseData, JSON_INVALID_UTF8_SUBSTITUTE);
-
-        if (!isset($exerciseData["isempty"]))
+        if ($jsonExerciseData)
         {
-            //display current permission
-            $permission = new PermissionLevels();
+            $exerciseData = json_decode($jsonExerciseData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-            //display exercise data
-            foreach ($exerciseData as $row)
+            if (!isset($exerciseData["isempty"]))
             {
-                echo '<tr>';
-                echo '<td>'.$row["codeId"].'</td>';
+                //display current permission
+                $permission = new PermissionLevels();
 
-                echo '<td><u><a href="exercise.php?id='.$row["codeId"].'" class="moreInfoLink">'.$row["title"].'</a></u></td>';
-                echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["description"].'</td>';
-                echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
-                echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
+                //display exercise data
+                foreach ($exerciseData as $row)
+                {
+                    echo '<tr>';
+                    echo '<td>'.$row["codeId"].'</td>';
 
-                echo '<td>';
-                if ($row["visible"])
-                {
-                    echo "True";
+                    echo '<td><u><a href="exercise.php?id='.$row["codeId"].'" class="moreInfoLink">'.$row["title"].'</a></u></td>';
+                    echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["description"].'</td>';
+                    echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
+                    echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
+
+                    echo '<td>';
+                    if ($row["visible"])
+                    {
+                        echo "True";
+                    }
+                    else
+                    {
+                        echo "False";
+                    }
+                    echo '</td>';
+                    echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and down</td>';
+                    echo '</tr>';
                 }
-                else
-                {
-                    echo "False";
-                }
-                echo '</td>';
-                echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and down</td>';
-                echo '</tr>';
+            }
+            else
+            {
+                echo "There are no exercises";
             }
         }
         else

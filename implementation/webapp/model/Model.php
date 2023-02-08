@@ -106,7 +106,8 @@
 
             if (!$querySuccess)
             {
-                return json_encode(array("isempty"=>$emptyMessage), JSON_INVALID_UTF8_SUBSTITUTE);
+                //return json_encode(array("isempty"=>$emptyMessage), JSON_INVALID_UTF8_SUBSTITUTE);
+                return null;
             }
 
             //get the result
@@ -133,7 +134,9 @@
                 }
             }
 
-            return json_encode(array("isempty"=>$emptyMessage), JSON_INVALID_UTF8_SUBSTITUTE);
+            //return json_encode(array("isempty"=>$emptyMessage), JSON_INVALID_UTF8_SUBSTITUTE);
+
+            return null;
         }
 
         //deletes a record specified by primary key

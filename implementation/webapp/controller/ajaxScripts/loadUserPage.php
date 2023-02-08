@@ -24,32 +24,40 @@
     
         $jsonUserData = $userModel->getUsers(intval($pageNumInput), intval($pageSizeInput), $pageLimit);
 
-        
-        $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
-
-        if (!isset($userData["isempty"]))
+        if ($jsonUserData)
         {
-            //display current permission
-            $permission = new PermissionLevels();
+            $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-            //display user data
-            foreach ($userData as $row)
+            if (!isset($userData["isempty"]))
             {
-                echo '<tr>';
-                echo '<td>'.$row["userId"].'</td>';
-
-                echo '<td><u><a href="user.php?id='.$row["userId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
-                echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["containerPort"].'</td>';
-
-                echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
-
-                echo '</tr>';
+                //display current permission
+                $permission = new PermissionLevels();
+    
+                //display user data
+                foreach ($userData as $row)
+                {
+                    echo '<tr>';
+                    echo '<td>'.$row["userId"].'</td>';
+    
+                    echo '<td><u><a href="user.php?id='.$row["userId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
+                    echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["containerPort"].'</td>';
+    
+                    echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
+    
+                    echo '</tr>';
+                }
+            }
+            else
+            {
+                echo "There are no users";
             }
         }
         else
         {
             echo "Failed to load user data";
         }
+        
+        
     }
 
     loadUserPage();
