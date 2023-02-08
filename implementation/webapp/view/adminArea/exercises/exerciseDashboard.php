@@ -30,7 +30,7 @@
         <?php 
             function getHeader()
             {
-                $selected = "userDashboard.php";
+                $selected = "exerciseDashboard.php";
                 include "../../navigation.php";
             }
 
@@ -39,7 +39,7 @@
         ?>
         
         <div class="container p-3">
-            <h1>Manage Users</h1>
+            <h1>Manage Exercises</h1>
             <hr>
 
             <?php
@@ -57,30 +57,30 @@
                 <div class="col border-end">
                     <?php
 
-                        //get first page of users
+                        //get first page of exercises
 
                         $pageSize = 10;
                         $pageLimit = 0;
 
-                        $userModel = new UserModel();
+                        $exerciseModel = new ExerciseModel();
 
-                        $jsonUserData = $userModel->getUsers(1, $pageSize, $pageLimit);
+                        $jsonExerciseData = $exerciseModel->getExercises(1, $pageSize, $pageLimit);
 
-                        $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
+                        $exerciseData = json_decode($jsonExerciseData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-                        if (!isset($userData["isempty"]))
+                        if (!isset($exerciseData["isempty"]))
                         {
                     ?>
 
-                            <!-- view users table -->
-                            <p class="pb-1 pt-3 mb-0">Click on column headings to sort Users by this column</p>
+                            <!-- view exercises table -->
+                            <p class="pb-1 pt-3 mb-0">Click on column headings to sort Exercises by this column</p>
                             <div class="table-responsive">
                                 <table class="table tablesort tablesearch-table paginateTable" id="exerciseInfoTable">
                                     <thead>
                                         <tr>
                                             <th scope="col" data-tablesort-type="int">ID</th>
-                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Username</th>
-                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Container port</th>
+                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Title</th>
+                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Description</th>
                                             <th scope="col" data-tablesort-type="string">User Group</th>
                                         </tr>
                                     </thead>
