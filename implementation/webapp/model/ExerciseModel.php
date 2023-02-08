@@ -73,6 +73,16 @@
 
             return parent::create($jsonData, $paramTypes);
         }
+
+        //update an exercise
+        public function updateData($jsonData)
+        {
+            $this->sqlStmt = 'UPDATE honours_code_exercise SET title = ?, description = ?, exerciseFile = ?, instructionsFile = ?, visible = ?, availability = ? WHERE codeId = ?';
+
+            $paramTypes = "ssssiii";
+
+            return parent::create($jsonData, $paramTypes);
+        }
     }
 
 ?>
