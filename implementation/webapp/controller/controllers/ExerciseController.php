@@ -85,7 +85,6 @@
             
             $data -> exerciseFile = $_POST['exerciseFile'];
             $data -> instructionsFile = $_POST['instructionsFile'];
-            $data -> codeId = $_POST['codeId'];
 
             if (isset($_POST['visible']))
             {
@@ -97,6 +96,8 @@
             }
 
             $data -> availability = $_POST['availability'];
+            
+            $data -> codeId = $_POST['codeId'];
 
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 

@@ -214,7 +214,7 @@
             {
                 if (!$this->validateInt($exercise["codeId"]))
                 {
-                    $errorMessage[0]["content"] = "Invalid exerise id";
+                    $errorMessage[0]["content"] = "Invalid exercise id";
                     $errorMessage[0]["success"] = false;
                 }
             }

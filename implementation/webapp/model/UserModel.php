@@ -101,7 +101,7 @@
 
             $paramTypes = "siii";
 
-            return parent::create($jsonData, $paramTypes);
+            return parent::update($jsonData, $paramTypes);
         }
 
         //login user

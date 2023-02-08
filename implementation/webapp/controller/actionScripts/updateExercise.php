@@ -7,7 +7,7 @@
 
     function actionUpdateExercise()
     {
-        $exerciseController = new ExerciseController(ModelClassTypes::USER);
+        $exerciseController = new ExerciseController(ModelClassTypes::EXERCISE);
 
         $exerciseController -> updateExercise();
     }
