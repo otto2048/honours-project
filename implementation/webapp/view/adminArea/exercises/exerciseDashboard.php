@@ -79,27 +79,42 @@
                                     <thead>
                                         <tr>
                                             <th scope="col" data-tablesort-type="int">ID</th>
-                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Title</th>
+                                            <th scope="col" data-tablesort-type="string">Title</th>
                                             <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Description</th>
-                                            <th scope="col" data-tablesort-type="string">User Group</th>
+                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Exercise File</th>
+                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Instructions File</th>
+                                            <th scope="col" data-tablesort-type="string">Visibility</th>
+                                            <th scope="col" data-tablesort-type="string">Availability</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="paginateTableBody" id="userInfoTableBody">
+                                    <tbody class="paginateTableBody" id="exerciseInfoTableBody">
                                         <?php
 
                                             //display current permission
                                             $permission = new PermissionLevels();
 
                                             //display exercise data
-                                            foreach ($userData as $row)
+                                            foreach ($exerciseData as $row)
                                             {
                                                 echo '<tr>';
                                                 echo '<td>'.$row["codeId"].'</td>';
 
-                                                echo '<td><u><a href="exercise.php?id='.$row["codeId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
-                                                echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["containerPort"].'</td>';
+                                                echo '<td><u><a href="exercise.php?id='.$row["codeId"].'" class="moreInfoLink">'.$row["title"].'</a></u></td>';
+                                                echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["description"].'</td>';
+                                                echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
+                                                echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
 
-                                                echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
+                                                echo '<td>';
+                                                if ($row["visible"])
+                                                {
+                                                    echo "True";
+                                                }
+                                                else
+                                                {
+                                                    echo "False";
+                                                }
+                                                echo '</td>';
+                                                echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and up</td>';
                                                 echo '</tr>';
                                             }
                                         ?>
@@ -121,7 +136,7 @@
                             }
                             else
                             {
-                                echo "Failed to load user data";
+                                echo "Failed to load exercise data";
                             }                  
                         ?>
 
@@ -129,7 +144,7 @@
                 <div class="col">
                     <!-- create new exercise -->
                     <h2>Create a new exercise</h2>
-                    <form role="form" method="POST" action="../../../controller/actionScripts/createUser.php">
+                    <form role="form" method="POST" action="../../../controller/actionScripts/createExercise.php">
                         <div class="form-group">
                             <label for="username">Username:</label>
                             <input type="text" class="form-control" name="username" required id="username">
