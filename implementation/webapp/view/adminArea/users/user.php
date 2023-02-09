@@ -5,6 +5,8 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
@@ -99,10 +101,224 @@
                                     <li>User Group: <?php echo $permission->getPermissionLevel($userData[0]["permissionLevel"]) ?></li>
                                 </ul>
                             
-                        </div>
-
+                                <h1>Pre-test Exercises</h1>
+                                <hr>
                     <?php
+                            // User pre test exercises
 
+                            // get all the exercises for this type of user that are pre test exercises
+
+                            // for each exercise, check if the user has attempted it and display their mark
+
+                            $exerciseModel = new ExerciseModel();
+                            
+                            $jsonExercises = $exerciseModel->getAvailableExercises($userData[0]["permissionLevel"], ExerciseTypes::PRETEST);
+
+                            if ($jsonExercises)
+                            {
+                                $exercises = json_decode($jsonExercises, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                if (!isset($exercises["isempty"]))
+                                {
+?>
+                                <p class="pb-1 pt-3 mb-0">Click on column headings to sort Exercises by this column</p>
+                                <div class="table-responsive">
+                                    <table class="table tablesort tablesearch-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-tablesort-type="int">ID</th>
+                                                <th scope="col" data-tablesort-type="string">Title</th>
+                                                <th scope="col" data-tablesort-type="string">Mark</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+
+                                                //display user data
+                                                foreach ($exercises as $row)
+                                                {
+
+                                                    echo '<tr>';
+                                                    echo '<td>'.$row["codeId"].'</td>';
+                                                    echo '<td>'.$row["title"].'</td>';
+                                                    echo '<td>';
+
+                                                    //get mark information
+                                                    $markJson = $userModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
+
+                                                    if ($markJson)
+                                                    {
+                                                        $mark = json_decode($markJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                                        echo $mark["points"]."/".$mark["total"]."</td>";
+                                                    }
+                                                    else
+                                                    {
+                                                        echo 'Failed to retrieve mark</td>';
+                                                    }
+
+                                                    echo '</tr>';
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
+
+                                    
+                                </div>
+<?php
+                                }
+                                else
+                                {
+                                    echo "No pre-test exercises available for this user";
+                                }
+                            }
+                            else
+                            {
+                                echo "Pre-test exercises failed to load";
+                            }
+
+
+                            // User practice test exercises
+                            ?>
+                            <h1>Practice Exercises</h1>
+                                <hr>
+                            <?php
+
+                            $jsonExercises = $exerciseModel->getAvailableExercises($userData[0]["permissionLevel"], ExerciseTypes::PRACTICE);
+
+                            if ($jsonExercises)
+                            {
+                                $exercises = json_decode($jsonExercises, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                if (!isset($exercises["isempty"]))
+                                {
+                            ?>
+                                <p class="pb-1 pt-3 mb-0">Click on column headings to sort Exercises by this column</p>
+                                <div class="table-responsive">
+                                    <table class="table tablesort tablesearch-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-tablesort-type="int">ID</th>
+                                                <th scope="col" data-tablesort-type="string">Title</th>
+                                                <th scope="col" data-tablesort-type="string">Mark</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+
+                                                //display user data
+                                                foreach ($exercises as $row)
+                                                {
+
+                                                    echo '<tr>';
+                                                    echo '<td>'.$row["codeId"].'</td>';
+                                                    echo '<td>'.$row["title"].'</td>';
+                                                    echo '<td>';
+
+                                                    //get mark information
+                                                    $markJson = $userModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
+
+                                                    if ($markJson)
+                                                    {
+                                                        $mark = json_decode($markJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                                        echo $mark["points"]."/".$mark["total"]."</td>";
+                                                    }
+                                                    else
+                                                    {
+                                                        echo 'Failed to retrieve mark</td>';
+                                                    }
+
+                                                    echo '</tr>';
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
+
+                                    
+                                </div>
+                            <?php
+                                }
+                                else
+                                {
+                                    echo "No practice exercises available for this user";
+                                }
+                            }
+                            else
+                            {
+                                echo "Practice exercises failed to load";
+                            }
+
+                            // User post test exercises
+                            ?>
+                            <h1>Post-test Exercises</h1>
+                                <hr>
+                            <?php
+
+                            $jsonExercises = $exerciseModel->getAvailableExercises($userData[0]["permissionLevel"], ExerciseTypes::POSTTEST);
+
+                            if ($jsonExercises)
+                            {
+                                $exercises = json_decode($jsonExercises, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                if (!isset($exercises["isempty"]))
+                                {
+                            ?>
+                                <p class="pb-1 pt-3 mb-0">Click on column headings to sort Exercises by this column</p>
+                                <div class="table-responsive">
+                                    <table class="table tablesort tablesearch-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-tablesort-type="int">ID</th>
+                                                <th scope="col" data-tablesort-type="string">Title</th>
+                                                <th scope="col" data-tablesort-type="string">Mark</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+
+                                                //display exercise data
+                                                foreach ($exercises as $row)
+                                                {
+
+                                                    echo '<tr>';
+                                                    echo '<td>'.$row["codeId"].'</td>';
+                                                    echo '<td>'.$row["title"].'</td>';
+                                                    echo '<td>';
+
+                                                    //get mark information
+                                                    $markJson = $userModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
+
+                                                    if ($markJson)
+                                                    {
+                                                        $mark = json_decode($markJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                                        echo $mark["points"]."/".$mark["total"]."</td>";
+                                                    }
+                                                    else
+                                                    {
+                                                        echo 'Failed to retrieve mark</td>';
+                                                    }
+
+                                                    echo '</tr>';
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
+
+                                    
+                                </div>
+                            <?php
+                                }
+                                else
+                                {
+                                    echo "No post-test exercises available for this user";
+                                }
+                            }
+                            else
+                            {
+                                echo "Post-test exercises failed to load";
+                            }
                         }
                         else
                         {
@@ -120,6 +336,8 @@
                             echo "Failed to load user data";
                         
                     }
+
+                    
                 }
                 else
                 {
@@ -152,6 +370,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- Auto tables plugin -->
+        <script src="../../js/auto-sorter-filter/auto-tables.js"></script>
 
         <script src="../../js/deleteConfirmation.js"></script>
     </body>

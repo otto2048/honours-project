@@ -138,7 +138,7 @@
                             <h1>View User</h1>
                     <?php
                             echo "Failed to load user data";
-                        }
+                        
                     }
                 }
                 else

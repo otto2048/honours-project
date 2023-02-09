@@ -48,6 +48,27 @@
             return parent::retrieve(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
 
+        //get exercises based on availability and type
+        public function getAvailableExercises($permission, $type = null)
+        {
+            $WHERE_variables = new \stdClass();
+            $WHERE_variables -> permission = $permission;
+
+            $this->sqlStmt = 'SELECT codeId, title
+                FROM honours_code_exercise WHERE availability <= ?';
+
+            $paramTypes = "i";
+
+            if (!is_null($type))
+            {
+                $this->sqlStmt .= " AND type = ?";
+                $WHERE_variables -> type = $type;
+                $paramTypes = "ii";
+            }
+
+            return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+        }
+
         //delete an exercise
         public function deleteData($jsonData)
         {
@@ -84,5 +105,4 @@
             return parent::update($jsonData, $paramTypes);
         }
     }
-
 ?>
