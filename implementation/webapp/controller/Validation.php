@@ -46,6 +46,9 @@
                 case ModelClassTypes::EXERCISE:
                     return $this->validateExercisePK($jsonData);
                     break;
+                case ModelClassTypes::EXERCISE_ANSWER:
+                    return $this->validateExerciseAnswerPK($jsonData);
+                    break;
                 default:
                     return false;
             }
@@ -205,6 +208,19 @@
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             return $this->validateInt($data["userId"]);
+        }
+
+        //validate exercise answer pk
+        private function validateExerciseAnswerPK(&$jsonData)
+        {
+            $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            $data["answerId"] = $this->cleanInput($data["answerId"]);
+
+            //IMPORTANT: make sure jsonData is set to the sanitized version of the data
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            return $this->validateInt($data["answerId"]);
         }
 
         private function validateExerciseAnswer(&$jsonData, &$errorMessageJson)

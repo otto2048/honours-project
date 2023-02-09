@@ -4,7 +4,7 @@
 
     function deleteExerciseAnswer()
     {
-        $exerciseController = new ExerciseController(ModelClassTypes::EXERCISE_ANSWER);
+        $exerciseController = new ExerciseAnswerController(ModelClassTypes::EXERCISE_ANSWER);
 
         if ($exerciseController->deleteExerciseAnswer())
         {

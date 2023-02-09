@@ -18,12 +18,15 @@
         }
 
         //delete an answer for an exercise
-        public function deleteData($answerId)
+        public function deleteData($jsonData)
         {
+            //get the primary key passed through json data
+            $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE|JSON_OBJECT_AS_ARRAY);
+
             $this->sqlStmt = 'DELETE FROM honours_code_answer WHERE codeAnswerId = ?';
 
             $WHERE_variables = new \stdClass();
-            $WHERE_variables->answerId = $answerId;
+            $WHERE_variables->answerId = $data["answerId"];
 
             $paramTypes = "i";
 
