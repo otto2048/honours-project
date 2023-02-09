@@ -39,11 +39,30 @@ function deleteRow(id, type)
                 //remove the row that was just deleted
                 $("#row" + id).remove();
 
+                //check if this was the last row
+                var body = $(".modifyRowsTable table tbody")[0];
+
+                if (body.children.length == 0)
+                {
+                    //add message
+                    var p = document.createElement("p");
+
+                    p.innerHTML = "No data";
+
+                    //get table
+                    tableDiv = body.parentElement.parentElement;
+
+                    //add message before table
+                    tableDiv.before(p);
+
+                    //remove table
+                    tableDiv.remove();
+                }
             }
             else
             {
                 //add message that row failed to delete
-                console.log("failed to delete");
+                alert("Failed to delete row");
             }
         }
     });

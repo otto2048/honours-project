@@ -136,6 +136,9 @@
                 <?php
                         echo "Failed to load exercise data";
                     }
+                ?>
+                    <h1>View Exercise Answers</h1>
+                <?php
 
                     //get exercise answers
                     $exerciseAnswerModel = new ExerciseAnswerModel();
@@ -150,9 +153,9 @@
                         if (!isset($exerciseAnswerData["isempty"]))
                         {
                     ?>
-                            <p class="pb-1 pt-3 mb-0">Click on column headings to sort Exercise Answers by this column</p>
-                            <div class="table-responsive">
-                                <table class="table tablesort tablesearch-table modifyRowsTable" id="exerciseAnswerInfoTable">
+                            <div class="table-responsive modifyRowsTable" id="exerciseAnswerInfoTable">
+                                <p class="pb-1 pt-3 mb-0">Click on column headings to sort Exercise Answers by this column</p>
+                                <table class="table tablesort tablesearch-table">
                                     <thead>
                                         <tr>
                                             <th scope="col" data-tablesort-type="int">ID</th>
@@ -186,7 +189,6 @@
                         else
                         {
                     ?>
-                            <h1>View Exercise Answers</h1>
                     <?php
                             echo "There are no answers for this exercise";
                         }
@@ -194,7 +196,6 @@
                     else
                     {
                         ?>
-                        <h1>View Exercise Answers</h1>
                 <?php
                     echo "Failed to load exercise data";
                     }
