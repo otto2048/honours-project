@@ -54,7 +54,7 @@
             $WHERE_variables = new \stdClass();
             $WHERE_variables -> permission = $permission;
 
-            $this->sqlStmt = 'SELECT codeId, title, visible
+            $this->sqlStmt = 'SELECT codeId, title, visible, description
                 FROM honours_code_exercise WHERE availability <= ?';
 
             $paramTypes = "i";
