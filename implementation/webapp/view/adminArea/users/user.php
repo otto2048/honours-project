@@ -128,6 +128,7 @@
                                                 <th scope="col" data-tablesort-type="int">ID</th>
                                                 <th scope="col" data-tablesort-type="string">Title</th>
                                                 <th scope="col" data-tablesort-type="string">Mark</th>
+                                                <th scope="col" data-tablesort-type="string">Visible</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -155,6 +156,17 @@
                                                     {
                                                         echo 'Failed to retrieve mark</td>';
                                                     }
+
+                                                    echo '<td>';
+                                                    if ($row["visible"])
+                                                    {
+                                                        echo "True";
+                                                    }
+                                                    else
+                                                    {
+                                                        echo "False";
+                                                    }
+                                                    echo '</td>';
 
                                                     echo '</tr>';
                                                 }
@@ -200,6 +212,7 @@
                                                 <th scope="col" data-tablesort-type="int">ID</th>
                                                 <th scope="col" data-tablesort-type="string">Title</th>
                                                 <th scope="col" data-tablesort-type="string">Mark</th>
+                                                <th scope="col" data-tablesort-type="string">Visible</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -227,6 +240,17 @@
                                                     {
                                                         echo 'Failed to retrieve mark</td>';
                                                     }
+
+                                                    echo '<td>';
+                                                    if ($row["visible"])
+                                                    {
+                                                        echo "True";
+                                                    }
+                                                    else
+                                                    {
+                                                        echo "False";
+                                                    }
+                                                    echo '</td>';
 
                                                     echo '</tr>';
                                                 }
@@ -271,6 +295,7 @@
                                                 <th scope="col" data-tablesort-type="int">ID</th>
                                                 <th scope="col" data-tablesort-type="string">Title</th>
                                                 <th scope="col" data-tablesort-type="string">Mark</th>
+                                                <th scope="col" data-tablesort-type="string">Visible</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -298,6 +323,17 @@
                                                     {
                                                         echo 'Failed to retrieve mark</td>';
                                                     }
+
+                                                    echo '<td>';
+                                                    if ($row["visible"])
+                                                    {
+                                                        echo "True";
+                                                    }
+                                                    else
+                                                    {
+                                                        echo "False";
+                                                    }
+                                                    echo '</td>';
 
                                                     echo '</tr>';
                                                 }
