@@ -1,24 +1,12 @@
 <?php
-
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/controllers/ExerciseAnswerController.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
 
     function deleteExerciseAnswer()
     {
-        $validate = new Validation();
+        $exerciseController = new ExerciseController(ModelClassTypes::EXERCISE_ANSWER);
 
-        //validate and sanitize input
-        $answerId = $validate->cleanInput($_POST["itemId"]);
-
-        if (!$validate->validateInt($answerId))
-        {
-            echo 0;
-            return;
-        }
-
-        $exerciseModel = new ExerciseModel();
-
-        if ($exerciseModel->deleteExerciseAnswer($answerId))
+        if ($exerciseController->deleteExerciseAnswer())
         {
             echo 1;
         }
@@ -26,7 +14,6 @@
         {
             echo 0;
         }
-
     }
 
     deleteExerciseAnswer();

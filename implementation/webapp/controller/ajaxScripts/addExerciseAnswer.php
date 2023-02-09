@@ -1,5 +1,7 @@
 <?php
 
+    //TODO: move this into a Controller as the page will have to be reloaded to get the new ID
+
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");

@@ -3,6 +3,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/AnswerTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseAnswerModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
@@ -137,7 +138,9 @@
                     }
 
                     //get exercise answers
-                    $jsonExerciseAnswerData = $exerciseModel->getExerciseAnswers($input);
+                    $exerciseAnswerModel = new ExerciseAnswerModel();
+
+                    $jsonExerciseAnswerData = $exerciseAnswerModel->getExerciseAnswers($input);
 
                     if ($jsonExerciseAnswerData)
                     {

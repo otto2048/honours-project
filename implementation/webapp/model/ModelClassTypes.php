@@ -4,7 +4,7 @@
     {
         const USER = "UserModel";
         const EXERCISE = "ExerciseModel";
-        const EXERCISE_ANSWER = "ExerciseModelAnswer";
+        const EXERCISE_ANSWER = "ExerciseAnswerModel";
     }
 
 ?>
