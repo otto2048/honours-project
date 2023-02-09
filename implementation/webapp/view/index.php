@@ -3,6 +3,12 @@
 
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
+
+    //check if the user is allowed to be here
+    if (!isset($_SESSION["permissionLevel"]))
+    {
+        echo '<script type="text/javascript">window.open("/honours/webapp/view/userArea/signUp.php", name="_self")</script>';
+    }
 ?>
 
 <!doctype html>
@@ -21,6 +27,10 @@
             }
 
             getHeader();
+
+            // get the exercises the user has to do
+
+
 
          ?>
     </body>

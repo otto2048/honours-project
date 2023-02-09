@@ -22,9 +22,7 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/honours/webapp/view/index.php">Home</a>
-                        </li>
+                        
 
                         <?php 
                             require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
@@ -36,6 +34,9 @@
                                 if ($_SESSION["permissionLevel"] >= PermissionLevels::ADMIN)
                                 {
                         ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/honours/webapp/view/index.php">Home</a>
+                                    </li>
 
                                     <li class="nav-item">
                                         <a class="nav-link" href="/honours/webapp/view/adminArea/users/userDashboard.php">Manage Users</a>
