@@ -210,8 +210,8 @@
 
             <!-- add new exercise answers -->
             <h1>Add new Exercise Answer</h1>
-            <form role="form">
-                <input type="text" required hidden id="codeId" value="<?php echo $input ?>">
+            <form role="form" method="POST" action="../../../controller/actionScripts/createExerciseAnswer.php">
+                <input type="text" required hidden name="codeId" value="<?php echo $input ?>">
                 <div class="form-group">
                     <label for="input">Input:</label>
                     <input type="text" class="form-control" name="input" required id="input">
@@ -238,7 +238,7 @@
                     <label for="output">Output:</label>
                     <input type="text" class="form-control" name="output" required id="output">
                 </div>
-                <button class="btn btn-dark float-end mt-2" id="addRowBtn" role="button">Submit</button>
+                <button class="btn btn-dark float-end mt-2" id="addRowBtn" type="submit">Submit</button>
             </form>
         
         </div>

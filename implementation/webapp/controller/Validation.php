@@ -248,7 +248,7 @@
             }
 
             //repack sanitized data
-            $jsonData = json_encode($user, JSON_INVALID_UTF8_SUBSTITUTE);
+            $jsonData = json_encode($exerciseAnswer, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //check if we found any errors
             if (count($errorMessage) == 0)
@@ -257,8 +257,6 @@
             }
 
             $errorMessageJson = json_encode($errorMessage);
-
-            
 
             return false;
         }
