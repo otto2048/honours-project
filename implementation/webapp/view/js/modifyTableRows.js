@@ -7,11 +7,7 @@ function preparePage() {
     var buttons = $(".remove");
         
     for (var i=0; i<buttons.length; i++) (function(i){
-        buttons[i].onclick = function(){
-                var id = $(".remove > .id")[i].innerHTML;
-
-                deleteRow(id, $(".modifyRowsTable")[0].getAttribute("id"));
-            }
+        buttons[i].addEventListener("click", deleteRow.bind(event, $(".remove > .id")[i].innerHTML, $(".modifyRowsTable")[0].getAttribute("id")));
     }(i));
 }
 
@@ -36,6 +32,8 @@ function deleteRow(id, type)
         {
             if (result != 0)
             {
+            console.log(id);
+
                 //remove the row that was just deleted
                 $("#row" + id).remove();
 
