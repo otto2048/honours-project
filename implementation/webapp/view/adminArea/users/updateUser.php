@@ -29,7 +29,6 @@
         <?php 
             function getHeader()
             {
-                $selected = "userDashboard.php";
                 include "../../navigation.php";
             }
 

@@ -49,7 +49,7 @@
         }
 
         //get exercises based on availability and type
-        public function getAvailableExercises($permission, $type = null)
+        public function getAvailableExercises($permission, $type = null, $onlyVisible = false)
         {
             $WHERE_variables = new \stdClass();
             $WHERE_variables -> permission = $permission;
@@ -64,6 +64,11 @@
                 $this->sqlStmt .= " AND type = ?";
                 $WHERE_variables -> type = $type;
                 $paramTypes = "ii";
+            }
+
+            if ($onlyVisible)
+            {
+                $this->sqlStmt .= " AND visible = TRUE";
             }
 
             return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);

@@ -118,7 +118,7 @@
 
                                     <li>Visibility: <?php if ($exerciseData[0]["visible"]) {echo "True";} else {echo "False";} ?></li>
 
-                                    <li>Availability: <?php echo $permission->getPermissionLevel($exerciseData[0]["availability"]); ?> and down</li>
+                                    <li>Availability: <?php echo $permission->getPermissionLevel($exerciseData[0]["availability"]); ?> and up</li>
                                     <li>Type: <?php echo $exerciseType->getExerciseType($exerciseData[0]["type"]); ?></li>
                                 </ul>
 

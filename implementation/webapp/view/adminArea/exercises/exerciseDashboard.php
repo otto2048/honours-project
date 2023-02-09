@@ -117,7 +117,7 @@
                                                         echo "False";
                                                     }
                                                     echo '</td>';
-                                                    echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and down</td>';
+                                                    echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and up</td>';
                                                     echo '<td>'.$types->getExerciseType($row["type"]).'</td>';
                                                     echo '</tr>';
                                                 }

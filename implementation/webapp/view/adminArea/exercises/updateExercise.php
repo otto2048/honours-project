@@ -141,6 +141,12 @@
                                                 {
                                                     $optionString = '<option value = "';
                                                     $optionString .= $value.'"';
+
+                                                    if ($value == $exerciseData[0]["type"])
+                                                    {
+                                                        $optionString.='selected="selected"';
+                                                    }
+
                                                     $optionString .= ">".$types->getExerciseType($value)."</option>";
 
                                                     echo $optionString;
