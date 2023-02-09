@@ -32,8 +32,6 @@ function deleteRow(id, type)
         {
             if (result != 0)
             {
-            console.log(id);
-
                 //remove the row that was just deleted
                 $("#row" + id).remove();
 

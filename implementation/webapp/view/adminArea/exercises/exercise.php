@@ -138,6 +138,7 @@
                     }
                 ?>
                     <h1>View Exercise Answers</h1>
+                    <hr>
                 <?php
 
                     //get exercise answers
@@ -211,6 +212,7 @@
 
             <!-- add new exercise answers -->
             <h1>Add new Exercise Answer</h1>
+            <hr>
             <form role="form" method="POST" action="../../../controller/actionScripts/createExerciseAnswer.php">
                 <input type="text" required hidden name="codeId" value="<?php echo $input ?>">
                 <div class="form-group">
