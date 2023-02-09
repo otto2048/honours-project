@@ -4,6 +4,8 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/AnswerTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseAnswerModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
+
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
@@ -53,6 +55,7 @@
                     //get exercise
                     $exerciseModel = new ExerciseModel();
                     $answerType = new AnswerTypes();
+                    $exerciseType = new ExerciseTypes();
 
                     $jsonExerciseData = $exerciseModel->getExercise($input);
 
@@ -115,7 +118,8 @@
 
                                     <li>Visibility: <?php if ($exerciseData[0]["visible"]) {echo "True";} else {echo "False";} ?></li>
 
-                                    <li>Availability: <?php echo $permission->getPermissionLevel($exerciseData[0]["availability"]) ?> and down</li>
+                                    <li>Availability: <?php echo $permission->getPermissionLevel($exerciseData[0]["availability"]); ?> and down</li>
+                                    <li>Type: <?php echo $exerciseType->getExerciseType($exerciseData[0]["type"]); ?></li>
                                 </ul>
 
                     <?php

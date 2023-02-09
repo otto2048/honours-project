@@ -1,6 +1,7 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
@@ -64,6 +65,7 @@
 
                         $exerciseModel = new ExerciseModel();
                         $permission = new PermissionLevels();
+                        $types = new ExerciseTypes();
 
                         $jsonExerciseData = $exerciseModel->getExercises(1, $pageSize, $pageLimit);
 
@@ -88,6 +90,7 @@
                                                 <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Instructions File</th>
                                                 <th scope="col" data-tablesort-type="string">Visibility</th>
                                                 <th scope="col" data-tablesort-type="string">Availability</th>
+                                                <th scope="col" data-tablesort-type="string">Type</th>
                                             </tr>
                                         </thead>
                                         <tbody class="paginateTableBody" id="exerciseInfoTableBody">
@@ -115,6 +118,7 @@
                                                     }
                                                     echo '</td>';
                                                     echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and down</td>';
+                                                    echo '<td>'.$types->getExerciseType($row["type"]).'</td>';
                                                     echo '</tr>';
                                                 }
                                             ?>
@@ -182,6 +186,24 @@
                                         $optionString = '<option value = "';
                                         $optionString .= $value.'"';
                                         $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
+
+                                        echo $optionString;
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group pt-1">
+                            <label for="type">Type:</label>
+                            <select name="type" id="type">
+                                <?php
+                                    $typeReflection = new \ReflectionClass("ExerciseTypes");
+                                    $values = $typeReflection->getConstants();
+
+                                    foreach ($values as $value)
+                                    {
+                                        $optionString = '<option value = "';
+                                        $optionString .= $value.'"';
+                                        $optionString .= ">".$types->getExerciseType($value)."</option>";
 
                                         echo $optionString;
                                     }

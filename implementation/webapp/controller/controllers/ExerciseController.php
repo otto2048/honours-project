@@ -54,6 +54,7 @@
             }
 
             $data -> availability = $_POST['availability'];
+            $data -> type = $_POST['type'];
 
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
@@ -96,6 +97,7 @@
             }
 
             $data -> availability = $_POST['availability'];
+            $data -> type = $_POST['type'];
             
             $data -> codeId = $_POST['codeId'];
 

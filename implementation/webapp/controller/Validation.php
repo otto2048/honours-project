@@ -2,6 +2,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/AnswerTypes.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
 
     class Validation
     {
@@ -197,6 +198,25 @@
             return true;
         }
 
+        private function validateExerciseType($input)
+        {
+            //check if this input type is a valid int
+            if (!$this->validateInt($input))
+            {
+                return false;
+            }
+
+            //check if this exercise type is an actual exercise type in the system
+            $exerciseTypes = new ExerciseTypes();
+
+            if ($exerciseTypes->getExerciseType(intval($input)) == "Error finding status")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         //validate user PK
         private function validateUserPK(&$jsonData)
         {
@@ -356,6 +376,13 @@
             {
                 $errorMessage[5]["content"] = "Invalid availability";
                 $errorMessage[5]["success"] = false;
+            }
+
+            //validate type
+            if (!$this->validateExerciseType($exercise["type"]))
+            {
+                $errorMessage[3]["content"] = "Invalid exercise type";
+                $errorMessage[3]["success"] = false;
             }
 
             //repack sanitized data

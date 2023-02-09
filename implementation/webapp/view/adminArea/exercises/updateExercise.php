@@ -3,6 +3,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
 
@@ -50,6 +51,7 @@
                 {
                     //get exercise
                     $exerciseModel = new ExerciseModel();
+                    $types = new ExerciseTypes();
 
                     $jsonExerciseData = $exerciseModel->getExercise($input);
 
@@ -122,6 +124,24 @@
                                                     }
 
                                                     $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
+
+                                                    echo $optionString;
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group pt-1">
+                                        <label for="type">Type:</label>
+                                        <select name="type" id="type">
+                                            <?php
+                                                $typeReflection = new \ReflectionClass("ExerciseTypes");
+                                                $values = $typeReflection->getConstants();
+
+                                                foreach ($values as $value)
+                                                {
+                                                    $optionString = '<option value = "';
+                                                    $optionString .= $value.'"';
+                                                    $optionString .= ">".$types->getExerciseType($value)."</option>";
 
                                                     echo $optionString;
                                                 }
