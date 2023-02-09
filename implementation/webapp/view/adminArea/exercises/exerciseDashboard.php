@@ -103,7 +103,7 @@
                                                     echo '<td>'.$row["codeId"].'</td>';
 
                                                     echo '<td><u><a href="exercise.php?id='.$row["codeId"].'" class="moreInfoLink">'.$row["title"].'</a></u></td>';
-                                                    echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["description"].'</td>';
+                                                    echo '<td class="d-none d-sm-none d-md-table-cell">'.substr($row["description"], 0, 20).'...</td>';
                                                     echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/adminArea/exercises/exerciseFiles/'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
                                                     echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/adminArea/exercises/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
 
