@@ -63,66 +63,71 @@
                         $pageLimit = 0;
 
                         $userModel = new UserModel();
+                        $permission = new PermissionLevels();
 
                         $jsonUserData = $userModel->getUsers(1, $pageSize, $pageLimit);
 
-                        $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
-
-                        if (!isset($userData["isempty"]))
+                        if ($jsonUserData)
                         {
-                    ?>
+                            $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-                            <!-- view users table -->
-                            <p class="pb-1 pt-3 mb-0">Click on column headings to sort Users by this column</p>
-                            <div class="table-responsive">
-                                <table class="table tablesort tablesearch-table paginateTable" id="userInfoTable">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" data-tablesort-type="int">ID</th>
-                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Username</th>
-                                            <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Container port</th>
-                                            <th scope="col" data-tablesort-type="string">User Group</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="paginateTableBody" id="userInfoTableBody">
-                                        <?php
+                            if (!isset($userData["isempty"]))
+                            {
+                        ?>
 
-                                            //display current permission
-                                            $permission = new PermissionLevels();
+                                <!-- view users table -->
+                                <p class="pb-1 pt-3 mb-0">Click on column headings to sort Users by this column</p>
+                                <div class="table-responsive">
+                                    <table class="table tablesort tablesearch-table paginateTable" id="userInfoTable">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-tablesort-type="int">ID</th>
+                                                <th scope="col" data-tablesort-type="string">Username</th>
+                                                <th scope="col" data-tablesort-type="string">Container port</th>
+                                                <th scope="col" data-tablesort-type="string">User Group</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="paginateTableBody" id="userInfoTableBody">
+                                            <?php
 
-                                            //display user data
-                                            foreach ($userData as $row)
-                                            {
-                                                echo '<tr>';
-                                                echo '<td>'.$row["userId"].'</td>';
+                                                //display user data
+                                                foreach ($userData as $row)
+                                                {
+                                                    echo '<tr>';
+                                                    echo '<td>'.$row["userId"].'</td>';
 
-                                                echo '<td><u><a href="user.php?id='.$row["userId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
-                                                echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["containerPort"].'</td>';
+                                                    echo '<td><u><a href="user.php?id='.$row["userId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
+                                                    echo '<td>'.$row["containerPort"].'</td>';
 
-                                                echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
-                                                echo '</tr>';
-                                            }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                                    echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
+                                                    echo '</tr>';
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
 
-                                
-                            </div>
+                                    
+                                </div>
 
 
-                            <button class="btn theme-darker text-light" id="previousPageBtn">Previous page</button>
-                            <button class="btn theme-darker text-light float-end" id="nextPageBtn">Next page</button>
+                                <button class="btn theme-darker text-light" id="previousPageBtn">Previous page</button>
+                                <button class="btn theme-darker text-light float-end" id="nextPageBtn">Next page</button>
 
-                            <p class="text-center">Page: <span id="pageNum">1</span>/<span id="totalPages"><?php echo $pageLimit ?></span></p>
+                                <p class="text-center">Page: <span id="pageNum">1</span>/<span id="totalPages"><?php echo $pageLimit ?></span></p>
 
-                            <p>Page Size: <span id="pageSize"><?php echo $pageSize ?></span></p>
-                        <?php
+                                <p>Page Size: <span id="pageSize"><?php echo $pageSize ?></span></p>
+                            <?php
 
                             }
                             else
                             {
-                                echo "Failed to load user data";
-                            }                  
+                                echo "There are no users";
+                            }
+                        }
+                        else
+                        {
+                            echo "Failed to load user data";
+                        }              
                         ?>
 
                 </div>

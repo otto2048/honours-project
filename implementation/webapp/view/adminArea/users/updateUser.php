@@ -29,7 +29,6 @@
         <?php 
             function getHeader()
             {
-                $selected = "userDashboard.php";
                 include "../../navigation.php";
             }
 
@@ -52,80 +51,93 @@
                     //get user
                     $userModel = new UserModel();
 
+                    $permission = new PermissionLevels();
+
                     $jsonUserData = $userModel->getUserById($input);
                 
-                    $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
-
-                    if (!isset($userData["isempty"]))
+                    if ($jsonUserData)
                     {
-                ?>
-                        <?php
-                            //display user details 
-                            
-                            //display current permission
-                            $permission = new PermissionLevels();
-                        ?>
-                            <h1>Update User - <?php echo $userData[0]["username"]?></h1>
 
+                        $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                        if (!isset($userData["isempty"]))
+                        {
+                    ?>
                             <?php
-                                //check for errors on this page
-                                if (isset($_GET["message"]))
-                                {
-                                    $message = $_GET["message"];
+                                //display user details 
                                 
-                                    printErrorMessage($message);
-                                }
+                                
                             ?>
+                                <h1>Update User - <?php echo $userData[0]["username"]?></h1>
 
-                            <!-- update user -->
-                            <form role="form" method="POST" action="../../../controller/actionScripts/updateUser.php">
-                                <input type="text" name="userId" value=<?php echo $userData[0]["userId"] ?> required hidden readonly>
-                                <div class="form-group">
-                                    <label for="username">Username:</label>
-                                    <input type="text" class="form-control" name="username" required id="username" value=<?php echo $userData[0]["username"] ?>>
-                                </div>
-                                <div class="form-group">
-                                    <label for="containerPort">Container Port:</label>
-                                    <input type="text" class="form-control" name="containerPort" id="containerPort" value=<?php echo $userData[0]["containerPort"] ?>>
-                                </div>
-                                <div class="form-group pt-1">
-                                    <label for="permissionLevel">User group:</label>
-                                    <select name="permissionLevel" id="permissionLevel">
-                                        <?php
-                                            $permissionReflection = new \ReflectionClass("PermissionLevels");
-                                            $values = $permissionReflection->getConstants();
+                                <?php
+                                    //check for errors on this page
+                                    if (isset($_GET["message"]))
+                                    {
+                                        $message = $_GET["message"];
+                                    
+                                        printErrorMessage($message);
+                                    }
+                                ?>
 
-                                            foreach ($values as $value)
-                                            {
-                                                $optionString = '<option value = "';
-                                                $optionString .= $value.'"';
+                                <!-- update user -->
+                                <form role="form" method="POST" action="../../../controller/actionScripts/updateUser.php">
+                                    <input type="text" name="userId" value=<?php echo $userData[0]["userId"] ?> required hidden readonly>
+                                    <div class="form-group">
+                                        <label for="username">Username:</label>
+                                        <input type="text" class="form-control" name="username" required id="username" value=<?php echo $userData[0]["username"] ?>>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="containerPort">Container Port:</label>
+                                        <input type="text" class="form-control" name="containerPort" id="containerPort" value=<?php echo $userData[0]["containerPort"] ?>>
+                                    </div>
+                                    <div class="form-group pt-1">
+                                        <label for="permissionLevel">User group:</label>
+                                        <select name="permissionLevel" id="permissionLevel">
+                                            <?php
+                                                $permissionReflection = new \ReflectionClass("PermissionLevels");
+                                                $values = $permissionReflection->getConstants();
 
-                                                if ($value == $userData[0]["permissionLevel"])
+                                                foreach ($values as $value)
                                                 {
-                                                    $optionString.='selected="selected"';
+                                                    $optionString = '<option value = "';
+                                                    $optionString .= $value.'"';
+
+                                                    if ($value == $userData[0]["permissionLevel"])
+                                                    {
+                                                        $optionString.='selected="selected"';
+                                                    }
+
+                                                    $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
+
+                                                    echo $optionString;
                                                 }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
+                                </form>
+                            
+                        </div>
 
-                                                $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
+                    <?php
 
-                                                echo $optionString;
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
-                                <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
-                            </form>
-                        
-                    </div>
-
-                <?php
-
+                        }
+                        else
+                        {
+                    ?>
+                            <h1>View User</h1>
+                    <?php
+                            echo "Failed to load user data";
+                        }
                     }
                     else
                     {
-                ?>
-                        <h1>View User</h1>
-                <?php
-                        echo "Failed to load user data";
+                        ?>
+                            <h1>View User</h1>
+                    <?php
+                            echo "Failed to load user data";
+                        
                     }
                 }
                 else

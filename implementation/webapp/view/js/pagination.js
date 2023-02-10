@@ -56,6 +56,9 @@ function loadPage(page, pageSize_, type)
         case "userInfoTable":
             scriptURL = "/honours/webapp/controller/ajaxScripts/loadUserPage.php";
             break;
+        case "exerciseInfoTable":
+            scriptURL = "/honours/webapp/controller/ajaxScripts/loadExercisePage.php";
+            break;
         default:
             return;
     }
@@ -68,21 +71,12 @@ function loadPage(page, pageSize_, type)
         {
             if (result != 0)
             {
-                //output the results in the table based on the type of data
-                switch(type)
-                {
-                    case "userInfoTable":
-                        //remove current user info
-                        body = $("#userInfoTableBody")[0];
-                        body.textContent = '';
+                //remove current info
+                body = $(".paginateTableBody")[0];
+                body.textContent = '';
 
-                        //add new table info
-                        body.insertAdjacentHTML("beforeend", result);
-                        break;
-                    default:
-                        return;
-                    
-                }
+                //add new table info
+                body.insertAdjacentHTML("beforeend", result);
 
                 //update the page number
                 $("#pageNum")[0].textContent = page;
