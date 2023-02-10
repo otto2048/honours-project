@@ -17,11 +17,18 @@ function addInputField()
         {
             //add new input field to form
             rows = $("#newAnswerForm .row");
-            console.log(rows);
             rows[rows.length - 1].insertAdjacentHTML("afterend", result);
+
+            $("#removeInputinput" + inputCounter)[0].addEventListener("click", removeField);
 
             //increase input counter
             inputCounter = inputCounter + 1;
         }
     });
+}
+
+function removeField()
+{
+    //remove the row that this button is in
+    $(this).parent().parent().parent().remove();
 }

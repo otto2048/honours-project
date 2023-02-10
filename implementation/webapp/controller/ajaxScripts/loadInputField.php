@@ -11,7 +11,8 @@
         $inputId = $validate->cleanInput($_POST["inputId"]);
         $inputTypeId = $validate->cleanInput($_POST["inputTypeId"]);
 ?>
-        <div class="row">
+        <div class="row align-items-center">
+            
             <div class="col-4">
                 <div class="form-group">
                     <label for=<?php echo $inputId ?>>Input:</label>
@@ -36,7 +37,11 @@
                             }
                         ?>
                     </select>
+                <button type="button" class="btn btn-outline-dark mt-2 float-end" id="removeInput<?php echo $inputId; ?>">Remove input</button>
+
                 </div>
+
+
             </div>
         </div>
 <?php
