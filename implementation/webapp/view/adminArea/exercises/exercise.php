@@ -211,34 +211,42 @@
                             <!-- add new exercise answers -->
                             <h1>Add new Exercise Answer</h1>
                             <hr>
-                            <form role="form" method="POST" action="../../../controller/actionScripts/createExerciseAnswer.php">
+                            <form role="form" method="POST" action="../../../controller/actionScripts/createExerciseAnswer.php" id="newAnswerForm">
                                 <input type="text" required hidden name="codeId" value="<?php echo $input ?>">
-                                <div class="form-group">
-                                    <label for="input">Input:</label>
-                                    <input type="text" class="form-control" name="input" required id="input">
-                                </div>
-                                <div class="form-group pt-1">
-                                    <label for="inputType">Input Type:</label>
-                                    <select name="inputType" id="inputType">
-                                        <?php
-                                            $answerTypeRef = new \ReflectionClass("AnswerTypes");
-                                            $values = $answerTypeRef->getConstants();
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="input0">Input:</label>
+                                            <input type="text" class="form-control" name="input0" required id="input0">
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group pt-1">
+                                            <label for="inputType0">Input Type:</label>
+                                            <select name="inputType0" id="inputType0">
+                                                <?php
+                                                    $answerTypeRef = new \ReflectionClass("AnswerTypes");
+                                                    $values = $answerTypeRef->getConstants();
 
-                                            foreach ($values as $value)
-                                            {
-                                                $optionString = '<option value = "';
-                                                $optionString .= $value.'"';
-                                                $optionString .= ">".$answerType->getAnswerType($value)."</option>";
+                                                    foreach ($values as $value)
+                                                    {
+                                                        $optionString = '<option value = "';
+                                                        $optionString .= $value.'"';
+                                                        $optionString .= ">".$answerType->getAnswerType($value)."</option>";
 
-                                                echo $optionString;
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
+                                                        echo $optionString;
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                
                                 <div class="form-group">
                                     <label for="output">Output:</label>
                                     <input type="text" class="form-control" name="output" required id="output">
                                 </div>
+                                <button type="button" class="btn btn-outline-dark mt-2" id="addInput">Add another input</button>
                                 <button class="btn btn-dark float-end mt-2" id="addRowBtn" type="submit">Submit</button>
                             </form>
 
@@ -290,6 +298,7 @@
 
         <script src="../../js/deleteConfirmation.js"></script>
         <script src="../../js/modifyTableRows.js"></script>
+        <script src="../../js/addFormInput.js"></script>
 
         <!-- Auto tables plugin -->
         <script src="../../js/auto-sorter-filter/auto-tables.js"></script>
