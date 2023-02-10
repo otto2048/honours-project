@@ -1,6 +1,7 @@
 <?php
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/Model.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
 
     class UserModel extends Model
     {
@@ -125,12 +126,40 @@
             //get the primary key passed through json data
             $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE|JSON_OBJECT_AS_ARRAY);
 
-            $this->sqlStmt = 'DELETE FROM honours_user WHERE userId = ?';
+            //get user data
+            $this->sqlStmt = 'SELECT permissionLevel FROM honours_user WHERE userId = ?';
 
             $WHERE_variables = new \stdClass();
             $WHERE_variables->userId = $data["userId"];
 
             $paramTypes = "i";
+
+            $userJson = parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+
+            //if we fail to get user data, return false
+            if (!$userJson)
+            {
+                return false;
+            }
+
+            $user = json_decode($userJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //if the user doesnt exist, return true
+            if (isset($user["isempty"]))
+            {
+                return true;
+            }
+
+            $permission = $user[0]["permissionLevel"];
+
+            //check if this is an admin user, if so, do not delete
+            if ($permission == PermissionLevels::ADMIN)
+            {
+                return false;
+            }
+
+            //delete user
+            $this->sqlStmt = 'DELETE FROM honours_user WHERE userId = ?';
 
             return parent::delete(json_encode($WHERE_variables), $paramTypes);
         }
