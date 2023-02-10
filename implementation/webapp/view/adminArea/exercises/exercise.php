@@ -187,9 +187,9 @@
                                                 {
                                                     $inputs = json_decode($inputJson, JSON_INVALID_UTF8_SUBSTITUTE);
 
-                                                    foreach ($inputs as $input)
+                                                    foreach ($inputs as $input_)
                                                     {
-                                                        echo $input["value"]." (".$answerType->getAnswerType($input["type"]).")<br>";
+                                                        echo $input_["value"]." (".$answerType->getAnswerType($input_["type"]).")<br>";
                                                     }
                                                 }
                                                 else

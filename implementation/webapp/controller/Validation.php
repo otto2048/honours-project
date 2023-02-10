@@ -253,10 +253,10 @@
             $exerciseAnswer["answer"]["codeId_fk"] = $this->cleanInput($exerciseAnswer["answer"]["codeId_fk"]);
             $exerciseAnswer["answer"]["output"] = $this->cleanInput($exerciseAnswer["answer"]["output"]);
 
-            foreach ($exerciseAnswer["inputs"] as &$input)
+            foreach ($exerciseAnswer["inputs"] as &$input_)
             {
-                $input["value"] = $this->cleanInput($input["value"]);
-                $input["type"] = $this->cleanInput($input["type"]);
+                $input_["value"] = $this->cleanInput($input_["value"]);
+                $input_["type"] = $this->cleanInput($input_["type"]);
             }
 
             //validate code id
