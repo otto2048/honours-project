@@ -164,8 +164,7 @@
                                     <thead>
                                         <tr>
                                             <th scope="col" data-tablesort-type="int">ID</th>
-                                            <th scope="col" data-tablesort-type="string">Input</th>
-                                            <th scope="col" data-tablesort-type="string">Input Type</th>
+                                            <th scope="col" data-tablesort-type="string">Inputs (input, input type)</th>
                                             <th scope="col" data-tablesort-type="string">Output</th>
                                             <th scope="col">Delete Answer</th>
                                         </tr>
@@ -173,14 +172,33 @@
                                     <tbody>
                                         <?php
 
-
                                             //display exercise data
                                             foreach ($exerciseAnswerData as $row)
                                             {
                                                 echo '<tr id="row'.$row["codeAnswerId"].'">';
                                                 echo '<td>'.$row["codeAnswerId"].'</td>';
-                                                echo '<td>'.$row["input"].'</td>';
-                                                echo '<td>'.$answerType->getAnswerType($row["inputType"]).'</td>';
+
+                                                echo '<td>';
+
+                                                //get all inputs
+                                                $inputJson = $exerciseAnswerModel->getAnswerInputs($row["codeAnswerId"]);
+
+                                                if ($inputJson)
+                                                {
+                                                    $inputs = json_decode($inputJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                                    foreach ($inputs as $input)
+                                                    {
+                                                        echo $input["value"]." (".$answerType->getAnswerType($input["type"]).")<br>";
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    echo 'Failed to retrieve inputs</td>';
+                                                }
+
+                                                echo '</td>';
+
                                                 echo '<td>'.$row["output"].'</td>';
                                                 echo '<td><button class="btn btn-danger remove" role="button"><span class="id d-none">'.$row["codeAnswerId"].'</span>Remove</button></td>';
                                                 echo '</tr>';

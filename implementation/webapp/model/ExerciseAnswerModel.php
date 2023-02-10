@@ -17,6 +17,19 @@
             return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
 
+        //get the inputs for an answer
+        public function getAnswerInputs($answerId)
+        {
+            $this->sqlStmt = "SELECT * FROM honours_values INNER JOIN honours_code_answer ON codeAnswer_fk = honours_code_answer.codeAnswerId WHERE codeAnswer_fk = ?";
+
+            $WHERE_variables = new \stdClass();
+            $WHERE_variables -> answerId = $answerId;
+
+            $paramTypes = "i";
+
+            return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+        }
+
         //delete an answer for an exercise
         public function deleteData($jsonData)
         {
