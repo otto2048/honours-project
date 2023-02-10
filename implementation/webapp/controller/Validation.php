@@ -265,8 +265,8 @@
             //validate input
             if (!$this->validateString($exerciseAnswer["input"], Validation::EXERCISE_ANSWER_INPUT))
             {
-                $errorMessage[1]["content"] = "Invalid input";
-                $errorMessage[1]["success"] = false;
+                $errorMessage[2]["content"] = "Invalid input";
+                $errorMessage[2]["success"] = false;
             }
 
             //validate input type
