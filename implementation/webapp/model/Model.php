@@ -75,7 +75,7 @@
 
             if (!$this->stmt)
             {
-                return null;
+                return false;
             }
 
             //bind result if this query has a WHERE clause or JOIN etc.
@@ -85,7 +85,7 @@
 
                 if (!$bindResult)
                 {
-                    return null;
+                    return false;
                 }
             }
 
@@ -160,12 +160,14 @@
         //the order of the json data and the params must match up so that the data is unpacked correctly
         //on success, return true
         //on failure, return false
-        public function create($jsonData, $paramTypes, &$errorCode = 0)
+        public function create($jsonData, $paramTypes, &$errorCode = 0, &$lastInsertId = -1)
         {
             //run query
             $querySuccess = $this->runQuery($jsonData, $paramTypes, false);
 
             $errorCode = mysqli_errno($this->conn->getConnection());
+
+            $lastInsertId = $this->stmt->insert_id;
 
             //close prepared statement
             mysqli_stmt_close($this->stmt);

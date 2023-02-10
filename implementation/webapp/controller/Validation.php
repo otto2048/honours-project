@@ -250,37 +250,50 @@
             $exerciseAnswer = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //sanitize data
-            $exerciseAnswer["codeId_fk"] = $this->cleanInput($exerciseAnswer["codeId_fk"]);
-            $exerciseAnswer["input"] = $this->cleanInput($exerciseAnswer["input"]);
-            $exerciseAnswer["inputType"] = $this->cleanInput($exerciseAnswer["inputType"]);
-            $exerciseAnswer["output"] = $this->cleanInput($exerciseAnswer["output"]);
+            $exerciseAnswer["answer"]["codeId_fk"] = $this->cleanInput($exerciseAnswer["answer"]["codeId_fk"]);
+            $exerciseAnswer["answer"]["output"] = $this->cleanInput($exerciseAnswer["answer"]["output"]);
+
+            foreach ($exerciseAnswer["inputs"] as &$input_)
+            {
+                $input_["value"] = $this->cleanInput($input_["value"]);
+                $input_["type"] = $this->cleanInput($input_["type"]);
+            }
 
             //validate code id
-            if (!$this->validateInt($exerciseAnswer["codeId_fk"]))
+            if (!$this->validateInt($exerciseAnswer["answer"]["codeId_fk"]))
             {
                 $errorMessage[1]["content"] = "Invalid code ID";
                 $errorMessage[1]["success"] = false;
             }
 
-            //validate input
-            if (!$this->validateString($exerciseAnswer["input"], Validation::EXERCISE_ANSWER_INPUT))
+            //validate each input
+            $errorCounter = 2;
+            foreach ($exerciseAnswer["inputs"] as $key => $input)
             {
-                $errorMessage[2]["content"] = "Invalid input";
-                $errorMessage[2]["success"] = false;
-            }
+                //validate input
+                if (!$this->validateString($input["value"], Validation::EXERCISE_ANSWER_INPUT))
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid input on input: ".substr($key, -1);
+                    $errorMessage[$errorCounter]["success"] = false;
 
-            //validate input type
-            if (!$this->validateInputType($exerciseAnswer["inputType"]))
-            {
-                $errorMessage[3]["content"] = "Invalid input type";
-                $errorMessage[3]["success"] = false;
+                    $errorCounter++;
+                }
+
+                //validate input type
+                if (!$this->validateInputType($input["type"]))
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid input type on input: ".substr($key, -1);
+                    $errorMessage[$errorCounter]["success"] = false;
+
+                    $errorCounter++;
+                }
             }
 
             //validate output
-            if (!$this->validateString($exerciseAnswer["output"], Validation::EXERCISE_ANSWER_OUTPUT))
+            if (!$this->validateString($exerciseAnswer["answer"]["output"], Validation::EXERCISE_ANSWER_OUTPUT))
             {
-                $errorMessage[1]["content"] = "Invalid output";
-                $errorMessage[1]["success"] = false;
+                $errorMessage[$errorCounter]["content"] = "Invalid output";
+                $errorMessage[$errorCounter]["success"] = false;
             }
 
             //repack sanitized data
