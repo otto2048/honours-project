@@ -1,0 +1,8 @@
+{
+    "comments": "The file for the logical error exercise",
+    "files" : [
+        "logicalError/logicalError.cpp"
+    ]
+}
+
+
