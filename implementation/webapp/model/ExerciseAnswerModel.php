@@ -92,10 +92,6 @@
             }
             catch (mysqli_sql_exception $exception)
             {
-                echo "here";
-                echo "<pre>";
-                var_dump($exception);
-                echo "</pre>";
                 mysqli_rollback($this->conn->getConnection());
 
                 return false;
