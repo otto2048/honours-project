@@ -381,8 +381,8 @@
             //validate type
             if (!$this->validateExerciseType($exercise["type"]))
             {
-                $errorMessage[3]["content"] = "Invalid exercise type";
-                $errorMessage[3]["success"] = false;
+                $errorMessage[6]["content"] = "Invalid exercise type";
+                $errorMessage[6]["success"] = false;
             }
 
             //repack sanitized data
