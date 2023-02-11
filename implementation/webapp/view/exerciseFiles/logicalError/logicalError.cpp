@@ -1,7 +1,4 @@
-#include <iostream>
-
-using std::cout;
-using std::endl;
+#include "logicalError.h"
 
 //find the largest of 2 numbers
 int largest(int a, int b)
@@ -39,16 +36,4 @@ int largest3(int a, int b, int c)
 int largest6(int a, int b, int c, int d, int e, int f)
 {
     return largest(largest3(a, b, c), largest3(d, e, f));
-}
-
-int main()
-{
-    int u = 5;
-    int v = 5;
-    int w = 1;
-    int x = 2;
-    int y = 4;
-    int z = 1;
-
-    cout << largest6(u, v, w, x, y, z) << endl;
 }

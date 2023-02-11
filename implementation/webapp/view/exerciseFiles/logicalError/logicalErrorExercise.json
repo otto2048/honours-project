@@ -1,7 +1,15 @@
 {
     "comments": "The file for the logical error exercise",
-    "files" : [
-        "logicalError/logicalError.cpp"
+    "user_files" : [
+        "logicalError/logicalError.h",
+        "logicalError/logicalError.cpp",
+        "logicalError/main.cpp"
+    ],
+    "sys_files" : [
+        "logicalError/logicalError.h",
+        "logicalError/logicalError.cpp",
+        "logicalError/main_test.cpp",
+        "logicalError/unitTest.cpp"
     ]
 }
 
