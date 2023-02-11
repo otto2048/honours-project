@@ -10,7 +10,9 @@ const ws = require('ws');
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 
+//write to files
 const fs = require('fs');
+const async = require('async');
 
 const wss = new ws.Server({noServer: true});
 
@@ -51,47 +53,76 @@ function onConnect(ws) {
         }
         else if (clientMsg.operation == "COMPILE")
         {
-            //create cpp file and compile it
-            fs.writeFile("tmpFile.cpp", clientMsg.value, function(err) {
-                if (err)
-                {
-                    //failed to write to file
-                    console.log("Failed to write to file");
-                }
-                
-                console.log("File was saved!");
+            //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            async.each(clientMsg.value, function(file, callback) {
+                var fname = file[0];
+                var content = file[1];
 
-                //compile file
-                exec("g++ tmpFile.cpp -o executable", function(err, stdout, stderr)
+                fs.writeFile(fname, content, function (err)
                 {
-                    if (stdout)
+                    if (err)
                     {
-                        //give compilation errors
-                        console.log(stdout);
+                        console.log(err);
                     }
                     else
                     {
-                        //use child process to start program
-                        progProcess = spawn('./executable');
-
-                        progProcess.stdout.on('data', function (data) {
-                            console.log('stdout: ' + data.toString());
-                            ws.send(data.toString());
-                        });
-
-                        progProcess.stderr.on('data', function (data) {
-                            console.log('stderr: ' + data.toString());
-                            ws.send(data.toString());
-                        });
-
-                        progProcess.on('exit', function (code) {
-                            var data = 'Program exited with code ' + code.toString();
-                            console.log();
-                            ws.send(data);
-                        });
+                        console.log("created file " + fname);
                     }
+
+                    callback();
                 });
+            }, function (err)
+            {
+                if (err) {
+                    // One of the iterations produced an error.
+                    // All processing will now stop.
+                    console.log('A file failed to process');
+                }
+                else {
+                    console.log('All files have been processed successfully');
+                }
             });
+            
+            // fs.writeFile("tmpFile.cpp", clientMsg.value, function(err) {
+            //     if (err)
+            //     {
+            //         //failed to write to file
+            //         console.log("Failed to write to file");
+            //     }
+                
+            //     console.log("File was saved!");
+
+            //     //compile file
+            //     exec("g++ tmpFile.cpp -o executable", function(err, stdout, stderr)
+            //     {
+            //         if (stdout)
+            //         {
+            //             //give compilation errors
+            //             console.log(stdout);
+            //         }
+            //         else
+            //         {
+            //             //use child process to start program
+            //             progProcess = spawn('./executable');
+
+            //             progProcess.stdout.on('data', function (data) {
+            //                 console.log('stdout: ' + data.toString());
+            //                 ws.send(data.toString());
+            //             });
+
+            //             progProcess.stderr.on('data', function (data) {
+            //                 console.log('stderr: ' + data.toString());
+            //                 ws.send(data.toString());
+            //             });
+
+            //             progProcess.on('exit', function (code) {
+            //                 var data = 'Program exited with code ' + code.toString();
+            //                 console.log();
+            //                 ws.send(data);
+            //             });
+            //         }
+            //     });
+            // });
 
 
             
