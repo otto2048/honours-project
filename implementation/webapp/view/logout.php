@@ -1,6 +1,7 @@
 <!-- logout message displayed here -->
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/logout.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 ?>
 
 <!doctype html>
@@ -12,7 +13,7 @@
     </head>
     <body>
         <?php 
-            include "navigation.php";
+            getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
 
         <div class="container">

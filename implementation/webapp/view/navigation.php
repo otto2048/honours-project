@@ -1,9 +1,10 @@
 <!-- The navigation for all the web pages -->
-<!doctype html>
 
-<html lang="en">
-    <head></head>
-    <body>
+<?php
+
+    function getNavigation($selected = null)
+    {
+?>
         <nav class="navbar navbar-expand-lg navbar-dark theme-darker">
             <div class="container-fluid">
                 <div class="d-flex">
@@ -74,5 +75,7 @@
             </div>
         </nav>
         <script src="/honours/webapp/view/js/navigation.js"></script>
-    </body>
-</html>
+<?php
+    }
+
+?>

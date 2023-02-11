@@ -6,6 +6,8 @@
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
 
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
+
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
     {
@@ -27,13 +29,7 @@
     </head>
     <body>
         <?php 
-            function getHeader()
-            {
-                include "../../navigation.php";
-            }
-
-            getHeader();
-
+            getNavigation();
         ?>
         
         <div class="container p-3">

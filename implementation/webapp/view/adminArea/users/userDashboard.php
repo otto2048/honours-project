@@ -5,6 +5,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
 
     //check if the user is allowed to be here
@@ -28,14 +29,7 @@
     </head>
     <body>
         <?php 
-            function getHeader()
-            {
-                $selected = "userDashboard.php";
-                include "../../navigation.php";
-            }
-
-            getHeader();
-
+            getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
         
         <div class="container p-3">
