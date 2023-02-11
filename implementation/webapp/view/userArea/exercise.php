@@ -90,8 +90,10 @@
                                     </ul>
 
                                     <div class="tab-content">
+                                        <input type="hidden" name="main.cpp">
                                         <div class="tab-pane fade show active editorContainer" id="mainFileContainer" role="tabpanel" aria-labelledby="mainFile">
                                             <div id="mainEditor" class="editor">
+//ENTRY POINT
 #include &#60;iostream&#62;
 int main() {
     // Write C++ code here
@@ -111,6 +113,7 @@ int main() {
 
                                                 ?>
 
+                                                <input type="hidden" name="<?php echo $pathInfo["basename"]; ?>">
                                                 <div class="tab-pane fade editorContainer" id="<?php echo $pathInfo["basename"]; ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
                                                     <div id="<?php echo $pathInfo["filename"]; ?>Editor" class="editor">
 <?php echo $file; ?>
