@@ -80,51 +80,53 @@ function onConnect(ws) {
                 }
                 else {
                     console.log('All files have been processed successfully');
+
+                    //compile program
+                    var fileString = "";
+                    for (var i=0; i<clientMsg.value.length; i++)
+                    {
+                        console.log(clientMsg.value[i][0].split('.').pop());
+                        if (clientMsg.value[i][0].split('.').pop() == "cpp")
+                        {
+                            fileString = fileString + clientMsg.value[i][0] + " ";
+                        }
+                    }
+
+                    console.log(fileString);
+
+                    var command = "g++ " + fileString + " -o executable";
+
+                    exec(command, function(err, stdout, stderr)
+                    {
+                        if (stdout)
+                        {
+                            //give compilation errors
+                            console.log(stdout);
+                        }
+                        else
+                        {
+                            //use child process to start program
+                            progProcess = spawn('./executable');
+
+                            progProcess.stdout.on('data', function (data) {
+                                console.log('stdout: ' + data.toString());
+                                ws.send(data.toString());
+                            });
+
+                            progProcess.stderr.on('data', function (data) {
+                                console.log('stderr: ' + data.toString());
+                                ws.send(data.toString());
+                            });
+
+                            progProcess.on('exit', function (code) {
+                                var data = 'Program exited with code ' + code.toString();
+                                console.log();
+                                ws.send(data);
+                            });
+                        }
+                    });
                 }
             });
-            
-            // fs.writeFile("tmpFile.cpp", clientMsg.value, function(err) {
-            //     if (err)
-            //     {
-            //         //failed to write to file
-            //         console.log("Failed to write to file");
-            //     }
-                
-            //     console.log("File was saved!");
-
-            //     //compile file
-            //     exec("g++ tmpFile.cpp -o executable", function(err, stdout, stderr)
-            //     {
-            //         if (stdout)
-            //         {
-            //             //give compilation errors
-            //             console.log(stdout);
-            //         }
-            //         else
-            //         {
-            //             //use child process to start program
-            //             progProcess = spawn('./executable');
-
-            //             progProcess.stdout.on('data', function (data) {
-            //                 console.log('stdout: ' + data.toString());
-            //                 ws.send(data.toString());
-            //             });
-
-            //             progProcess.stderr.on('data', function (data) {
-            //                 console.log('stderr: ' + data.toString());
-            //                 ws.send(data.toString());
-            //             });
-
-            //             progProcess.on('exit', function (code) {
-            //                 var data = 'Program exited with code ' + code.toString();
-            //                 console.log();
-            //                 ws.send(data);
-            //             });
-            //         }
-            //     });
-            // });
-
-
             
         }
     });

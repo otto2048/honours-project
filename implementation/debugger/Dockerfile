@@ -5,6 +5,7 @@ WORKDIR /compilerApp
 COPY . .
 
 RUN npm install ws
+RUN npm install async
 
 EXPOSE 8080
 
