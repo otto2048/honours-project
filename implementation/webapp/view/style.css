@@ -7,6 +7,18 @@
     background-color: var(--green);
 }
 
+.nav-link {
+    color: #f8f9fa;
+}
+
+.navbar-nav .nav-link.active {
+    text-decoration: underline;
+}
+
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link:focus {
+    text-decoration: underline;
+}
+
 /* editor */
 .editor { 
     position: absolute;

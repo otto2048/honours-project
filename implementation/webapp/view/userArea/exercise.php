@@ -13,7 +13,7 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Homepage</title>
         <?php include "../head.php"; ?>
@@ -32,51 +32,54 @@
             getNavigation();
         ?>
 
-        <div class="row">
-            <div class="col">
-                <ul class="nav-tabs nav" role="tablist">
-                    <li class="nav-item">
-                        <button class="nav-link active" id="mainFile" data-bs-toggle="tab" data-bs-target="#mainFileContainer" role="tab" type="button" aria-controls="main.cpp" aria-selected="true">main.cpp</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" id="testFile" data-bs-toggle="tab" data-bs-target="#testFileContainer" type="button" role="tab" aria-controls="test.cpp" aria-selected="false">test.cpp</button>
-                    </li>
-                </ul>
+        <div class="container p-3">
 
-                <div class="tab-content">
-                    <div class="tab-pane fade show active editorContainer" id="mainFileContainer" role="tabpanel" aria-labelledby="mainFile">
-                        <div id="mainEditor" class="editor">
-                        #include &#60;iostream&#62;
-        int main() {
-            // Write C++ code here
-            std::cout &lt;&lt; "Hello world!";
+            <div class="row">
+                <div class="col">
+                    <ul class="nav-tabs nav bg-dark" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="mainFile" data-bs-toggle="tab" data-bs-target="#mainFileContainer" role="tab" type="button" aria-controls="main.cpp" aria-selected="true">main.cpp</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="testFile" data-bs-toggle="tab" data-bs-target="#testFileContainer" type="button" role="tab" aria-controls="test.cpp" aria-selected="false">test.cpp</button>
+                        </li>
+                    </ul>
 
-            return 0;
-        }
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active editorContainer" id="mainFileContainer" role="tabpanel" aria-labelledby="mainFile">
+                            <div id="mainEditor" class="editor">
+                            #include &#60;iostream&#62;
+            int main() {
+                // Write C++ code here
+                std::cout &lt;&lt; "Hello world!";
+
+                return 0;
+            }
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade editorContainer" id="testFileContainer" role="tabpanel" aria-labelledby="testFile">
+                            <div id="testEditor" class="editor">
+                            #include &#60;iostream&#62;
+            int main() {
+                // Write C++ code here
+                std::cout &lt;&lt; "This is a test!";
+
+                return 0;
+            }
+                            </div>
                         </div>
                     </div>
 
-                    <div class="tab-pane fade editorContainer" id="testFileContainer" role="tabpanel" aria-labelledby="testFile">
-                        <div id="testEditor" class="editor">
-                        #include &#60;iostream&#62;
-        int main() {
-            // Write C++ code here
-            std::cout &lt;&lt; "This is a test!";
-
-            return 0;
-        }
-                        </div>
-                    </div>
+                    
                 </div>
+                <div class="col">
+                    <!-- container for terminal -->
+                    <div id="code-output"></div>
+                </div>
+            </div>
 
-                
-            </div>
-            <div class="col">
-                <!-- container for terminal -->
-                <div id="code-output"></div>
-            </div>
         </div>
-
         <script src="../js/exerciseEnvironmentSetup.js"></script>
     </body>
 </html>

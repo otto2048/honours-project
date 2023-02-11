@@ -16,7 +16,7 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Homepage</title>
         <?php include "head.php"; ?>
@@ -25,7 +25,7 @@
         <?php
             getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
-        <div class="container p-3">
+        <div class="container p-3" >
             <h1>Your Exercises</h1>
             <hr>
             <?php
@@ -153,5 +153,6 @@
                 }
             ?>
         </div>
+        
     </body>
 </html>
