@@ -68,6 +68,7 @@
 
                             ?>
                             <button type="button" class="btn text-light theme-darker float-end" id="play-btn">Play</button>
+                            <button type="button" class="btn text-light theme-darker float-end" id="complete-btn">Submit</button>
                             <ul class="nav-tabs nav bg-dark" role="tablist">
                                 <li class="nav-item">
                                     <button class="nav-link active" id="mainFile" data-bs-toggle="tab" data-bs-target="#mainFileContainer" role="tab" type="button" aria-controls="main.cpp" aria-selected="true">main.cpp</button>

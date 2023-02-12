@@ -10,32 +10,7 @@ var files = $(".editor");
 
 window.onload = preparePage();
 
-let socket = new WebSocket("ws://192.168.17.50:5000");
-
-//set up socket
-socket.onopen = function(e) {
-    console.log("Connection established");
-};
-
-socket.onmessage = function(event) {
-    //get active terminal
-    var term = $.terminal.active();
-
-    //output received message into terminal
-    term.echo(event.data);
-};
-
-socket.onclose = function(event) {
-    if (event.wasClean) {
-        console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
-    } else {
-        console.log("Connection died");
-    }
-};
-
-socket.onerror = function(error) {
-    console.log("[error]");
-};
+var socket = null;
 
 function preparePage()
 {
@@ -47,6 +22,8 @@ function preparePage()
     
     //add event listener to play button
     $("#play-btn")[0].addEventListener("click", startProgram);
+
+    $("#complete-btn")[0].addEventListener("click", disconnectContainer);
 
     //set up jquery terminal
     $('#code-output').terminal(function(command)
@@ -107,6 +84,55 @@ function launchCompiler()
 {
     $.ajax({
         url: "/honours/webapp/controller/ajaxScripts/launchCompiler.php",
+        async: false,
+        success: function(result)
+        {
+            if (result != 0)
+            {
+                //connect web socket
+                socket = new WebSocket("ws://192.168.17.50:5000");
+
+                //set up socket
+                socket.onopen = function(e) {
+                    console.log("Connection established");
+
+                    //allow user to interact with compiler
+                };
+
+                socket.onmessage = function(event) {
+                    //get active terminal
+                    var term = $.terminal.active();
+
+                    //output received message into terminal
+                    term.echo(event.data);
+                };
+
+                socket.onclose = function(event) {
+
+                    //clean up docker container
+                    disconnectContainer();
+
+                    if (event.wasClean) {
+                        console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
+                    } else {
+                        console.log("Connection died");
+                    }
+                };
+
+                socket.onerror = function(error) {
+                    console.log("[error]");
+                };
+            }
+            console.log(result);
+        }
+    });
+}
+
+function disconnectContainer()
+{
+    //clean up docker container
+    $.ajax({
+        url: "/honours/webapp/controller/ajaxScripts/killContainer.php",
         async: false,
         success: function(result)
         {
