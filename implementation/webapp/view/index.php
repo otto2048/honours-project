@@ -154,7 +154,7 @@
             ?>
         </div>
         
-        <script src="../js/setTheme.js"></script>
+        <script src="js/setTheme.js"></script>
 
     </body>
 </html>
