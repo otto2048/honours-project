@@ -18,7 +18,7 @@
 
 <html lang="en" data-bs-theme="dark">
     <head>
-        <title>Debugging Training Tool - Homepage</title>
+        <title>Debugging Training Tool - Exercise</title>
         <?php include "../head.php"; ?>
 
         <!-- jquery terminal -->

@@ -25,7 +25,7 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - View Exercise</title>
         <?php include "../../head.php"; ?>
@@ -75,7 +75,7 @@
 
                                         <button class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></button>
 
-                                        <a href="updateExercise.php?id=<?php echo $exerciseData[0]["codeId"] ?>" class="btn btn-dark ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="edit-btn">Edit <span class="mdi mdi-lead-pencil"></span></a>
+                                        <a href="updateExercise.php?id=<?php echo $exerciseData[0]["codeId"] ?>" class="btn btn-primary ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="edit-btn">Edit <span class="mdi mdi-lead-pencil"></span></a>
                                         
                                     </div>
                                 </div>
@@ -260,7 +260,7 @@
                                     <input type="text" class="form-control" name="output" required id="output">
                                 </div>
                                 <button type="button" class="btn btn-outline-dark mt-2" id="addInput">Add another input</button>
-                                <button class="btn btn-dark float-end mt-2" id="addRowBtn" type="submit">Submit</button>
+                                <button class="btn btn-primary float-end mt-2" id="addRowBtn" type="submit">Submit</button>
                             </form>
 
                         <?php
@@ -302,7 +302,7 @@
                         <p>All exercise data will be lost!</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn-dark btn" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn-primary btn" data-bs-dismiss="modal">Close</button>
                         <a href="../../../controller/actionScripts/deleteExercise.php?codeId=<?php echo $input; ?>" class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></a>
                     </div>
                 </div>

@@ -24,7 +24,7 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - View User</title>
         <?php include "../../head.php"; ?>
@@ -73,7 +73,7 @@
 
                                         <button class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></button>
 
-                                        <a href="updateUser.php?id=<?php echo $userData[0]["userId"] ?>" class="btn btn-dark ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="edit-btn">Edit <span class="mdi mdi-lead-pencil"></span></a>
+                                        <a href="updateUser.php?id=<?php echo $userData[0]["userId"] ?>" class="btn btn-primary ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="edit-btn">Edit <span class="mdi mdi-lead-pencil"></span></a>
                                         
                                     </div>
                                 </div>
@@ -395,7 +395,7 @@
                         <p>All user data will be lost!</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn-dark btn" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn-primary btn" data-bs-dismiss="modal">Close</button>
                         <a href="../../../controller/actionScripts/deleteUser.php?userId=<?php echo $input; ?>" class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></a>
                     </div>
                 </div>

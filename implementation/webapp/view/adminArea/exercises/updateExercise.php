@@ -22,7 +22,7 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - View Exercise</title>
         <?php include "../../head.php"; ?>
@@ -149,7 +149,7 @@
                                             ?>
                                         </select>
                                     </div>
-                                    <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
+                                    <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                                 </form>
                             
                         </div>

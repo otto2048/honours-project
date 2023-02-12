@@ -13,7 +13,7 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Login</title>
         <?php include "head.php"; ?>
