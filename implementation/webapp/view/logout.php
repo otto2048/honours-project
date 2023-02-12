@@ -29,5 +29,8 @@
                 <!-- TODO: participant debrief form here -->
             </div>
         </div>
+
+        <script src="../js/setTheme.js"></script>
+
     </body>
 </html>

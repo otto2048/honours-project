@@ -406,5 +406,8 @@
         <script src="../../js/auto-sorter-filter/auto-tables.js"></script>
 
         <script src="../../js/deleteConfirmation.js"></script>
+
+        <script src="../../js/setTheme.js"></script>
+
     </body>
 </html>

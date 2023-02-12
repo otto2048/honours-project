@@ -147,5 +147,8 @@
 
         
         </div>
+
+        <script src="../../js/setTheme.js"></script>
+
     </body>
 </html>

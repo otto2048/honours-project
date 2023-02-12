@@ -153,5 +153,8 @@ int main() {
 
         </div>
         <script src="../js/exerciseClient.js"></script>
+
+        <script src="../js/setTheme.js"></script>
+
     </body>
 </html>

@@ -313,6 +313,8 @@
         <script src="../../js/modifyTableRows.js"></script>
         <script src="../../js/addFormInput.js"></script>
 
+        <script src="../../js/setTheme.js"></script>
+
         <!-- Auto tables plugin -->
         <script src="../../js/auto-sorter-filter/auto-tables.js"></script>
     </body>

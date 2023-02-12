@@ -9,7 +9,6 @@
         //if the compiler is running, kill it
         if ($compiler->getCompilerStatus())
         {
-            echo "killing";
             if (!$compiler->killCompiler())
             {
                 echo 0;
