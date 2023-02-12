@@ -2,6 +2,7 @@
     include 'Session.php';
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/controllers/UserController.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/controllers/CompilerController.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
 
     function logout()
@@ -12,6 +13,10 @@
             $userController = new UserController(ModelClassTypes::USER);
             $userController -> deleteUser($_SESSION["userId"], true);
         }
+
+        //kill the users compiler if the container is still running
+        $compiler = new CompilerController();
+        $compiler->killCompiler();
 
         //unset variables
         session_unset();

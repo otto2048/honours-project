@@ -1,27 +1,21 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-    //kill a container
+    //kill the container running the compiler app
 
-    //get sdk
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/docker_php/vendor/autoload.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/controllers/CompilerController.php");
 
-    use Spatie\Docker\DockerContainer;
-    
-    $containerInstance = unserialize($_SESSION["dockerContainer"]);
-
-    if ($containerInstance)
+    function killCompiler()
     {
-        // $inspectArray = $containerInstance->inspect();
-        // var_dump($inspectArray);
-        $containerInstance->stop();
+        $compiler = new CompilerController();
 
-        echo 1;
+        if ($compiler->killCompiler())
+        {
+            echo 1;
+        }
+        else
+        {
+            echo 0;
+        }
     }
-    else
-    {
-        echo 0;
-    }
+
+    killCompiler();
 ?>

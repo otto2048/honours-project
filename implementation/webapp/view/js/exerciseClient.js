@@ -10,7 +10,35 @@ var files = $(".editor");
 
 window.onload = preparePage();
 
-var socket = null;
+//connect web socket
+socket = new WebSocket("ws://192.168.17.50:5000");
+
+//set up socket
+socket.onopen = function(e) {
+    console.log("Connection established");
+
+    //allow user to interact with compiler
+};
+
+socket.onmessage = function(event) {
+    //get active terminal
+    var term = $.terminal.active();
+
+    //output received message into terminal
+    term.echo(event.data);
+};
+
+socket.onclose = function(event) {
+    if (event.wasClean) {
+        console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
+    } else {
+        console.log("Connection died");
+    }
+};
+
+socket.onerror = function(error) {
+    console.log("[error]");
+};
 
 function preparePage()
 {
@@ -89,39 +117,7 @@ function launchCompiler()
         {
             if (result != 0)
             {
-                //connect web socket
-                socket = new WebSocket("ws://192.168.17.50:5000");
-
-                //set up socket
-                socket.onopen = function(e) {
-                    console.log("Connection established");
-
-                    //allow user to interact with compiler
-                };
-
-                socket.onmessage = function(event) {
-                    //get active terminal
-                    var term = $.terminal.active();
-
-                    //output received message into terminal
-                    term.echo(event.data);
-                };
-
-                socket.onclose = function(event) {
-
-                    //clean up docker container
-                    disconnectContainer();
-
-                    if (event.wasClean) {
-                        console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
-                    } else {
-                        console.log("Connection died");
-                    }
-                };
-
-                socket.onerror = function(error) {
-                    console.log("[error]");
-                };
+                
             }
             console.log(result);
         }
