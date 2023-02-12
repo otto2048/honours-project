@@ -3,6 +3,14 @@
     --green: #00663F;
 }
 
+[data-bs-theme=dark] {
+    --bs-body-color: #fff;
+}
+
+[data-bs-theme=light] {
+    --bs-body-color: #000;
+}
+
 .theme-darker {
     background-color: var(--green);
 }
