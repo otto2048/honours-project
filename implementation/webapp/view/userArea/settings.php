@@ -33,5 +33,8 @@
                 </select>
             </div>
         </div>
+
+        <script src="../js/manageTheme.js"></script>
+        <script src="../js/setTheme.js"></script>
     </body>
 </html>
