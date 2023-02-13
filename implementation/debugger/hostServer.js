@@ -6,6 +6,7 @@ const http = require('http');
 const ws = require('ws');
 const wss = new ws.Server({noServer: true});
 const exec = require('child_process').exec;
+const { v4: uuidv4 } = require('uuid');
 
 const OP_CONNECTION = "CONNECTION";
 const OP_INPUT = "INPUT";
@@ -55,9 +56,14 @@ function onConnect(ws, req) {
             obj.value = null;
             obj.sender = SENDER_HOST;
 
-            var port = Math.floor(Math.random() * 10);
+            var port = generatePort(2, 5);
 
-            port = port + 5000;
+            if (!port)
+            {
+                console.log("Out of available ports");
+                ws.send(JSON.stringify(obj));
+                return;
+            }
 
             command = "docker run -d -p " + port + ":8080 debugger_app:1.1";
 
@@ -82,25 +88,43 @@ function onConnect(ws, req) {
 
                 ws.send(JSON.stringify(obj));
 
-
+                clients[uuidv4()] = {websocket: ws, containerPort: port};
               });
 
         }
-
-        console.log("on message");
-        console.log(req.socket.remoteAddress);
-
-        
-
-        
     });
 
     ws.on('close', function()
     {
-        console.log(req.socket.remoteAddress + " lost");
+        var values = Object.values(clients);
+        var client = values.find(doc => doc.websocket === ws);
 
-        
+        if (client)
+        {
+            console.log(client.containerPort + " lost");
+
+            //clean up container for this client
+        }
+
     });
+}
 
-    
+function generatePort(portRange, attempts)
+{
+    var values = Object.values(clients);
+
+    var gen = 0;
+
+    for (var i=0; i<attempts; i++)
+    {
+        gen = Math.floor(Math.random() * portRange) + 5000;
+        console.log("Generated port: "+gen);
+
+        if (!values.find(doc => doc.containerPort === gen))
+        {
+            return gen;
+        }
+    }
+
+    return null;
 }
