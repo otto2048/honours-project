@@ -140,6 +140,8 @@ int main() {
                                 </div>
                             </div>
 
+                            <script src="../js/exerciseClient.js" type="module"></script>
+
                             <?php
                         }
                     }
@@ -150,7 +152,6 @@ int main() {
             
 
         </div>
-        <script src="../js/exerciseClient.js"></script>
 
         <script src="../js/setTheme.js"></script>
 
