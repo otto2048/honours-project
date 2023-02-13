@@ -5,8 +5,7 @@
 const http = require('http');
 const ws = require('ws');
 const wss = new ws.Server({noServer: true});
-const compose = require("docker-compose");
-const path = require("path");
+const exec = require('child_process').exec;
 
 //keep track of the clients
 const clients = [];
@@ -36,16 +35,30 @@ function onConnect(ws, req) {
         console.log("on message");
         console.log(req.socket.remoteAddress);
 
-        console.log(path.join(__dirname, "debuggerApp"));
-        
-        compose.upAll({ cwd: path.join(__dirname, "debuggerApp"), log: true }).then(
-            () => {
-              console.log('done')
-            },
-            (err) => {
-              console.log('something went wrong:', err.message)
+        exec("docker run -d -p 5000:8080 --name testName__ debugger_app:1.1", (error, stdout, stderr) => {
+            if (error) {
+              console.error(`error: ${error.message}`);
+              return;
             }
-          )
+          
+            if (stderr) {
+              console.error(`stderr: ${stderr}`);
+              return;
+            }
+          
+            console.log(`stdout:\n${stdout}`);
+          });
+
+        // console.log(path.join(__dirname, "debuggerApp"));
+        
+        // compose.upAll({ cwd: path.join(__dirname, "debuggerApp"), log: true }).then(
+        //     () => {
+        //       console.log('done')
+        //     },
+        //     (err) => {
+        //       console.log('something went wrong:', err.message)
+        //     }
+        //   )
         
     });
 

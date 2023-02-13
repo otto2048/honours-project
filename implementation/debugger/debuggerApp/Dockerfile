@@ -4,8 +4,7 @@ WORKDIR /debuggerApp
 
 COPY . .
 
-RUN npm install ws
-RUN npm install async
+RUN npm install
 
 EXPOSE 8080
 
