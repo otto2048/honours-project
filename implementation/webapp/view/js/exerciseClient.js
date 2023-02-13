@@ -11,6 +11,7 @@ var files = $(".editor");
 window.onload = preparePage();
 
 //connect web socket
+// TODO: change this value based on the users port
 socket = new WebSocket("ws://192.168.17.50:5000");
 
 //set up socket
@@ -51,6 +52,7 @@ function preparePage()
     //add event listener to play button
     $("#play-btn")[0].addEventListener("click", startProgram);
 
+    // TODO: marking of exercise if applicable
     $("#complete-btn")[0].addEventListener("click", disconnectContainer);
 
     //set up jquery terminal
