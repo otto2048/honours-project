@@ -44,7 +44,7 @@
             $pageLimit = ceil(floatval(json_decode(parent::retrieve(), JSON_OBJECT_AS_ARRAY)[0]["totalUsers"]) / $pageSize);
 
             //get the page of users
-            $this->sqlStmt = 'SELECT honours_user.username, honours_user.userId, honours_user.permissionLevel, honours_user.containerPort
+            $this->sqlStmt = 'SELECT honours_user.username, honours_user.userId, honours_user.permissionLevel
                 FROM honours_user LIMIT ? OFFSET ?';
 
             $variables = new \stdClass();
@@ -165,26 +165,21 @@
         }
 
         //create a user
-        //TODO: update this once container port is sorted
         public function createData($jsonData)
         {
-          //  $this->sqlStmt = 'INSERT INTO honours_user (username, password, permissionLevel, containerPort) VALUES (?, ?, ?, ?)';
             $this->sqlStmt = 'INSERT INTO honours_user (username, password, permissionLevel) VALUES (?, ?, ?)';
 
-           // $paramTypes = "ssii";
             $paramTypes = "ssi";
 
             return parent::create($jsonData, $paramTypes);
-
-            //get the last port value, add a value and add another random value to get the port value for this user - to avoid db clashes
         }
 
         //update a user
         public function updateData($jsonData)
         {
-            $this->sqlStmt = 'UPDATE honours_user SET username = ?, permissionLevel = ?, containerPort = ? WHERE userId = ?';
+            $this->sqlStmt = 'UPDATE honours_user SET username = ?, permissionLevel = ? WHERE userId = ?';
 
-            $paramTypes = "siii";
+            $paramTypes = "sii";
 
             return parent::update($jsonData, $paramTypes);
         }

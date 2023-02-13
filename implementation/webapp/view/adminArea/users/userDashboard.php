@@ -77,7 +77,6 @@
                                             <tr>
                                                 <th scope="col" data-tablesort-type="int">ID</th>
                                                 <th scope="col" data-tablesort-type="string">Username</th>
-                                                <th scope="col" data-tablesort-type="string">Container port</th>
                                                 <th scope="col" data-tablesort-type="string">User Group</th>
                                             </tr>
                                         </thead>
@@ -91,7 +90,6 @@
                                                     echo '<td>'.$row["userId"].'</td>';
 
                                                     echo '<td><u><a href="user.php?id='.$row["userId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
-                                                    echo '<td>'.$row["containerPort"].'</td>';
 
                                                     echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
                                                     echo '</tr>';

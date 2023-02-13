@@ -136,8 +136,6 @@
                 //guest user
                 $data -> permissionLevel = PermissionLevels::GUEST;
             }
-
-            //TODO: set container port based on some validation metric
             
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
@@ -179,7 +177,6 @@
             $data = new \stdClass();
             $data -> username = $_POST['username'];
             $data -> permissionLevel = $_POST['permissionLevel'];
-            $data -> containerPort = $_POST['containerPort'];
             $data -> userId = $_POST['userId'];
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
