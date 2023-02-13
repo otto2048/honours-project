@@ -1,0 +1,4 @@
+const OP_CONNECTION = "CONNECTION";
+const OP_INPUT = "INPUT";
+
+const SENDER = "DEBUGGER_SERVER";

@@ -1,0 +1,2 @@
+const OP_CONNECTION = "CONNECTION";
+const OP_INPUT = "INPUT";
