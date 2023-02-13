@@ -51,11 +51,13 @@ function onConnect(ws, req) {
 
         if (message.operation == OP_LAUNCH_DEBUGGER)
         {
+            //create response object
             var obj = new Object();
             obj.operation = OP_LAUNCH_DEBUGGER;
             obj.value = null;
             obj.sender = SENDER_HOST;
 
+            //generate a port for the container
             var port = generatePort(2, 5);
 
             if (!port)
@@ -65,6 +67,7 @@ function onConnect(ws, req) {
                 return;
             }
 
+            //run the container
             command = "docker run -d -p " + port + ":8080 debugger_app:1.1";
 
             //launch a debugger container for this user
@@ -88,7 +91,10 @@ function onConnect(ws, req) {
 
                 ws.send(JSON.stringify(obj));
 
-                clients[uuidv4()] = {websocket: ws, containerPort: port};
+                var key = uuidv4();
+
+                //add client information to clients array
+                clients[key] = {websocket: ws, containerPort: port, containerId: stdout};
               });
 
         }
@@ -96,19 +102,52 @@ function onConnect(ws, req) {
 
     ws.on('close', function()
     {
-        var values = Object.values(clients);
-        var client = values.find(doc => doc.websocket === ws);
+        //get client information
+        var values = Object.entries(clients);
+        var client = values.find(doc => doc[1].websocket === ws);
 
         if (client)
         {
-            console.log(client.containerPort + " lost");
-
             //clean up container for this client
+            //TODO: handle errors
+            command = "docker stop " + client[1].containerId;
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                  console.error(`error: ${error.message}`);
+                  return;
+                }
+              
+                if (stderr) {
+                  console.error(`stderr: ${stderr}`);
+                  return;
+                }
+              
+                console.log(`stdout:\n${stdout}`);
+
+                command = "docker rm " + client[1].containerId;
+                exec(command, (error, stdout, stderr) => {
+                    if (error) {
+                    console.error(`error: ${error.message}`);
+                    return;
+                    }
+                
+                    if (stderr) {
+                    console.error(`stderr: ${stderr}`);
+                    return;
+                    }
+                
+                    console.log(`stdout:\n${stdout}`);
+                });
+             });
+            
+            //remove reference to client
+            delete clients[client[0]];
         }
 
     });
 }
 
+//generate a port for the container, based on a range and the number of times to try generate a port
 function generatePort(portRange, attempts)
 {
     var values = Object.values(clients);
