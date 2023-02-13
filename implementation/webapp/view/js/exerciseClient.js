@@ -12,14 +12,17 @@ var files = $(".editor");
 
 window.onload = preparePage();
 
-//connect web socket
-// TODO: change this value based on the users port
+$(document).ready(function(){
+    $("#load-debugger-modal").modal('show');
+});
 
 //web socket to connect to the host server
 let socketHost = new WebSocket("ws://192.168.17.50:8080");
 
 //set up sockets
 let socket = null;
+
+var connected = false;
 
 socketHost.onopen = function(e) {
     console.log("Connection established with host");
@@ -33,7 +36,11 @@ socketHost.onopen = function(e) {
     socketHost.send(JSON.stringify(obj));
 };
 
-
+socketHost.onerror = function(error) {
+    $("#debugger-load-message")[0].innerHTML = "Failed to connect to server";
+    $("#spinner")[0].remove();
+    $("#debugger-load-status")[0].innerHTML = "Failed";
+};
 
 socketHost.onmessage = function(event) {
     var message = JSON.parse(event.data);
@@ -50,7 +57,22 @@ socketHost.onmessage = function(event) {
             socket.onopen = function(e) {
                 console.log("Connection established with compiler");
             
-                //allow user to interact with compiler
+                //allow user to interact with compiler, enable buttons
+                var debuggerBtns = $(".debugger-control");
+
+                for (var i=0; i<debuggerBtns.length; i++)
+                {
+                    debuggerBtns[i].disabled = false;
+                    debuggerBtns[i].ariaDisabled = false;
+                }
+
+                connected = true;
+
+                $("#debugger-load-message")[0].innerHTML = "Connected to environment";
+                $("#spinner")[0].remove();
+                $("#debugger-load-status")[0].innerHTML = "Success";
+
+                $("#load-debugger-modal").modal('hide');
             };
 
             socket.onmessage = function(event) {
@@ -76,6 +98,10 @@ socketHost.onmessage = function(event) {
         else
         {
             console.log("Failed to init compiler");
+
+            $("#debugger-load-message")[0].innerHTML = "Failed to connect to environment";
+            $("#spinner")[0].remove();
+            $("#debugger-load-status")[0].innerHTML = "Failed";
         }
     }
 }
@@ -88,14 +114,20 @@ function preparePage()
     setUpEditors();
     
     //add event listener to play button
-    $("#play-btn")[0].addEventListener("click", startProgram);
+    $("#play-btn")[0].addEventListener("click", function()
+    {
+        if (connected)
+        {
+            startProgram();
+        }
+    });
 
     // TODO: marking of exercise if applicable
 
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {
-        if (command !== '')
+        if (command !== '' && connected)
         {
             sendInput(command);
         }
