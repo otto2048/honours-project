@@ -10,6 +10,8 @@ const ws = require('ws');
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 
+//TODO: use constants in this file
+
 //write to files
 const fs = require('fs');
 const async = require('async');

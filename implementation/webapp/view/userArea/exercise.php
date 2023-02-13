@@ -67,8 +67,8 @@
                             $editorContents = array();
 
                             ?>
-                            <button type="button" class="btn text-light theme-darker float-end" id="play-btn">Play</button>
-                            <button type="button" class="btn text-light theme-darker float-end" id="complete-btn">Submit</button>
+                            <button type="button" class="btn text-light theme-darker float-end debugger-control" disabled aria-disabled=true id="play-btn">Play</button>
+                            <button type="button" class="btn text-light theme-darker float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
                             <ul class="nav-tabs nav bg-dark" role="tablist">
                                 <li class="nav-item">
                                     <button class="nav-link active" id="mainFile" data-bs-toggle="tab" data-bs-target="#mainFileContainer" role="tab" type="button" aria-controls="main.cpp" aria-selected="true">main.cpp</button>
@@ -140,6 +140,30 @@ int main() {
                                 </div>
                             </div>
 
+                            <!-- load debugger connection modal -->
+                            <div class="modal fade" id="load-debugger-modal" tabindex="-1" aria-labelledby="load-debugger-modal" aria-hidden="false">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="h5 modal-title">Preparing environment...</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" id="modal-body">
+                                            <div class="d-flex align-items-center" id="connecting">
+                                                <strong id="debugger-load-message">Connecting to server....</strong>
+                                                <div class="spinner-border ms-auto" role="status" aria-hidden="true" id="spinner"></div>
+                                            </div>
+                                            <p>Status: <span id="debugger-load-status">Loading...</span></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn-dark btn" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script src="../js/exerciseClient.js" type="module"></script>
+
                             <?php
                         }
                     }
@@ -150,7 +174,6 @@ int main() {
             
 
         </div>
-        <script src="../js/exerciseClient.js"></script>
 
         <script src="../js/setTheme.js"></script>
 

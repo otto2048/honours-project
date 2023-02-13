@@ -83,10 +83,6 @@
                                         <label for="username">Username:</label>
                                         <input type="text" class="form-control" name="username" required id="username" value=<?php echo $userData[0]["username"] ?>>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="containerPort">Container Port:</label>
-                                        <input type="text" class="form-control" name="containerPort" id="containerPort" value=<?php echo $userData[0]["containerPort"] ?>>
-                                    </div>
                                     <div class="form-group pt-1">
                                         <label for="permissionLevel">User group:</label>
                                         <select name="permissionLevel" id="permissionLevel">

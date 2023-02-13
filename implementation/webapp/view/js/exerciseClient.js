@@ -4,61 +4,132 @@
 
 // need to handle instruction file if it exists
 
+import * as constants from "../js/constants.js";
+
 var editors = [];
 
 var files = $(".editor");
 
 window.onload = preparePage();
 
-//connect web socket
-// TODO: change this value based on the users port
-socket = new WebSocket("ws://192.168.17.50:5000");
+$(document).ready(function(){
+    $("#load-debugger-modal").modal('show');
+});
 
-//set up socket
-socket.onopen = function(e) {
-    console.log("Connection established");
+//web socket to connect to the host server
+let socketHost = new WebSocket("ws://192.168.17.50:8080");
 
-    //allow user to interact with compiler
+//set up sockets
+let socket = null;
+
+var connected = false;
+
+socketHost.onopen = function(e) {
+    console.log("Connection established with host");
+
+    //ask the host to launch a compiler for us
+    var obj = new Object();
+    obj.operation = constants.OP_LAUNCH_DEBUGGER;
+    obj.value = true;
+    obj.sender = constants.SENDER_USER;
+
+    socketHost.send(JSON.stringify(obj));
 };
 
-socket.onmessage = function(event) {
-    //get active terminal
-    var term = $.terminal.active();
-
-    //output received message into terminal
-    term.echo(event.data);
+socketHost.onerror = function(error) {
+    $("#debugger-load-message")[0].innerHTML = "Failed to connect to server";
+    $("#spinner")[0].remove();
+    $("#debugger-load-status")[0].innerHTML = "Failed";
 };
 
-socket.onclose = function(event) {
-    if (event.wasClean) {
-        console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
-    } else {
-        console.log("Connection died");
+socketHost.onmessage = function(event) {
+    var message = JSON.parse(event.data);
+
+    console.log(message);
+
+    if (message.operation == constants.OP_LAUNCH_DEBUGGER)
+    {
+        if (message.value)
+        {
+            //connect to the container wss
+            socket = new WebSocket("ws://192.168.17.50:" + message.value);
+
+            socket.onopen = function(e) {
+                console.log("Connection established with compiler");
+            
+                //allow user to interact with compiler, enable buttons
+                var debuggerBtns = $(".debugger-control");
+
+                for (var i=0; i<debuggerBtns.length; i++)
+                {
+                    debuggerBtns[i].disabled = false;
+                    debuggerBtns[i].ariaDisabled = false;
+                }
+
+                connected = true;
+
+                $("#debugger-load-message")[0].innerHTML = "Connected to environment";
+                $("#spinner")[0].remove();
+                $("#debugger-load-status")[0].innerHTML = "Success";
+
+                $("#load-debugger-modal").modal('hide');
+            };
+
+            socket.onmessage = function(event) {
+                //get active terminal
+                var term = $.terminal.active();
+            
+                //output received message into terminal
+                term.echo(event.data);
+            };
+
+            socket.onclose = function(event) {
+                if (event.wasClean) {
+                    console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
+                } else {
+                    console.log("Connection died");
+                }
+            };
+            
+            socket.onerror = function(error) {
+                $("#debugger-load-message")[0].innerHTML = "Failed to connect to server";
+                $("#spinner")[0].remove();
+                $("#debugger-load-status")[0].innerHTML = "Failed";
+            };
+        }
+        else
+        {
+            console.log("Failed to init compiler");
+
+            $("#debugger-load-message")[0].innerHTML = "Failed to connect to environment";
+            $("#spinner")[0].remove();
+            $("#debugger-load-status")[0].innerHTML = "Failed";
+        }
     }
-};
+}
 
-socket.onerror = function(error) {
-    console.log("[error]");
-};
+
 
 function preparePage()
 {
     //set up ACE editors
     setUpEditors();
-
-    //launch compiler container app
-    launchCompiler();
     
     //add event listener to play button
-    $("#play-btn")[0].addEventListener("click", startProgram);
+    $("#play-btn")[0].addEventListener("click", function()
+    {
+        if (connected)
+        {
+            startProgram();
+        }
+    });
 
     // TODO: marking of exercise if applicable
-    $("#complete-btn")[0].addEventListener("click", disconnectContainer);
 
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {
-        if (command !== '')
+        if (command !== '' && connected)
         {
             sendInput(command);
         }
@@ -71,7 +142,7 @@ function preparePage()
 function startProgram()
 {
     var obj = new Object();
-    obj.operation = "COMPILE";
+    obj.operation = constants.OP_COMPILE;
 
     var filesData = [];
 
@@ -89,7 +160,7 @@ function startProgram()
 function sendInput(input)
 {
     var obj = new Object();
-    obj.operation = "INPUT";
+    obj.operation = constants.OP_INPUT;
     obj.value = input;
     socket.send(JSON.stringify(obj));
 }
@@ -107,34 +178,4 @@ function setUpEditors()
         editors[i].setTheme("ace/theme/tomorrow_night_bright");
         editors[i].session.setMode("ace/mode/c_cpp");
     }
-}
-
-//use ajax to launch compiler
-function launchCompiler()
-{
-    $.ajax({
-        url: "/honours/webapp/controller/ajaxScripts/launchCompiler.php",
-        async: false,
-        success: function(result)
-        {
-            if (result != 0)
-            {
-                
-            }
-            console.log(result);
-        }
-    });
-}
-
-function disconnectContainer()
-{
-    //clean up docker container
-    $.ajax({
-        url: "/honours/webapp/controller/ajaxScripts/killContainer.php",
-        async: false,
-        success: function(result)
-        {
-            console.log(result);
-        }
-    });
 }
