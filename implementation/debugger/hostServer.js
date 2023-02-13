@@ -55,8 +55,14 @@ function onConnect(ws, req) {
             obj.value = null;
             obj.sender = SENDER_HOST;
 
+            var port = Math.floor(Math.random() * 10);
+
+            port = port + 5000;
+
+            command = "docker run -d -p " + port + ":8080 debugger_app:1.1";
+
             //launch a debugger container for this user
-            exec("docker run -d -p 5000:8080 --name testName__ debugger_app:1.1", (error, stdout, stderr) => {
+            exec(command, (error, stdout, stderr) => {
                 if (error) {
                   console.error(`error: ${error.message}`);
                   ws.send(JSON.stringify(obj));
@@ -72,7 +78,7 @@ function onConnect(ws, req) {
                 console.log(`stdout:\n${stdout}`);
 
                 //send back the port the container was launched on
-                obj.value = 5000;
+                obj.value = port;
 
                 ws.send(JSON.stringify(obj));
 

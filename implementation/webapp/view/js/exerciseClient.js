@@ -92,7 +92,9 @@ socketHost.onmessage = function(event) {
             };
             
             socket.onerror = function(error) {
-                console.log("[error]");
+                $("#debugger-load-message")[0].innerHTML = "Failed to connect to server";
+                $("#spinner")[0].remove();
+                $("#debugger-load-status")[0].innerHTML = "Failed";
             };
         }
         else
