@@ -13,10 +13,19 @@ window.onload = preparePage();
 //connect web socket
 // TODO: change this value based on the users port
 socket = new WebSocket("ws://192.168.17.50:5000");
+socketHost = new WebSocket("ws://192.168.17.50:8080");
 
 //set up socket
 socket.onopen = function(e) {
-    console.log("Connection established");
+    console.log("Connection established with compiler");
+
+    //allow user to interact with compiler
+};
+
+socketHost.onopen = function(e) {
+    console.log("Connection established with host");
+
+    socketHost.send("hi");
 
     //allow user to interact with compiler
 };
@@ -47,7 +56,7 @@ function preparePage()
     setUpEditors();
 
     //launch compiler container app
-    launchCompiler();
+    //launchCompiler();
     
     //add event listener to play button
     $("#play-btn")[0].addEventListener("click", startProgram);
