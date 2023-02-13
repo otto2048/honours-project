@@ -259,7 +259,7 @@
                                     <label for="output">Output:</label>
                                     <input type="text" class="form-control" name="output" required id="output">
                                 </div>
-                                <button type="button" class="btn btn-outline-dark mt-2" id="addInput">Add another input</button>
+                                <button type="button" class="btn btn-secondary mt-2" id="addInput">Add another input</button>
                                 <button class="btn btn-primary float-end mt-2" id="addRowBtn" type="submit">Submit</button>
                             </form>
 
