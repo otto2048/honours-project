@@ -55,6 +55,12 @@ function onConnect(ws) {
 
         console.log(clientMsg);
 
+        //create response object
+        var obj = new Object();
+        obj.operation = clientMsg.operation;
+        obj.value = null;
+        obj.sender = SENDER_DEBUGGER;
+
         //check which operation client has requested
         if (clientMsg.operation == OP_INPUT)
         {
@@ -120,18 +126,21 @@ function onConnect(ws) {
 
                             progProcess.stdout.on('data', function (data) {
                                 console.log('stdout: ' + data.toString());
-                                ws.send(data.toString());
+                                obj.value = data.toString();
+                                ws.send(JSON.stringify(obj));
                             });
 
                             progProcess.stderr.on('data', function (data) {
                                 console.log('stderr: ' + data.toString());
-                                ws.send(data.toString());
+                                obj.value = data.toString();
+                                ws.send(JSON.stringify(obj));
                             });
 
                             progProcess.on('exit', function (code) {
                                 var data = 'Program exited with code ' + code.toString();
                                 console.log();
-                                ws.send(data);
+                                obj.value = data.toString();
+                                ws.send(JSON.stringify(obj));
                             });
                         }
                     });
@@ -195,22 +204,18 @@ function onConnect(ws) {
                         else
                         {
                             //use child process to start program
-                            var testProcess = spawn('./unitTest');
+                            var testProcess = spawn('./unitTest', ['--gtest_brief=1', '--gtest_print_time=0']);
 
                             testProcess.stdout.on('data', function (data) {
                                 console.log('stdout: ' + data.toString());
-                                ws.send(data.toString());
+                                obj.value = data.toString();
+                                ws.send(JSON.stringify(obj));
                             });
 
                             testProcess.stderr.on('data', function (data) {
                                 console.log('stderr: ' + data.toString());
-                                ws.send(data.toString());
-                            });
-
-                            testProcess.on('exit', function (code) {
-                                var data = 'Program exited with code ' + code.toString();
-                                console.log();
-                                ws.send(data);
+                                obj.value = data.toString();
+                                ws.send(JSON.stringify(obj));
                             });
                         }
                     });

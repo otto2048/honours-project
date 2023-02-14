@@ -75,12 +75,26 @@ socketHost.onmessage = function(event) {
                 $("#load-debugger-modal").modal('hide');
             };
 
-            socket.onmessage = function(event) {
-                //get active terminal
-                var term = $.terminal.active();
-            
-                //output received message into terminal
-                term.echo(event.data);
+            socket.onmessage = function(messageEvent) {
+
+                //handle message
+                var message = JSON.parse(messageEvent.data);
+
+                if (message.operation == constants.OP_INPUT)
+                {
+                    //output response into terminal
+
+                    //get active terminal
+                    var term = $.terminal.active();
+                
+                    //output received message into terminal
+                    term.echo(message.value);
+                }
+                else if (message.operation == constants.OP_TEST)
+                {
+                    console.log(message.value);
+                }
+                
             };
 
             socket.onclose = function(event) {
