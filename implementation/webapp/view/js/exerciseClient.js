@@ -171,6 +171,7 @@ function testProgram()
     obj.operation = constants.OP_TEST;
 
     var filesData = [];
+    var editorFiles = [];
     var sysFiles = [];
 
     //read exercise file to see what files to get
@@ -195,6 +196,24 @@ function testProgram()
                 filesData.push([sysFiles[i].split('/').pop(), data]);
             }
         });
+    }
+
+    //get the files in the editor
+    for (var i=0; i<editors.length; i++)
+    {
+        editorFiles.push([files[i].getAttribute("id"), editors[i].session.getValue()]);
+    }
+
+    //update the files if they match anything in the editor
+    for (var i=0; i<filesData.length; i++)
+    {
+        for (var j=0; j<editorFiles.length; j++)
+        {
+            if (filesData[i][0] == editorFiles[j][0])
+            {
+                filesData[i][1] = editorFiles[j][1];
+            }
+        }
     }
 
     obj.value = filesData;
