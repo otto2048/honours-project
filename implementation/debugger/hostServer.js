@@ -71,6 +71,7 @@ function onConnect(ws, req) {
             command = "docker run -d -p " + port + ":8080 debugger_app:1.1";
 
             //launch a debugger container for this user
+            //TODO: remove the container if it fails to launch
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                   console.error(`error: ${error.message}`);

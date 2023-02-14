@@ -92,7 +92,12 @@ socketHost.onmessage = function(event) {
                 }
                 else if (message.operation == constants.OP_TEST)
                 {
-                    console.log(message.value);
+                    //get value of tests failed
+                    var value = message.value.replace(/\s/g, "");
+
+                    value = value.split("DEBUGGING_TOOL_RESULT:").pop();
+
+                    console.log(value);
                 }
                 
             };

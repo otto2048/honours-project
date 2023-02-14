@@ -203,19 +203,14 @@ function onConnect(ws) {
                         }
                         else
                         {
-                            //use child process to start program
-                            var testProcess = spawn('./unitTest', ['--gtest_brief=1', '--gtest_print_time=0']);
-
-                            testProcess.stdout.on('data', function (data) {
-                                console.log('stdout: ' + data.toString());
-                                obj.value = data.toString();
-                                ws.send(JSON.stringify(obj));
-                            });
-
-                            testProcess.stderr.on('data', function (data) {
-                                console.log('stderr: ' + data.toString());
-                                obj.value = data.toString();
-                                ws.send(JSON.stringify(obj));
+                            //run test program
+                            exec("./unitTest --gtest_brief=1 --gtest_print_time=0", function(err, stdout, stderr)
+                            {
+                                if (stdout)
+                                {
+                                    obj.value = stdout.toString();
+                                    ws.send(JSON.stringify(obj));
+                                }
                             });
                         }
                     });
