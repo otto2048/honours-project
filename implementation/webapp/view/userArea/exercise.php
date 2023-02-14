@@ -69,6 +69,8 @@
                             ?>
                             <button type="button" class="btn text-light theme-darker float-end debugger-control" disabled aria-disabled=true id="play-btn">Play</button>
                             <button type="button" class="btn text-light theme-darker float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
+                            
+                            
                             <ul class="nav-tabs nav bg-dark" role="tablist">
                                 <?php
                                     foreach ($exerciseFile["user_files"] as $fileName)
@@ -85,6 +87,9 @@
                                     }
                                 ?>
                             </ul>
+
+                            <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
+
                             <div class="row">
                                 <div class="col">
                                     

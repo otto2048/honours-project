@@ -125,7 +125,7 @@ function preparePage()
     });
 
     // TODO: marking of exercise if applicable
-    $("#complete-btn")[0].onclick(function()
+    $("#complete-btn")[0].addEventListener("click", function()
     {
         if (connected)
         {
@@ -170,11 +170,35 @@ function testProgram()
     obj.operation = constants.OP_TEST;
 
     var filesData = [];
+    var sysFiles = [];
 
-    for (var i=0; i<editors.length; i++)
+    //read exercise file to see what files to get
+    $.ajax({
+        type: "GET",
+        url: $("#exerciseFileLocation")[0].innerHTML,
+        dataType: "json",
+        async: false,
+        success: function(data) {
+            sysFiles = data.sys_files;
+        }
+    });
+
+    //read all the files into filesData
+    for (var i=0; i<sysFiles.length; i++)
     {
-        filesData.push([files[i].getAttribute("id"), editors[i].session.getValue()]);
+        $.ajax({
+            type: "GET",
+            url: "/honours/webapp/view/exerciseFiles/" + sysFiles[i],
+            async: false,
+            success: function(data) {
+                filesData.push([sysFiles[i].split('/').pop(), data]);
+            }
+        });
     }
+
+    obj.value = filesData;
+
+    socket.send(JSON.stringify(obj));
 }
 
 //tell socket that we want to send some input to the program
