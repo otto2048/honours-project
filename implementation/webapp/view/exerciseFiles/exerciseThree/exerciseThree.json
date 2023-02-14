@@ -1,0 +1,15 @@
+{
+    "comments": "The file for the logical and semantic error exercise",
+    "user_files" : [
+        "logicalError/logicalError.h",
+        "logicalError/logicalError.cpp"
+    ],
+    "sys_files" : [
+        "logicalError/logicalError.h",
+        "logicalError/logicalError.cpp",
+        "logicalError/main_test.cpp",
+        "logicalError/unitTest.cpp"
+    ]
+}
+
+

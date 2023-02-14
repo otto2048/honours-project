@@ -125,6 +125,13 @@ function preparePage()
     });
 
     // TODO: marking of exercise if applicable
+    $("#complete-btn")[0].onclick(function()
+    {
+        if (connected)
+        {
+            testProgram();
+        }
+    })
 
     //set up jquery terminal
     $('#code-output').terminal(function(command)
@@ -154,6 +161,20 @@ function startProgram()
     obj.value = filesData;
 
     socket.send(JSON.stringify(obj));
+}
+
+//tell socket to run unit test on program code
+function testProgram()
+{
+    var obj = new Object();
+    obj.operation = constants.OP_TEST;
+
+    var filesData = [];
+
+    for (var i=0; i<editors.length; i++)
+    {
+        filesData.push([files[i].getAttribute("id"), editors[i].session.getValue()]);
+    }
 }
 
 //tell socket that we want to send some input to the program

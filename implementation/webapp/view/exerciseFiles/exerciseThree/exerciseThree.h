@@ -1,0 +1,1 @@
+bool testFactors(int, int, int);
