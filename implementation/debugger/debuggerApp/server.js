@@ -144,10 +144,10 @@ function onConnect(ws) {
             //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
             async.each(clientMsg.value, function(file, callback) {
                 //create files for testing
-                var fname = file[0];
-                var content = file[1];
+                var fname_ = file[0];
+                var content_ = file[1];
 
-                fs.writeFile(fname, content, function (err)
+                fs.writeFile(fname_, content_, function (err)
                 {
                     if (err)
                     {
@@ -155,7 +155,7 @@ function onConnect(ws) {
                     }
                     else
                     {
-                        console.log("created file " + fname);
+                        console.log("created file " + fname_);
                     }
 
                     callback();
@@ -171,21 +171,21 @@ function onConnect(ws) {
                     console.log('All files have been processed successfully');
 
                     //compile program
-                    var fileString = "";
+                    var fileString_ = "";
                     for (var i=0; i<clientMsg.value.length; i++)
                     {
                         console.log(clientMsg.value[i][0].split('.').pop());
                         if (clientMsg.value[i][0].split('.').pop() == "cpp")
                         {
-                            fileString = fileString + clientMsg.value[i][0] + " ";
+                            fileString_ = fileString_ + clientMsg.value[i][0] + " ";
                         }
                     }
 
-                    console.log(fileString);
+                    console.log(fileString_);
 
-                    var command = "g++ -Wall -g -pthread" + fileString + " /usr/local/lib/libgtest.a -o unitTest";
+                    var command_ = "g++ -Wall -g -pthread " + fileString_ + " /usr/local/lib/libgtest.a -o unitTest";
 
-                    exec(command, function(err, stdout, stderr)
+                    exec(command_, function(err, stdout, stderr)
                     {
                         if (stdout)
                         {

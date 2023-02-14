@@ -17,7 +17,7 @@ $(document).ready(function(){
 });
 
 //web socket to connect to the host server
-let socketHost = new WebSocket("ws://192.168.17.50:8080");
+let socketHost = new WebSocket("ws://192.168.17.60:8080");
 
 //set up sockets
 let socket = null;
@@ -52,7 +52,7 @@ socketHost.onmessage = function(event) {
         if (message.value)
         {
             //connect to the container wss
-            socket = new WebSocket("ws://192.168.17.50:" + message.value);
+            socket = new WebSocket("ws://192.168.17.60:" + message.value);
 
             socket.onopen = function(e) {
                 console.log("Connection established with compiler");
@@ -84,6 +84,7 @@ socketHost.onmessage = function(event) {
             };
 
             socket.onclose = function(event) {
+                console.log(event);
                 if (event.wasClean) {
                     console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
                 } else {
@@ -197,6 +198,8 @@ function testProgram()
     }
 
     obj.value = filesData;
+
+    console.log(obj);
 
     socket.send(JSON.stringify(obj));
 }
