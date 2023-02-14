@@ -70,9 +70,6 @@
                             <button type="button" class="btn text-light theme-darker float-end debugger-control" disabled aria-disabled=true id="play-btn">Play</button>
                             <button type="button" class="btn text-light theme-darker float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
                             <ul class="nav-tabs nav bg-dark" role="tablist">
-                                <li class="nav-item">
-                                    <button class="nav-link active" id="mainFile" data-bs-toggle="tab" data-bs-target="#mainFileContainer" role="tab" type="button" aria-controls="main.cpp" aria-selected="true">main.cpp</button>
-                                </li>
                                 <?php
                                     foreach ($exerciseFile["user_files"] as $fileName)
                                     {
@@ -82,7 +79,7 @@
 
                                         ?>
                                         <li class="nav-item">
-                                            <button class="nav-link" id="<?php echo $pathInfo["filename"]; ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo $pathInfo["basename"]; ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
+                                            <button class="nav-link <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php echo $pathInfo["filename"]; ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo $pathInfo["basename"]; ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
                                         </li>
                                         <?php
                                     }
@@ -93,18 +90,6 @@
                                     
 
                                     <div class="tab-content">
-                                        <div class="tab-pane fade show active editorContainer" id="mainFileContainer" role="tabpanel" aria-labelledby="mainFile">
-                                            <div id="main.cpp" class="editor">
-//ENTRY POINT
-#include &#60;iostream&#62;
-int main() {
-    // Write C++ code here
-    std::cout &lt;&lt; "Hello world!";
-
-    return 0;
-}
-                                            </div>
-                                        </div>
 
                                         <?php
                                             foreach ($exerciseFile["user_files"] as $fileName)
@@ -115,7 +100,7 @@ int main() {
 
                                                 ?>
 
-                                                <div class="tab-pane fade editorContainer" id="<?php echo $pathInfo["basename"]; ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
+                                                <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?> editorContainer" id="<?php echo $pathInfo["basename"]; ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
                                                     <div id="<?php echo $pathInfo["basename"]; ?>" class="editor">
 <?php echo $file; ?>
                                                     </div>

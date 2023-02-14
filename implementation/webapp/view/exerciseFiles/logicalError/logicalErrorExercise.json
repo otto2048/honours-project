@@ -1,6 +1,7 @@
 {
     "comments": "The file for the logical error exercise",
     "user_files" : [
+        "logicalError/main.cpp",
         "logicalError/logicalError.h",
         "logicalError/logicalError.cpp"
     ],
