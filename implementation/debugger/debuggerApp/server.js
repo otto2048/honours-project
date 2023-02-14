@@ -10,7 +10,14 @@ const ws = require('ws');
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 
-//TODO: use constants in this file
+const OP_CONNECTION = "CONNECTION";
+const OP_INPUT = "INPUT";
+const OP_COMPILE = "COMPILE";
+const OP_LAUNCH_DEBUGGER = "DEBUGGER_LAUNCH";
+
+const SENDER_HOST = "HOST_SERVER";
+const SENDER_USER = "USER_SENDER";
+const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
 //write to files
 const fs = require('fs');
@@ -48,12 +55,12 @@ function onConnect(ws) {
         console.log(clientMsg);
 
         //check which operation client has requested
-        if (clientMsg.operation == "INPUT")
+        if (clientMsg.operation == OP_INPUT)
         {
             //send input to child process
             progProcess.stdin.write(clientMsg.value + "\n");
         }
-        else if (clientMsg.operation == "COMPILE")
+        else if (clientMsg.operation == OP_COMPILE)
         {
             //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
             async.each(clientMsg.value, function(file, callback) {
