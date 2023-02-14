@@ -92,7 +92,7 @@ socketHost.onmessage = function(event) {
                 }
                 else if (message.operation == constants.OP_TEST)
                 {
-                    //get value of tests failed
+                    //get number of tests succeeded
                     var value = message.value.replace(/\s/g, "");
 
                     value = value.split("DEBUGGING_TOOL_RESULT:").pop();
