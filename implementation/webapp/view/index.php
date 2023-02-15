@@ -5,6 +5,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
     //check if the user is allowed to be here
@@ -34,6 +35,7 @@
 
                 $exerciseModel = new ExerciseModel();
                 $userModel = new UserModel();
+                $userExerciseModel = new UserExerciseModel();
 
                 $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], null, true);
 
@@ -49,7 +51,7 @@
                         foreach ($exercises as $exercise)
                         {
                             //get mark information to check if this exercise is completed
-                            $markJson = $userModel->getExerciseMark($_SESSION["userId"], $exercise["codeId"]);
+                            $markJson = $userExerciseModel->getExerciseMark($_SESSION["userId"], $exercise["codeId"]);
 
                             if ($markJson)
                             {

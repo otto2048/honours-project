@@ -2,6 +2,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
@@ -48,6 +49,7 @@
                 {
                     //get user
                     $userModel = new UserModel();
+                    $userExerciseModel = new UserExerciseModel();
 
                     $jsonUserData = $userModel->getUserById($input);
 
@@ -139,7 +141,7 @@
                                                     echo '<td>';
 
                                                     //get mark information
-                                                    $markJson = $userModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
+                                                    $markJson = $userExerciseModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
 
                                                     if ($markJson)
                                                     {
@@ -223,7 +225,7 @@
                                                     echo '<td>';
 
                                                     //get mark information
-                                                    $markJson = $userModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
+                                                    $markJson = $userExerciseModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
 
                                                     if ($markJson)
                                                     {
@@ -306,7 +308,7 @@
                                                     echo '<td>';
 
                                                     //get mark information
-                                                    $markJson = $userModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
+                                                    $markJson = $userExerciseModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
 
                                                     if ($markJson)
                                                     {
