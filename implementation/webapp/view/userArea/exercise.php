@@ -5,7 +5,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/ExerciseModel.php");
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
