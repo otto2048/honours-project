@@ -99,8 +99,24 @@ socketHost.onmessage = function(event) {
 
                     console.log(value);
 
-                    //TODO: redirect the user
+                    const urlParams = new URLSearchParams(window.location.search);
+
                     //mark this in the database
+                    $.ajax({
+                        type: "POST",
+                        url: "/honours/webapp/controller/ajaxScripts/logUserExerciseAttempt.php",
+                        data: {codeId: urlParams.get("id"), mark: value},
+                        success: function(data) {
+                            if (data != 0)
+                            {
+                                window.open("/honours/webapp/view/index.php", name="_self");
+                            }
+                            else
+                            {
+                                //TODO: error message
+                            }
+                        }
+                    });
                 }
                 
             };
