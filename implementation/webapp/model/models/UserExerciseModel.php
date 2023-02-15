@@ -6,7 +6,11 @@
     {
         public function createData($jsonData)
         {
+            $this->sqlStmt = 'INSERT INTO honours_user_exercise (userId, codeId, mark, completed) VALUES (?, ?, ?, ?)';
 
+            $paramTypes = "iiii";
+
+            return parent::create($jsonData, $paramTypes);
         }
 
         //get a users mark for an exercise

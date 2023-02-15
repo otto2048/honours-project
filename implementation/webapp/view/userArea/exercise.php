@@ -7,6 +7,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/ExerciseModel.php");
 
+    //TODO: check if the user has completed this exercise already
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
     {

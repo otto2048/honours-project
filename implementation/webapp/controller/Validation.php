@@ -30,6 +30,9 @@
                 case ModelClassTypes::EXERCISE_ANSWER:
                     return $this->validateExerciseAnswer($jsonData, $errorMessageJson);
                     break;
+                case ModelClassTypes::USER_EXERCISE:
+                    return $this->validateUserExercise($jsonData, $errorMessageJson);
+                    break;
                 default:
                     return false;
             }
@@ -82,6 +85,58 @@
         public function validateInt($input)
         {
             return ctype_digit($input);
+        }
+
+        //validate user exercise attempt
+        private function validateUserExercise(&$jsonData, &$errorMessageJson)
+        {
+            $errorMessage = array();
+
+            $userExercise = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //sanitize data
+            $userExercise["userId"] = $this->cleanInput($userExercise["userId"]);
+            $userExercise["codeId"] = $this->cleanInput($userExercise["codeId"]);
+            $userExercise["mark"] = $this->cleanInput($userExercise["mark"]);
+            $userExercise["completed"] = $this->cleanInput($userExercise["completed"]);
+
+            //repack sanitized data
+            $jsonData = json_encode($userExercise, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //validate data
+            if (!$this->validateInt($userExercise["userId"]))
+            {
+                $errorMessage[0]["content"] = "Invalid user id";
+                $errorMessage[0]["success"] = false;
+            }
+
+            if (!$this->validateInt($userExercise["codeId"]))
+            {
+                $errorMessage[1]["content"] = "Invalid code id";
+                $errorMessage[1]["success"] = false;
+            }
+
+            if (!$this->validateInt($userExercise["mark"]))
+            {
+                $errorMessage[2]["content"] = "Invalid mark value";
+                $errorMessage[2]["success"] = false;
+            }
+
+            if (!filter_var($userExercise["completed"], FILTER_VALIDATE_BOOLEAN))
+            {
+                $errorMessage[3]["content"] = "Invalid completed value";
+                $errorMessage[3]["success"] = false;
+            }
+
+            //check if we found any errors
+            if (count($errorMessage) == 0)
+            {
+                return true;
+            }
+
+            $errorMessageJson = json_encode($errorMessage);
+
+            return false;
         }
 
         //validate user object
