@@ -98,11 +98,16 @@ socketHost.onmessage = function(event) {
                     value = value.split("DEBUGGING_TOOL_RESULT:").pop();
 
                     console.log(value);
+
+                    //TODO: redirect the user
+                    //mark this in the database
                 }
                 
             };
 
             socket.onclose = function(event) {
+                //TODO: message if the user disconnets from this socket or the host webserver
+                //TODO: some timeout on host connection
                 console.log(event);
                 if (event.wasClean) {
                     console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
