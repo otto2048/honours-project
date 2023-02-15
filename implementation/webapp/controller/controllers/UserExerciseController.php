@@ -2,7 +2,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Controller.php");
 
-    class UserController extends Controller
+    class UserExerciseController extends Controller
     {
         public function logUserExerciseAttempt()
         {
