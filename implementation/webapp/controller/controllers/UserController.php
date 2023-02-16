@@ -39,6 +39,7 @@
                 //set up session variables
                 $userData = json_decode($userData, JSON_INVALID_UTF8_SUBSTITUTE);
                 $_SESSION["userId"] = $userData[0]["userId"];
+                $_SESSION["username"] = $userData[0]["username"];
                 $_SESSION["permissionLevel"] = $userData[0]["permissionLevel"];
 
                 //send to home page         

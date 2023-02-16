@@ -28,12 +28,17 @@ socketHost.onopen = function(e) {
     console.log("Connection established with host");
 
     //ask the host to launch a compiler for us
-    var obj = new Object();
-    obj.operation = constants.OP_LAUNCH_DEBUGGER;
-    obj.value = true;
-    obj.sender = constants.SENDER_USER;
+    getUsername().then(function(data)
+    {
+        var obj = new Object();
+        obj.operation = constants.OP_LAUNCH_DEBUGGER;
+        obj.value = data.username;
+        obj.sender = constants.SENDER_USER;
 
-    socketHost.send(JSON.stringify(obj));
+        console.log(obj);
+
+        socketHost.send(JSON.stringify(obj));
+    })   
 };
 
 socketHost.onerror = function(error) {
@@ -149,8 +154,6 @@ socketHost.onmessage = function(event) {
     }
 }
 
-
-
 function preparePage()
 {
     //set up ACE editors
@@ -165,7 +168,6 @@ function preparePage()
         }
     });
 
-    // TODO: marking of exercise if applicable
     $("#complete-btn")[0].addEventListener("click", function()
     {
         if (connected)
@@ -184,6 +186,21 @@ function preparePage()
     }, {
         height: 500
     });
+}
+
+//get session info
+function getUsername()
+{
+    return Promise.resolve($.ajax({
+        url: "/honours/webapp/controller/ajaxScripts/getSessionData.php",
+        async: false,
+        type: "POST",
+        dataType: 'json',
+        success: function(result)
+        {
+            return result.username;
+        }
+    }));
 }
 
 //tell socket that we want to compile and start the program

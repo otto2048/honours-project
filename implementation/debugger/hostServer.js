@@ -39,6 +39,31 @@ function accept(req, res) {
 
 http.createServer(accept).listen(8080);
 
+//https://stackoverflow.com/questions/2956966/javascript-telling-setinterval-to-only-fire-x-amount-of-times
+function checkUserContainerStatus(delay, repetitions, callback, callbackFailure, callbackSuccess, value)
+{
+    var x = 0;
+    var intervalID = setInterval(function () {
+
+        var keys = Object.keys(clients);
+        if (!keys.includes(value))
+        {
+            clearInterval(intervalID);
+
+            callbackSuccess();
+        }
+
+        if (x++ === repetitions) {
+            clearInterval(intervalID);
+
+            callbackFailure();
+        }
+
+        callback();
+
+    }, delay);
+}
+
 //handle connections
 function onConnect(ws, req) {
     ws.on('message', function (message) {
@@ -49,55 +74,74 @@ function onConnect(ws, req) {
 
         console.log(OP_LAUNCH_DEBUGGER);
 
+        //create response object
+        var obj = new Object();
+        obj.operation = OP_LAUNCH_DEBUGGER;
+        obj.value = null;
+        obj.sender = SENDER_HOST;
+
+        //TODO: add a warning to users if they open two windows with environment
+
         if (message.operation == OP_LAUNCH_DEBUGGER)
         {
-            //create response object
-            var obj = new Object();
-            obj.operation = OP_LAUNCH_DEBUGGER;
-            obj.value = null;
-            obj.sender = SENDER_HOST;
+            var keys = Object.keys(clients);
+            console.log(keys);
+            console.log(message.value);
 
-            //generate a port for the container
-            var port = generatePort(2, 5);
-
-            if (!port)
+            //if the username is registered, wait a bit to see if the container is removed
+            var launchAttempts = 10;
+            checkUserContainerStatus(5000, launchAttempts, function()
             {
-                console.log("Out of available ports");
+                console.log("Waiting for removal");
+            }, function() {
+                //TODO: test this
+                console.log("Removal timeout");
                 ws.send(JSON.stringify(obj));
-                return;
-            }
+            },
+            function() {
+                //generate a port for the container
+                var port = generatePort(2, 5);
 
-            //run the container
-            command = "docker run -d -p " + port + ":8080 debugger_app:1.1";
-            console.log(command);
-
-            //launch a debugger container for this user
-            //TODO: remove the container if it fails to launch
-            exec(command, (error, stdout, stderr) => {
-                if (error) {
-                  console.error(`error: ${error.message}`);
-                  ws.send(JSON.stringify(obj));
-                  return;
+                if (!port)
+                {
+                    console.log("Out of available ports");
+                    ws.send(JSON.stringify(obj));
+                    return;
                 }
-              
-                if (stderr) {
-                  console.error(`stderr: ${stderr}`);
-                  ws.send(JSON.stringify(obj));
-                  return;
-                }
-              
-                console.log(`stdout:\n${stdout}`);
 
-                //send back the port the container was launched on
-                obj.value = port;
+                //run the container
+                command = "docker run -d --name " + message.value + " -p " + port + ":8080 debugger_app:1.1";
+                console.log(command);
 
-                ws.send(JSON.stringify(obj));
+                //launch a debugger container for this user
+                //TODO: remove the container if it fails to launch
+                exec(command, (error, stdout, stderr) => {
+                    if (error) {
+                    console.error(`error: ${error.message}`);
+                    ws.send(JSON.stringify(obj));
+                    return;
+                    }
+                
+                    if (stderr) {
+                    console.error(`stderr: ${stderr}`);
+                    ws.send(JSON.stringify(obj));
+                    return;
+                    }
+                
+                    console.log(`stdout:\n${stdout}`);
 
-                var key = uuidv4();
+                    //send back the port the container was launched on
+                    obj.value = port;
 
-                //add client information to clients array
-                clients[key] = {websocket: ws, containerPort: port, containerId: stdout};
-              });
+                    ws.send(JSON.stringify(obj));
+
+                    //add client information to clients array
+                    clients[message.value] = {websocket: ws, containerPort: port, containerId: stdout};
+                });
+            }, message.value);
+
+
+            
 
         }
     });
