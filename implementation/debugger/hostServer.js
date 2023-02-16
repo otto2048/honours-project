@@ -69,6 +69,7 @@ function onConnect(ws, req) {
 
             //run the container
             command = "docker run -d -p " + port + ":8080 debugger_app:1.1";
+            console.log(command);
 
             //launch a debugger container for this user
             //TODO: remove the container if it fails to launch
@@ -138,11 +139,14 @@ function onConnect(ws, req) {
                     }
                 
                     console.log(`stdout:\n${stdout}`);
+
+                    //remove reference to client
+                    console.log("Deleting reference to client");
+                    delete clients[client[0]];
                 });
              });
             
-            //remove reference to client
-            delete clients[client[0]];
+            
         }
 
     });

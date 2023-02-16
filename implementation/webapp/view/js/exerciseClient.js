@@ -80,7 +80,7 @@ socketHost.onmessage = function(event) {
                 //handle message
                 var message = JSON.parse(messageEvent.data);
 
-                if (message.operation == constants.OP_INPUT)
+                if (message.operation == constants.OP_INPUT || message.operation == constants.OP_COMPILE)
                 {
                     //output response into terminal
 
