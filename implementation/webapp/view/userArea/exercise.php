@@ -29,7 +29,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js" integrity="sha512-IQmiIneKUJhTJElpHOlsrb3jpF7r54AzhCTi7BTDLiBVg0f7mrEqWVCmOeoqKv5hDdyf3rbbxBUgYf4u3O/QcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         
         <!-- jquery terminal styles -->
-        <link rel="stylesheet" href="https://unpkg.com/jquery.terminal/css/jquery.terminal.min.css"/>
+        <link rel="stylesheet" href="/honours/webapp/view/js/jquery-terminal/jquery-terminal-2.35.3.css"/>
     </head>
     <body>
         <?php 
@@ -68,10 +68,12 @@
                             $editorContents = array();
 
                             ?>
-                            <button type="button" class="btn text-light theme-darker float-end debugger-control" disabled aria-disabled=true id="play-btn">Play</button>
-                            <button type="button" class="btn text-light theme-darker float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
-                            
-                            
+
+                            <div class="justify-content-center pt-1 pb-1 d-flex">
+                                <button type="button" class="btn text-light theme-darker debugger-control ms-1" disabled aria-disabled=true id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
+                            </div>
+
+                            <button type="button" class="btn btn-primary float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
                             <ul class="nav-tabs nav bg-dark" role="tablist">
                                 <?php
                                     foreach ($exerciseFile["user_files"] as $fileName)
