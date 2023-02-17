@@ -185,13 +185,13 @@ function onConnect(ws, req) {
                 command = "docker rm " + client[1].containerId;
                 exec(command, (error, stdout, stderr) => {
                     if (error) {
-                    console.error(`error: ${error.message}`);
-                    return;
+                        console.error(`error: ${error.message}`);
+                        return;
                     }
                 
                     if (stderr) {
-                    console.error(`stderr: ${stderr}`);
-                    return;
+                        console.error(`stderr: ${stderr}`);
+                        return;
                     }
                 
                     console.log(`stdout:\n${stdout}`);
@@ -231,7 +231,6 @@ function launchContainer(userMessage, responseObj, ws)
     console.log(command);
 
     //launch a debugger container for this user
-    //TODO: remove the container if it fails to launch
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`error: ${error.message}`);
