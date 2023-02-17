@@ -110,7 +110,7 @@ function onConnect(ws) {
 
                     console.log(fileString);
 
-                    var command = "g++ " + fileString + " -o executable";
+                    var command = "g++ -g " + fileString + " -o executable";
 
                     exec(command, function(err, stdout, stderr)
                     {
