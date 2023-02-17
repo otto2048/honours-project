@@ -141,7 +141,7 @@
                                         </div>
                                         <div class="modal-body" id="modal-body">
                                             <div class="d-flex align-items-center" id="connecting">
-                                                <strong id="debugger-load-message">Connecting to server....</strong>
+                                                <p><strong id="debugger-load-message">Connecting to server....</strong></p>
                                                 <div class="spinner-border ms-auto" role="status" aria-hidden="true" id="spinner"></div>
                                             </div>
                                             <p>Status: <span id="debugger-load-status">Loading...</span></p>

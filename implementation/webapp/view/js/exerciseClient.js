@@ -7,6 +7,7 @@
 import * as constants from "../js/constants.js";
 
 var editors = [];
+var startedLaunching = false;
 
 var files = $(".editor");
 
@@ -54,8 +55,12 @@ socketHost.onmessage = function(event) {
 
     if (message.operation == constants.OP_LAUNCH_DEBUGGER)
     {
-        if (message.value)
+        console.log(startedLaunching);
+
+        if (message.status == constants.ENV_SUCCESS)
         {
+            $("#debugger-load-message")[0].innerHTML = message.message;
+            //successfully launched environment
             //connect to the container wss
             socket = new WebSocket("ws://192.168.17.60:" + message.value);
 
@@ -73,7 +78,6 @@ socketHost.onmessage = function(event) {
 
                 connected = true;
 
-                $("#debugger-load-message")[0].innerHTML = "Connected to environment";
                 $("#spinner")[0].remove();
                 $("#debugger-load-status")[0].innerHTML = "Success";
 
@@ -138,16 +142,29 @@ socketHost.onmessage = function(event) {
             };
             
             socket.onerror = function(error) {
-                $("#debugger-load-message")[0].innerHTML = "Failed to connect to server";
                 $("#spinner")[0].remove();
                 $("#debugger-load-status")[0].innerHTML = "Failed";
             };
         }
-        else
+        else if (message.status == constants.ENV_LAUNCHING)
         {
+            $("#debugger-load-message")[0].innerHTML = message.message;
+            startedLaunching = true;
+        }
+        else if (message.status == constants.ENV_REFRESH)
+        {
+            if (!startedLaunching)
+            {
+                $("#debugger-load-message")[0].innerHTML = message.message;
+            }
+        }
+        else if (message.status == constants.ENV_FAIL)
+        {
+            $("#debugger-load-message")[0].innerHTML = message.message;
+
+            //failed to launch environment
             console.log("Failed to init compiler");
 
-            $("#debugger-load-message")[0].innerHTML = "Failed to connect to environment";
             $("#spinner")[0].remove();
             $("#debugger-load-status")[0].innerHTML = "Failed";
         }

@@ -20,6 +20,11 @@ const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 const CONTAINER_RUNNING = "CONTAINER_RUNNING";
 const CONTAINER_STOPPING = "CONTAINER_STOPPING";
 
+const ENV_REFRESH = 0;
+const ENV_FAIL = 1;
+const ENV_LAUNCHING = 2;
+const ENV_SUCCESS = 3;
+
 //keep track of the clients
 const clients = [];
 
@@ -80,6 +85,8 @@ function onConnect(ws, req) {
         var obj = new Object();
         obj.operation = OP_LAUNCH_DEBUGGER;
         obj.value = null;
+        obj.status = ENV_FAIL;
+        obj.message = "Oh no! Something went wrong!";
         obj.sender = SENDER_HOST;
 
         //TODO: add a warning to users if they open two windows with environment
@@ -103,10 +110,13 @@ function onConnect(ws, req) {
                     {
                         //callback function
                         console.log("Waiting for removal");
+                        obj.message = "Refreshing environment...";
+                        obj.status = ENV_REFRESH;
+                        ws.send(JSON.stringify(obj));
                     }, function() {
                         //failure function
-                        //TODO: test this
                         console.log("Removal timeout");
+                        obj.message = "Failed to launch environment. Try reloading the page?";
                         ws.send(JSON.stringify(obj));
                     },
                     function()
@@ -120,6 +130,7 @@ function onConnect(ws, req) {
                 else
                 {
                     //return failure
+                    obj.message = "You cannot have the environment open in more than one tab. Try closing the active session and refresh this page.";
                     ws.send(JSON.stringify(obj));
                 }
             }
@@ -189,6 +200,11 @@ function onConnect(ws, req) {
 //launch a container
 function launchContainer(userMessage, responseObj, ws)
 {
+    responseObj.message = "Launching environment...";
+    responseObj.status = ENV_LAUNCHING;
+
+    ws.send(JSON.stringify(responseObj));
+
     //generate a port for the container
     var port = generatePort(2, 5);
 
@@ -222,6 +238,9 @@ function launchContainer(userMessage, responseObj, ws)
 
         //send back the port the container was launched on
         responseObj.value = port;
+        responseObj.status = ENV_SUCCESS;
+
+        responseObj.message = "Successfully launched environment";
 
         ws.send(JSON.stringify(responseObj));
 
