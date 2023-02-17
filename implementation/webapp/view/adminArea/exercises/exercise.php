@@ -291,7 +291,7 @@
 
         <!-- delete exercise modal -->
         <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2 class="h5 modal-title">Are you sure you want to delete this exercise?</h2>

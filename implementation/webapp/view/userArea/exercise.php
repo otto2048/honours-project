@@ -155,7 +155,7 @@
 
                             <!-- confirm submit modal -->
                             <div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirm-modal" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h2 class="h5 modal-title">Submission Confirmation</h2>
