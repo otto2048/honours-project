@@ -151,7 +151,7 @@ function onConnect(ws, req) {
         }
 
         //set timeout to disconnect user automatically after some inactivity time
-        timeout = setTimeout(() => ws.close(1000, "Inactivity"), 600000);
+        timeout = setTimeout(() => ws.close(1000, "Disconnected due to inactivity"), 600000);
     });
 
     ws.on('close', function()

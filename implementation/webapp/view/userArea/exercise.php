@@ -136,7 +136,7 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h2 class="h5 modal-title">Preparing environment...</h2>
+                                            <h2 class="h5 modal-title">Environment Status</h2>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body" id="modal-body">
@@ -148,6 +148,26 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn-dark btn" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- confirm submit modal -->
+                            <div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirm-modal" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="h5 modal-title">Submission Confirmation</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" id="modal-body">
+                                            <p>Confirm submission</p>
+                                            <p>Make sure you want to submit this exercise, once you submit your answer, you won't be able to attempt the exercise again</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn-secondary btn" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn-primary btn" data-bs-dismiss="modal" id="confirm-complete-btn">Confirm</button>
                                         </div>
                                     </div>
                                 </div>

@@ -31,13 +31,16 @@
                             //check if user is logged in
                             if (isset($_SESSION["userId"]))
                             {
+                        ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/honours/webapp/view/index.php">Home</a>
+                                </li>
+                        <?php
                                 //check if user is an admin
                                 if ($_SESSION["permissionLevel"] >= PermissionLevels::ADMIN)
                                 {
                         ?>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/honours/webapp/view/index.php">Home</a>
-                                    </li>
+                                    
 
                                     <li class="nav-item">
                                         <a class="nav-link" href="/honours/webapp/view/adminArea/users/userDashboard.php">Manage Users</a>

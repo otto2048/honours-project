@@ -52,7 +52,7 @@ socketHost.onerror = function(error) {
 
 socketHost.onclose = function(event)
 {
-    $("#debugger-load-message")[0].innerHTML = "Disconnected from environment due to inactivity";
+    $("#debugger-load-message")[0].innerHTML = event.reason;
     $("#debugger-load-status")[0].innerHTML = "Disconnected";
     $("#load-debugger-modal").modal('show');
 
@@ -137,11 +137,12 @@ socketHost.onmessage = function(event) {
                         success: function(data) {
                             if (data != 0)
                             {
+                                //take user back to homepage
                                 window.open("/honours/webapp/view/index.php", name="_self");
                             }
                             else
                             {
-                                //TODO: error message
+                                alert("Failed to submit exercise. Try again?");
                             }
                         }
                     });
@@ -216,6 +217,16 @@ function preparePage()
     {
         if (connected)
         {
+            //confirm that the user wants to submit their answer
+            $("#confirm-modal").modal("show");
+        }
+    })
+
+    $("#confirm-complete-btn")[0].addEventListener("click", function()
+    {
+        if (connected)
+        {
+            //submit user answer
             testProgram();
         }
     })
