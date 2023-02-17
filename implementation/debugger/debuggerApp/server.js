@@ -120,23 +120,29 @@ function onConnect(ws) {
                         if (stderr)
                         {
                             //give compilation errors
-                            obj.value = stderr;
+                            obj.value = "Failed to compile\nErrors:\n" + stderr;
                             ws.send(JSON.stringify(obj));
                         }
                         else
                         {
+                            //send compilation success message
+                            obj.value = "Successfully compiled program \nRunning in terminal...";
+                            ws.send(JSON.stringify(obj));
+
                             //use child process to start program
                             progProcess = spawn('./executable');
 
                             progProcess.stdout.on('data', function (data) {
                                 console.log('stdout: ' + data.toString());
                                 obj.value = data.toString();
+                                obj.operation = OP_INPUT;
                                 ws.send(JSON.stringify(obj));
                             });
 
                             progProcess.stderr.on('data', function (data) {
                                 console.log('stderr: ' + data.toString());
                                 obj.value = data.toString();
+                                obj.operation = OP_INPUT;
                                 ws.send(JSON.stringify(obj));
                             });
 
@@ -144,6 +150,7 @@ function onConnect(ws) {
                                 var data = 'Program exited with code ' + code.toString();
                                 console.log();
                                 obj.value = data.toString();
+                                obj.operation = OP_INPUT;
                                 ws.send(JSON.stringify(obj));
                                 progProcess = null;
                             });

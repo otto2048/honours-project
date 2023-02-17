@@ -23,7 +23,7 @@
         <?php include "../head.php"; ?>
 
         <!-- jquery terminal -->
-        <script src="https://unpkg.com/jquery.terminal/js/jquery.terminal.min.js"></script>
+        <script src="/honours/webapp/view/js/jquery-terminal/jquery-terminal-2.35.3.js"></script>
 
         <!-- ACE editor -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js" integrity="sha512-IQmiIneKUJhTJElpHOlsrb3jpF7r54AzhCTi7BTDLiBVg0f7mrEqWVCmOeoqKv5hDdyf3rbbxBUgYf4u3O/QcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -123,12 +123,14 @@
                                 <div class="col">
                                     <!-- container for terminal -->
                                     <div id="code-output"></div>
-
-                                    <!-- compilation message output -->
-                                    <div class="mt-2 border-light border pt-5 pb-5 ps-1">
-                                        <h2 class="h4">Compilation Output</h2>
-                                    </div>
                                 </div>
+                            </div>
+
+                            <!-- compilation message output -->
+                            <div class="mt-2 border-light border pb-5 ps-1">
+                                <h2 class="h4 ps-2 pt-3">Compilation Output</h2>
+                                <hr>
+                                <p class="pe-2 ps-2 prewrap" id="comp-output">Compilation output will appear here</p>
                             </div>
 
                             <!-- load debugger connection modal -->

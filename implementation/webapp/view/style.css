@@ -27,6 +27,10 @@
     text-decoration: underline;
 }
 
+.prewrap {
+    white-space: pre-wrap;
+}
+
 /* editor */
 .editor { 
     position: absolute;
@@ -38,5 +42,5 @@
 
 .editorContainer {
     position: relative;
-    height: 40em;
+    height: 30em;
 }

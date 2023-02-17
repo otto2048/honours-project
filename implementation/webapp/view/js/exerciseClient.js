@@ -109,7 +109,7 @@ socketHost.onmessage = function(event) {
                 var message = JSON.parse(messageEvent.data);
                 console.log(message);
 
-                if (message.operation == constants.OP_INPUT || message.operation == constants.OP_COMPILE)
+                if (message.operation == constants.OP_INPUT)
                 {
                     //output response into terminal
 
@@ -118,6 +118,12 @@ socketHost.onmessage = function(event) {
                 
                     //output received message into terminal
                     term.echo(message.value);
+                }
+                else if (message.operation == constants.OP_COMPILE)
+                {
+                    //display compilation output
+                    console.log(message.value);
+                    $("#comp-output")[0].innerHTML = message.value;
                 }
                 else if (message.operation == constants.OP_TEST)
                 {
@@ -234,6 +240,9 @@ function preparePage()
         }
     })
 
+
+    console.log($('.tab-content').height());
+
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {
@@ -242,7 +251,7 @@ function preparePage()
             sendInput(command);
         }
     }, {
-        height: 500
+        height: $('.tab-content').height()
     });
 }
 
