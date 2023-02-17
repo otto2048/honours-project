@@ -64,8 +64,11 @@ function onConnect(ws) {
         //check which operation client has requested
         if (clientMsg.operation == OP_INPUT)
         {
-            //send input to child process
-            progProcess.stdin.write(clientMsg.value + "\n");
+            if (progProcess)
+            {
+                //send input to child process
+                progProcess.stdin.write(clientMsg.value + "\n");
+            }
         }
         else if (clientMsg.operation == OP_COMPILE)
         {
@@ -114,10 +117,11 @@ function onConnect(ws) {
 
                     exec(command, function(err, stdout, stderr)
                     {
-                        if (stdout)
+                        if (stderr)
                         {
                             //give compilation errors
-                            console.log(stdout);
+                            obj.value = stderr;
+                            ws.send(JSON.stringify(obj));
                         }
                         else
                         {
@@ -141,6 +145,7 @@ function onConnect(ws) {
                                 console.log();
                                 obj.value = data.toString();
                                 ws.send(JSON.stringify(obj));
+                                progProcess = null;
                             });
                         }
                     });

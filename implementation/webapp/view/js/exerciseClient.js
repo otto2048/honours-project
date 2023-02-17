@@ -107,6 +107,7 @@ socketHost.onmessage = function(event) {
 
                 //handle message
                 var message = JSON.parse(messageEvent.data);
+                console.log(message);
 
                 if (message.operation == constants.OP_INPUT || message.operation == constants.OP_COMPILE)
                 {
@@ -166,6 +167,8 @@ socketHost.onmessage = function(event) {
                     }
     
                     connected = false;
+
+                    socketHost.close(1000, "Environment failed");
                 }
             };
             
