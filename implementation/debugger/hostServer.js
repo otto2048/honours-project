@@ -17,6 +17,9 @@ const SENDER_HOST = "HOST_SERVER";
 const SENDER_USER = "USER_SENDER";
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
+const CONTAINER_RUNNING = "CONTAINER_RUNNING";
+const CONTAINER_STOPPING = "CONTAINER_STOPPING";
+
 //keep track of the clients
 const clients = [];
 
@@ -52,8 +55,7 @@ function checkUserContainerStatus(delay, repetitions, callback, callbackFailure,
 
             callbackSuccess();
         }
-
-        if (x++ === repetitions) {
+        else if (x++ === repetitions) {
             clearInterval(intervalID);
 
             callbackFailure();
@@ -88,61 +90,45 @@ function onConnect(ws, req) {
             console.log(keys);
             console.log(message.value);
 
-            //if the username is registered, wait a bit to see if the container is removed
-            var launchAttempts = 10;
-            checkUserContainerStatus(5000, launchAttempts, function()
+            //if client in clients
+            if (keys.includes(message.value))
             {
-                console.log("Waiting for removal");
-            }, function() {
-                //TODO: test this
-                console.log("Removal timeout");
-                ws.send(JSON.stringify(obj));
-            },
-            function() {
-                //generate a port for the container
-                var port = generatePort(2, 5);
-
-                if (!port)
+                console.log("keys included");
+                //if container in stopping state
+                if (clients[message.value].containerState == CONTAINER_STOPPING)
                 {
-                    console.log("Out of available ports");
-                    ws.send(JSON.stringify(obj));
-                    return;
+                    //wait for container to stop
+                    var launchAttempts = 10;
+                    checkUserContainerStatus(5000, launchAttempts, function()
+                    {
+                        //callback function
+                        console.log("Waiting for removal");
+                    }, function() {
+                        //failure function
+                        //TODO: test this
+                        console.log("Removal timeout");
+                        ws.send(JSON.stringify(obj));
+                    },
+                    function()
+                    {
+                        console.log("Success function");
+                        launchContainer(message, obj, ws);
+                    }
+                    , message.value);
                 }
-
-                //run the container
-                command = "docker run -d --name " + message.value + " -p " + port + ":8080 debugger_app:1.1";
-                console.log(command);
-
-                //launch a debugger container for this user
-                //TODO: remove the container if it fails to launch
-                exec(command, (error, stdout, stderr) => {
-                    if (error) {
-                    console.error(`error: ${error.message}`);
+                //if container in running state
+                else
+                {
+                    //return failure
                     ws.send(JSON.stringify(obj));
-                    return;
-                    }
-                
-                    if (stderr) {
-                    console.error(`stderr: ${stderr}`);
-                    ws.send(JSON.stringify(obj));
-                    return;
-                    }
-                
-                    console.log(`stdout:\n${stdout}`);
-
-                    //send back the port the container was launched on
-                    obj.value = port;
-
-                    ws.send(JSON.stringify(obj));
-
-                    //add client information to clients array
-                    clients[message.value] = {websocket: ws, containerPort: port, containerId: stdout};
-                });
-            }, message.value);
-
-
-            
-
+                }
+            }
+            else
+            {
+                console.log("keys not included");
+                //run new container
+                launchContainer(message, obj, ws);
+            }
         }
     });
 
@@ -155,6 +141,10 @@ function onConnect(ws, req) {
         if (client)
         {
             //clean up container for this client
+
+            //set container state to stopping
+            clients[client[0]].containerState = CONTAINER_STOPPING;
+
             //TODO: handle errors
             command = "docker stop " + client[1].containerId;
             exec(command, (error, stdout, stderr) => {
@@ -193,6 +183,50 @@ function onConnect(ws, req) {
             
         }
 
+    });
+}
+
+//launch a container
+function launchContainer(userMessage, responseObj, ws)
+{
+    //generate a port for the container
+    var port = generatePort(2, 5);
+
+    if (!port)
+    {
+        console.log("Out of available ports");
+        ws.send(JSON.stringify(responseObj));
+        return;
+    }
+
+    //run the container
+    command = "docker run -d --name " + userMessage.value + " -p " + port + ":8080 debugger_app:1.1";
+    console.log(command);
+
+    //launch a debugger container for this user
+    //TODO: remove the container if it fails to launch
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`error: ${error.message}`);
+            ws.send(JSON.stringify(responseObj));
+            return;
+        }
+
+        if (stderr) {
+            console.error(`stderr: ${stderr}`);
+            ws.send(JSON.stringify(responseObj));
+            return;
+        }
+
+        console.log(`stdout:\n${stdout}`);
+
+        //send back the port the container was launched on
+        responseObj.value = port;
+
+        ws.send(JSON.stringify(responseObj));
+
+        //add client information to clients array
+        clients[userMessage.value] = {websocket: ws, containerPort: port, containerId: stdout, containerState: CONTAINER_RUNNING};
     });
 }
 
