@@ -25,6 +25,8 @@ let socket = null;
 
 var connected = false;
 
+var pingHostObj = {operation: constants.OP_PING, value: null, sender: constants.SENDER_USER};
+
 socketHost.onopen = function(e) {
     console.log("Connection established with host");
 
@@ -47,6 +49,23 @@ socketHost.onerror = function(error) {
     $("#spinner")[0].remove();
     $("#debugger-load-status")[0].innerHTML = "Failed";
 };
+
+socketHost.onclose = function(event)
+{
+    $("#debugger-load-message")[0].innerHTML = "Disconnected from environment due to inactivity";
+    $("#debugger-load-status")[0].innerHTML = "Disconnected";
+    $("#load-debugger-modal").modal('show');
+
+    var debuggerBtns = $(".debugger-control");
+
+    for (var i=0; i<debuggerBtns.length; i++)
+    {
+        debuggerBtns[i].disabled = true;
+        debuggerBtns[i].ariaDisabled = true;
+    }
+
+    connected = false;
+}
 
 socketHost.onmessage = function(event) {
     var message = JSON.parse(event.data);
@@ -131,13 +150,21 @@ socketHost.onmessage = function(event) {
             };
 
             socket.onclose = function(event) {
-                //TODO: message if the user disconnets from this socket or the host webserver
-                //TODO: some timeout on host connection
-                console.log(event);
-                if (event.wasClean) {
-                    console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
-                } else {
-                    console.log("Connection died");
+                if (connected)
+                {
+                    $("#debugger-load-message")[0].innerHTML = "Environment failed.";
+                    $("#debugger-load-status")[0].innerHTML = "Failed";
+                    $("#load-debugger-modal").modal('show');
+    
+                    var debuggerBtns = $(".debugger-control");
+    
+                    for (var i=0; i<debuggerBtns.length; i++)
+                    {
+                        debuggerBtns[i].disabled = true;
+                        debuggerBtns[i].ariaDisabled = true;
+                    }
+    
+                    connected = false;
                 }
             };
             
@@ -236,6 +263,7 @@ function startProgram()
     obj.value = filesData;
 
     socket.send(JSON.stringify(obj));
+    socketHost.send(JSON.stringify(pingHostObj));
 }
 
 //tell socket to run unit test on program code
@@ -295,6 +323,7 @@ function testProgram()
     console.log(obj);
 
     socket.send(JSON.stringify(obj));
+    socketHost.send(JSON.stringify(pingHostObj));
 }
 
 //tell socket that we want to send some input to the program
@@ -304,6 +333,7 @@ function sendInput(input)
     obj.operation = constants.OP_INPUT;
     obj.value = input;
     socket.send(JSON.stringify(obj));
+    socketHost.send(JSON.stringify(pingHostObj));
 }
 
 //set up the code editors for all the files

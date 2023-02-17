@@ -12,6 +12,7 @@ const OP_CONNECTION = "CONNECTION";
 const OP_INPUT = "INPUT";
 const OP_COMPILE = "COMPILE";
 const OP_LAUNCH_DEBUGGER = "DEBUGGER_LAUNCH";
+const OP_PING = "PING";
 
 const SENDER_HOST = "HOST_SERVER";
 const SENDER_USER = "USER_SENDER";
@@ -73,7 +74,16 @@ function checkUserContainerStatus(delay, repetitions, callback, callbackFailure,
 
 //handle connections
 function onConnect(ws, req) {
+
+    var timeout = null;
+
     ws.on('message', function (message) {
+
+        if (timeout)
+        {
+            console.log("Clearing the timeout");
+            clearTimeout(timeout);
+        }
 
         //get message
         var message = JSON.parse(message);
@@ -88,8 +98,6 @@ function onConnect(ws, req) {
         obj.status = ENV_FAIL;
         obj.message = "Oh no! Something went wrong!";
         obj.sender = SENDER_HOST;
-
-        //TODO: add a warning to users if they open two windows with environment
 
         if (message.operation == OP_LAUNCH_DEBUGGER)
         {
@@ -141,6 +149,9 @@ function onConnect(ws, req) {
                 launchContainer(message, obj, ws);
             }
         }
+
+        //set timeout to disconnect user automatically after some inactivity time
+        timeout = setTimeout(() => ws.close(1000, "Inactivity"), 600000);
     });
 
     ws.on('close', function()
