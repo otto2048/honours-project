@@ -31,6 +31,10 @@
     white-space: pre-wrap;
 }
 
+#compilation-messages-box {
+    max-height: 500px;
+}
+
 /* editor */
 .editor { 
     position: absolute;

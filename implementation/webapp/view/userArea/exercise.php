@@ -134,7 +134,11 @@
                             <div class="mt-2 border-light border pb-5 ps-1">
                                 <h2 class="h4 ps-2 pt-3">Compilation Output</h2>
                                 <hr>
-                                <p class="pe-2 ps-2 prewrap" id="comp-output">Compilation output will appear here</p>
+                                <div class="overflow-auto" id="compilation-messages-box">
+                                    <ul class="list-unstyled list-group">
+                                        
+                                    </ul>
+                                </div>
                             </div>
 
                             <!-- load debugger connection modal -->

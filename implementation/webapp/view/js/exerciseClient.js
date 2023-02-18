@@ -124,12 +124,11 @@ socketHost.onmessage = function(event) {
                     if (message.value)
                     {
                         //display compilation output
-                        console.log(message.value);
-                        $("#comp-output")[0].innerHTML = message.value;
+                        addCompilationBoxMessage(message.value, "alert-info");
                     }
                     else
                     {
-                        alert("Compilation operation failed. Try again?");
+                        addCompilationBoxMessage("Compilation operation failed. Try again?.", "alert-dark");
                     }
                     
                 }
@@ -234,7 +233,15 @@ function preparePage()
     {
         if (connected)
         {
+            //clear the terminal
+            clearTerminal();
+
+            //send compilation request to server
             startProgram();
+
+            //add a new message to compilation box to tell the user we are compiling the program
+            addCompilationBoxMessage("Compiling program...", "alert-dark");
+
         }
     });
 
@@ -270,11 +277,14 @@ function preparePage()
         height: $('.tab-content').height()
     });
 
-    $('#clear-terminal-btn')[0].addEventListener("click", function()
-    {
-        var term = $.terminal.active();
-        term.clear();
-    });
+    $('#clear-terminal-btn')[0].addEventListener("click", clearTerminal);
+}
+
+//clear terminal
+function clearTerminal()
+{
+    var term = $.terminal.active();
+    term.clear();
 }
 
 //get session info
@@ -308,7 +318,7 @@ function startProgram()
     obj.value = filesData;
 
     socket.send(JSON.stringify(obj));
-    socketHost.send(JSON.stringify(pingHostObj));
+    socketHost.send(JSON.stringify(pingHostObj));    
 }
 
 //tell socket to run unit test on program code
@@ -369,6 +379,25 @@ function testProgram()
 
     socket.send(JSON.stringify(obj));
     socketHost.send(JSON.stringify(pingHostObj));
+}
+
+function addCompilationBoxMessage(message, colour)
+{
+    var li = document.createElement("li");
+    
+    var alertDiv = document.createElement("div");
+    alertDiv.classList = "alert " + colour + " fade show";
+    alertDiv.setAttribute("role", "alert");
+
+    var alertText = document.createElement("p");
+    alertText.classList = "m-0 prewrap";
+    alertText.innerHTML = message;
+
+    alertDiv.append(alertText);
+
+    li.append(alertDiv);
+
+    $("#compilation-messages-box ul")[0].prepend(li);
 }
 
 //tell socket that we want to send some input to the program
