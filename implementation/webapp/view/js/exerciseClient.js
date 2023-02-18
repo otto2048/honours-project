@@ -153,19 +153,32 @@ socketHost.onmessage = function(event) {
                             success: function(data) {
                                 if (data != 0)
                                 {
+                                    console.log("ajax succeed");
+
+                                    $("#submitting-exercise-message")[0].innerHTML = "Successfully submitted exercise";
+                                    $("#spinner-exercise").hide();
+                                    $("#submitting-exercise-status")[0].innerHTML = "Success";
+
                                     //take user back to homepage
                                     window.open("/honours/webapp/view/index.php", name="_self");
                                 }
                                 else
                                 {
-                                    alert("Failed to submit exercise. Try again?");
+                                    console.log("ajax failed");
+                                    $("#submitting-exercise-message")[0].innerHTML = "Failed to submit exercise. Try again?";
+                                    $("#spinner-exercise").hide();
+                                    $("#submitting-exercise-status")[0].innerHTML = "Failed";
+
                                 }
                             }
                         });
                     }
                     else
                     {
-                        alert("Submission operation failed. Try again?");
+                        console.log("server failed");
+                        $("#submitting-exercise-message")[0].innerHTML = "Failed to submit exercise. Try again?";
+                        $("#spinner-exercise").hide();
+                        $("#submitting-exercise-status")[0].innerHTML = "Failed";
                     }
                     
                 }
@@ -241,7 +254,6 @@ function preparePage()
 
             //add a new message to compilation box to tell the user we are compiling the program
             addCompilationBoxMessage("Compiling program...", "alert-dark");
-
         }
     });
 
@@ -258,6 +270,11 @@ function preparePage()
     {
         if (connected)
         {
+            $("#submitting-exercise-message")[0].innerHTML = "Submitting exercise...";
+            $("#spinner-exercise").show();
+            $("#submitting-exercise-status")[0].innerHTML = "Submitting...";
+            $("#submit-exercise-modal").modal("show");
+
             //submit user answer
             testProgram();
         }

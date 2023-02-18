@@ -183,6 +183,28 @@
                                 </div>
                             </div>
 
+                            <!-- submission progress modal -->
+                            <div class="modal fade" id="submit-exercise-modal" tabindex="-1" aria-labelledby="submit-exercise-modal" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="h5 modal-title">Submitting exercise</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" id="modal-body">
+                                            <div class="d-flex align-items-center" id="submitting">
+                                                <p><strong id="submitting-exercise-message">Submitting exercise....</strong></p>
+                                                <div class="spinner-border ms-auto" role="status" aria-hidden="true" id="spinner-exercise"></div>
+                                            </div>
+                                            <p>Status: <span id="submitting-exercise-status">Submitting...</span></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn-secondary btn" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <script src="../js/exerciseClient.js" type="module"></script>
 
                             <?php
