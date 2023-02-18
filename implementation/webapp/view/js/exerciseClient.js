@@ -121,38 +121,54 @@ socketHost.onmessage = function(event) {
                 }
                 else if (message.operation == constants.OP_COMPILE)
                 {
-                    //display compilation output
-                    console.log(message.value);
-                    $("#comp-output")[0].innerHTML = message.value;
+                    if (message.value)
+                    {
+                        //display compilation output
+                        console.log(message.value);
+                        $("#comp-output")[0].innerHTML = message.value;
+                    }
+                    else
+                    {
+                        alert("Compilation operation failed. Try again?");
+                    }
+                    
                 }
                 else if (message.operation == constants.OP_TEST)
                 {
-                    //get number of tests succeeded
-                    var value = message.value.replace(/\s/g, "");
+                    if (message.value)
+                    {
+                        //get number of tests succeeded
+                        var value = message.value.replace(/\s/g, "");
 
-                    value = value.split("DEBUGGING_TOOL_RESULT:").pop();
+                        value = value.split("DEBUGGING_TOOL_RESULT:").pop();
 
-                    console.log(value);
+                        console.log(value);
 
-                    const urlParams = new URLSearchParams(window.location.search);
+                        const urlParams = new URLSearchParams(window.location.search);
 
-                    //mark this in the database
-                    $.ajax({
-                        type: "POST",
-                        url: "/honours/webapp/controller/ajaxScripts/logUserExerciseAttempt.php",
-                        data: {codeId: urlParams.get("id"), mark: value},
-                        success: function(data) {
-                            if (data != 0)
-                            {
-                                //take user back to homepage
-                                window.open("/honours/webapp/view/index.php", name="_self");
+                        //mark this in the database
+                        $.ajax({
+                            type: "POST",
+                            url: "/honours/webapp/controller/ajaxScripts/logUserExerciseAttempt.php",
+                            data: {codeId: urlParams.get("id"), mark: value},
+                            success: function(data) {
+                                if (data != 0)
+                                {
+                                    //take user back to homepage
+                                    window.open("/honours/webapp/view/index.php", name="_self");
+                                }
+                                else
+                                {
+                                    alert("Failed to submit exercise. Try again?");
+                                }
                             }
-                            else
-                            {
-                                alert("Failed to submit exercise. Try again?");
-                            }
-                        }
-                    });
+                        });
+                    }
+                    else
+                    {
+                        alert("Submission operation failed. Try again?");
+                    }
+                    
                 }
                 
             };

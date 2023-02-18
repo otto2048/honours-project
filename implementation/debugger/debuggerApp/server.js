@@ -95,7 +95,7 @@ function onConnect(ws) {
                 if (err) {
                     // One of the iterations produced an error.
                     // All processing will now stop.
-                    //TODO: return failure message
+                    ws.send(JSON.stringify(obj));
                     console.log('A file failed to process');
                 }
                 else {
@@ -187,7 +187,7 @@ function onConnect(ws) {
                 if (err) {
                     // One of the iterations produced an error.
                     // All processing will now stop.
-                    //TODO: return failure message
+                    ws.send(JSON.stringify(obj));
                     console.log('A file failed to process');
                 }
                 else {
@@ -212,9 +212,8 @@ function onConnect(ws) {
                     {
                         if (stderr)
                         {
-                            //give compilation errors
-                            //TODO: return score of 0
-                            console.log(stdout);
+                            //if compilation failures, submission fails
+                            ws.send(JSON.stringify(obj));
                         }
                         else
                         {
