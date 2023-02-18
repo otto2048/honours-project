@@ -74,6 +74,8 @@
                             </div>
 
                             <button type="button" class="btn btn-primary float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
+                            <button type="button" class="btn text-light theme-darker float-end me-1" id="clear-terminal-btn">Clear Terminal</button>
+
                             <ul class="nav-tabs nav bg-dark" role="tablist">
                                 <?php
                                     foreach ($exerciseFile["user_files"] as $fileName)

@@ -245,7 +245,7 @@ function preparePage()
             //confirm that the user wants to submit their answer
             $("#confirm-modal").modal("show");
         }
-    })
+    });
 
     $("#confirm-complete-btn")[0].addEventListener("click", function()
     {
@@ -254,7 +254,7 @@ function preparePage()
             //submit user answer
             testProgram();
         }
-    })
+    });
 
 
     console.log($('.tab-content').height());
@@ -268,6 +268,12 @@ function preparePage()
         }
     }, {
         height: $('.tab-content').height()
+    });
+
+    $('#clear-terminal-btn')[0].addEventListener("click", function()
+    {
+        var term = $.terminal.active();
+        term.clear();
     });
 }
 
