@@ -44,12 +44,16 @@
     text-decoration: underline;
 }
 
-[data-bs-theme=dark] button.nav-link:hover, [data-bs-theme=dark] button.nav:focus {
+[data-bs-theme=dark] button.nav-link:hover, [data-bs-theme=dark] button.nav-link:focus {
     color: #fff;
 }
 
-[data-bs-theme=light] button.nav-link:hover, [data-bs-theme=light] button.nav:focus {
+[data-bs-theme=light] button.nav-link:hover, [data-bs-theme=light] button.nav-link:focus, [data-bs-theme=light] button.nav-link {
     color: #000;
+}
+
+[data-bs-theme=light] button.nav-link.nav-link.active {
+    border-color: #000;
 }
 
 .prewrap {
