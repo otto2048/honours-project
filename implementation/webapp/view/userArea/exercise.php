@@ -124,8 +124,8 @@
                                         ?>
                                     </div>
                                     <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-dark theme me-1" id="increase-code-size-btn">+</button>
-                                        <button type="button" class="btn btn-dark theme me-1" id="decrease-code-size-btn">-</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="increase-code-size-btn">+ Increase Font Size</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="decrease-code-size-btn">- Decrease Font Size</button>
                                     </div>
                                     
                                     
@@ -134,9 +134,9 @@
                                     <!-- container for terminal -->
                                     <div id="code-output"></div>
                                     <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-dark theme me-1" id="increase-terminal-size-btn">+</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="increase-terminal-size-btn">+ Increase Font Size</button>
                                         <button type="button" class="btn btn-dark theme me-1" id="clear-terminal-btn">Clear Terminal</button>
-                                        <button type="button" class="btn btn-dark theme me-1" id="decrease-terminal-size-btn">-</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="decrease-terminal-size-btn">- Decrease Font Size</button>
                                     </div>
                                     
                                 </div>
