@@ -30,6 +30,9 @@
         
         <!-- jquery terminal styles -->
         <link rel="stylesheet" href="/honours/webapp/view/js/jquery-terminal/jquery-terminal-2.35.3.css"/>
+
+        <!-- interact js -->
+        <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     </head>
     <body>
         <?php 
@@ -70,13 +73,12 @@
                             ?>
 
                             <div class="justify-content-center pt-1 pb-1 d-flex">
-                                <button type="button" class="btn text-light theme-darker debugger-control ms-1" disabled aria-disabled=true id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
+                                <button type="button" class="btn btn-dark theme debugger-control ms-1" disabled aria-disabled=true id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
                             </div>
 
                             <button type="button" class="btn btn-primary float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
-                            <button type="button" class="btn text-light theme-darker float-end me-1" id="clear-terminal-btn">Clear Terminal</button>
 
-                            <ul class="nav-tabs nav bg-dark" role="tablist">
+                            <ul class="nav-tabs nav" role="tablist">
                                 <?php
                                     foreach ($exerciseFile["user_files"] as $fileName)
                                     {
@@ -110,8 +112,8 @@
 
                                                 ?>
 
-                                                <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?> editorContainer" id="<?php echo $pathInfo["basename"]; ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
-                                                    <div id="<?php echo $pathInfo["basename"]; ?>" class="editor">
+                                                <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo $pathInfo["basename"]; ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
+                                                    <div id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
 <?php echo $file; ?>
                                                     </div>
                                                 </div>
@@ -121,19 +123,30 @@
 
                                         ?>
                                     </div>
-
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-dark theme me-1" id="increase-code-size-btn">+</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="decrease-code-size-btn">-</button>
+                                    </div>
+                                    
                                     
                                 </div>
                                 <div class="col">
                                     <!-- container for terminal -->
                                     <div id="code-output"></div>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-dark theme me-1" id="increase-terminal-size-btn">+</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="clear-terminal-btn">Clear Terminal</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="decrease-terminal-size-btn">-</button>
+                                    </div>
+                                    
                                 </div>
                             </div>
 
                             <!-- compilation message output -->
-                            <div class="mt-2 border-light border pb-5 ps-1">
+                            <div class="mt-2 border pb-5 ps-1 resize">
                                 <h2 class="h4 ps-2 pt-3">Compilation Output</h2>
                                 <hr>
+                                <p class="ps-2">See compilation messages here</p>
                                 <div class="overflow-auto" id="compilation-messages-box">
                                     <ul class="list-unstyled list-group">
                                         
@@ -219,6 +232,7 @@
         </div>
 
         <script src="../js/setTheme.js"></script>
+        <script src="../js/resizing.js"></script>
 
     </body>
 </html>

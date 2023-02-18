@@ -50,12 +50,12 @@
                         <label for="password">Enter Password:</label>
                         <input type="password" class="form-control" name="password" id="password" required/>
                     </div>
-                    <input type="submit" class="btn theme-darker text-light mt-2 float-end" name="button" value="Login"/>
+                    <input type="submit" class="btn theme text-light mt-2 float-end" name="button" value="Login"/>
                 </form>
             </div>
         </div>
 
-        <script src="../js/setTheme.js"></script>
+        <script src="js/setTheme.js"></script>
 
     </body>
 </html>

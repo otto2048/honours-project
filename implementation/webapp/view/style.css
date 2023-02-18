@@ -1,6 +1,10 @@
 /*Colours*/
 :root {
     --green: #00663F;
+    --dark-green: #013320;
+    --white: #fff;
+
+    --bs-info-text: #000;
 }
 
 [data-bs-theme=dark] {
@@ -11,8 +15,21 @@
     --bs-body-color: #000;
 }
 
-.theme-darker {
+.theme {
     background-color: var(--green);
+}
+
+.theme-darker {
+    background-color: var(--dark-green);
+}
+
+.btn.theme:hover {
+    background-color: var(--dark-green);
+    border-color: var(--dark-green);
+}
+
+.btn.theme, .btn.theme {
+    border-color: var(--white);
 }
 
 .nav-link {
@@ -27,6 +44,18 @@
     text-decoration: underline;
 }
 
+[data-bs-theme=dark] button.nav-link:hover, [data-bs-theme=dark] button.nav-link:focus {
+    color: #fff;
+}
+
+[data-bs-theme=light] button.nav-link:hover, [data-bs-theme=light] button.nav-link:focus, [data-bs-theme=light] button.nav-link {
+    color: #000;
+}
+
+[data-bs-theme=light] button.nav-link.nav-link.active {
+    border-color: #000;
+}
+
 .prewrap {
     white-space: pre-wrap;
 }
@@ -35,16 +64,26 @@
     max-height: 500px;
 }
 
-/* editor */
-.editor { 
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    top: 0;
-    right: 0;
+[data-bs-theme=light] .alert-dark p {
+    color: #000;
 }
 
-.editorContainer {
-    position: relative;
+[data-bs-theme=dark] .alert-info p {
+    color: #FFF;
+}
+
+[data-bs-theme=dark] .alert {
+    border-color: #d2d2d2;
+}
+
+[data-bs-theme=light] .alert {
+    border-color: #000;
+}
+
+/* editor */
+.editor {
+    bottom: 0px;
+    font-size: 15px;
     height: 30em;
+    border: solid 2px black;
 }

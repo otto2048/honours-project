@@ -23,7 +23,7 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Sign up</title>
         <?php include "../head.php"; ?>
@@ -90,12 +90,13 @@
                             <input type="password" class="form-control" name="password" id="password" required />
                         </div>
                     </div>
-                    <input type="submit" id="signUpBtn" class="btn theme-darker text-light mt-2 float-end" name="button" value="Sign up with username and password"/>
+                    <input type="submit" id="signUpBtn" class="btn theme text-light mt-2 float-end" name="button" value="Sign up with username and password"/>
                 </form>
             </div>
         </div>
 
         <script src="../js/signUp.js"></script>
+        <script src="../js/setTheme.js"></script>
         
     </body>
 </html>
