@@ -445,13 +445,18 @@ function addCompilationBoxMessage(message, colour)
     var li = document.createElement("li");
     
     var alertDiv = document.createElement("div");
-    alertDiv.classList = "alert " + colour + " fade show";
+    alertDiv.classList = "alert " + colour + " show d-flex align-items-center";
     alertDiv.setAttribute("role", "alert");
 
     var alertText = document.createElement("p");
-    alertText.classList = "m-0 prewrap";
+    alertText.classList = "m-0 prewrap ms-3";
     alertText.innerHTML = message;
 
+    var alertTime = document.createElement("p");
+    alertTime.classList = "m-0";
+    alertTime.innerHTML = new Date().toLocaleTimeString();
+
+    alertDiv.append(alertTime);
     alertDiv.append(alertText);
 
     li.append(alertDiv);
