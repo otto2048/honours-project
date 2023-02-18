@@ -435,6 +435,21 @@ function setUpEditors()
         editors.push(ace.edit(files[i].getAttribute("id"))); 
     }
 
+    //check if editors should be in light mode
+    if (localStorage.getItem("theme"))
+    {
+        // set theme
+        if (localStorage.getItem("theme") == "light")
+        {
+            for (var i=0; i<editors.length; i++)
+            {
+                editors[i].session.setMode("ace/mode/c_cpp");
+            }
+
+            return;
+        }
+    }
+
     for (var i=0; i<editors.length; i++)
     {
         editors[i].setTheme("ace/theme/tomorrow_night_bright");
