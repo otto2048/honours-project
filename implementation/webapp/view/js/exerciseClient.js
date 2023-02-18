@@ -8,6 +8,7 @@ import * as constants from "../js/constants.js";
 
 var editors = [];
 var startedLaunching = false;
+var launchFailed = false;
 
 var files = $(".editor");
 
@@ -218,13 +219,14 @@ socketHost.onmessage = function(event) {
         }
         else if (message.status == constants.ENV_REFRESH)
         {
-            if (!startedLaunching)
+            if (!startedLaunching && !launchFailed)
             {
                 $("#debugger-load-message")[0].innerHTML = message.message;
             }
         }
         else if (message.status == constants.ENV_FAIL)
         {
+            launchFailed = true;
             $("#debugger-load-message")[0].innerHTML = message.message;
 
             //failed to launch environment

@@ -125,6 +125,7 @@ function onConnect(ws, req) {
                         //failure function
                         console.log("Removal timeout");
                         obj.message = "Failed to launch environment. Try reloading the page?";
+                        obj.status = ENV_FAIL;
                         ws.send(JSON.stringify(obj));
                     },
                     function()
