@@ -2,6 +2,7 @@ window.onload = preparePage();
 
 function preparePage()
 {
+    //https://interactjs.io/
     interact('.resize').resizable({
         // resize from all edges and corners
         edges: { left: true, right: true, bottom: true, top: true },

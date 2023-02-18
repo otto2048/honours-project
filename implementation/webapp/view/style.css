@@ -83,7 +83,7 @@
 /* editor */
 .editor {
     bottom: 0px;
-    font-size: medium;
+    font-size: 15px;
     height: 30em;
     border: solid 2px black;
 }

@@ -77,7 +77,6 @@
                             </div>
 
                             <button type="button" class="btn btn-primary float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
-                            <button type="button" class="btn btn-dark theme float-end me-1" id="clear-terminal-btn">Clear Terminal</button>
 
                             <ul class="nav-tabs nav" role="tablist">
                                 <?php
@@ -124,12 +123,22 @@
 
                                         ?>
                                     </div>
-
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-dark theme me-1" id="increase-code-size-btn">+</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="decrease-code-size-btn">-</button>
+                                    </div>
+                                    
                                     
                                 </div>
                                 <div class="col">
                                     <!-- container for terminal -->
                                     <div id="code-output"></div>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" class="btn btn-dark theme me-1" id="increase-terminal-size-btn">+</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="clear-terminal-btn">Clear Terminal</button>
+                                        <button type="button" class="btn btn-dark theme me-1" id="decrease-terminal-size-btn">-</button>
+                                    </div>
+                                    
                                 </div>
                             </div>
 

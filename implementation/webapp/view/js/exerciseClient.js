@@ -280,9 +280,6 @@ function preparePage()
         }
     });
 
-
-    console.log($('.tab-content').height());
-
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {
@@ -294,7 +291,52 @@ function preparePage()
         height: $('.tab-content').height()
     });
 
+    clearTerminal();
+
     $('#clear-terminal-btn')[0].addEventListener("click", clearTerminal);
+
+    $('#increase-code-size-btn')[0].addEventListener("click", function()
+    {
+        changeCodeSize(5);
+    });
+
+    $('#decrease-code-size-btn')[0].addEventListener("click", function()
+    {
+        changeCodeSize(-5);
+    });
+
+    $('#increase-terminal-size-btn')[0].addEventListener("click", function()
+    {
+        changeTerminalSize(1);
+    });
+
+    $('#decrease-terminal-size-btn')[0].addEventListener("click", function()
+    {
+        changeTerminalSize(-1);
+    });
+}
+
+//change code size
+function changeCodeSize(value)
+{
+    //change size of editor text
+    var newValue = parseInt($(".editor").css('font-size'), 10) + value;
+
+    if (newValue > 0)
+    {
+        $(".editor").css('font-size', newValue.toString() + "px");
+    }
+}
+
+//change size of terminal text
+function changeTerminalSize(value)
+{
+    var newValue = parseInt($(".terminal").css('--size'), 10) + value;
+
+    if (newValue > 0)
+    {
+        $(".terminal").css('--size', newValue);
+    }
 }
 
 //clear terminal
