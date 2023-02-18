@@ -217,11 +217,13 @@ function launchContainer(userMessage, responseObj, ws)
     ws.send(JSON.stringify(responseObj));
 
     //generate a port for the container
-    var port = generatePort(2, 5);
+    var port = generatePort(3, 5);
 
     if (!port)
     {
         console.log("Out of available ports");
+        responseObj.message = "Failed to launch environment";
+        responseObj.status = ENV_FAIL;
         ws.send(JSON.stringify(responseObj));
         return;
     }
