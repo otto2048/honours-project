@@ -134,6 +134,7 @@
                             <div class="mt-2 border pb-5 ps-1">
                                 <h2 class="h4 ps-2 pt-3">Compilation Output</h2>
                                 <hr>
+                                <p class="ps-2">See compilation messages here</p>
                                 <div class="overflow-auto" id="compilation-messages-box">
                                     <ul class="list-unstyled list-group">
                                         
