@@ -44,6 +44,14 @@
     text-decoration: underline;
 }
 
+[data-bs-theme=dark] button.nav-link:hover, [data-bs-theme=dark] button.nav:focus {
+    color: #fff;
+}
+
+[data-bs-theme=light] button.nav-link:hover, [data-bs-theme=light] button.nav:focus {
+    color: #000;
+}
+
 .prewrap {
     white-space: pre-wrap;
 }
