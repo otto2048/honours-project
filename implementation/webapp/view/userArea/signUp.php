@@ -90,7 +90,7 @@
                             <input type="password" class="form-control" name="password" id="password" required />
                         </div>
                     </div>
-                    <input type="submit" id="signUpBtn" class="btn theme-darker text-light mt-2 float-end" name="button" value="Sign up with username and password"/>
+                    <input type="submit" id="signUpBtn" class="btn theme text-light mt-2 float-end" name="button" value="Sign up with username and password"/>
                 </form>
             </div>
         </div>

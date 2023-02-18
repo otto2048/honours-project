@@ -5,7 +5,7 @@
     function getNavigation($selected = null)
     {
 ?>
-        <nav class="navbar navbar-expand-lg navbar-dark theme-darker">
+        <nav class="navbar navbar-expand-lg navbar-dark theme">
             <div class="container-fluid">
                 <div class="d-flex">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

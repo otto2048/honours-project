@@ -1,6 +1,8 @@
 /*Colours*/
 :root {
     --green: #00663F;
+    --dark-green: #013320;
+    --white: #fff;
 }
 
 [data-bs-theme=dark] {
@@ -11,8 +13,21 @@
     --bs-body-color: #000;
 }
 
-.theme-darker {
+.theme {
     background-color: var(--green);
+}
+
+.theme-darker {
+    background-color: var(--dark-green);
+}
+
+.btn.theme:hover {
+    background-color: var(--dark-green);
+    border-color: var(--dark-green);
+}
+
+.btn.theme, .btn.theme {
+    border-color: var(--white);
 }
 
 .nav-link {
