@@ -95,6 +95,7 @@ function onConnect(ws) {
                 if (err) {
                     // One of the iterations produced an error.
                     // All processing will now stop.
+                    //TODO: return failure message
                     console.log('A file failed to process');
                 }
                 else {
@@ -186,6 +187,7 @@ function onConnect(ws) {
                 if (err) {
                     // One of the iterations produced an error.
                     // All processing will now stop.
+                    //TODO: return failure message
                     console.log('A file failed to process');
                 }
                 else {
@@ -208,9 +210,10 @@ function onConnect(ws) {
 
                     exec(command_, function(err, stdout, stderr)
                     {
-                        if (stdout)
+                        if (stderr)
                         {
                             //give compilation errors
+                            //TODO: return score of 0
                             console.log(stdout);
                         }
                         else

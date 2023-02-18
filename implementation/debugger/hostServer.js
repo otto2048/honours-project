@@ -250,7 +250,7 @@ function launchContainer(userMessage, responseObj, ws)
         responseObj.value = port;
         responseObj.status = ENV_SUCCESS;
 
-        responseObj.message = "Successfully launched environment";
+        responseObj.message = "Connecting to environment...";
 
         ws.send(JSON.stringify(responseObj));
 
