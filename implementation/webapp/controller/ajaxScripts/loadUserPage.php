@@ -1,6 +1,6 @@
 <?php
 
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
@@ -40,7 +40,6 @@
                     echo '<td>'.$row["userId"].'</td>';
     
                     echo '<td><u><a href="user.php?id='.$row["userId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
-                    echo '<td class="d-none d-sm-none d-md-table-cell">'.$row["containerPort"].'</td>';
     
                     echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
     

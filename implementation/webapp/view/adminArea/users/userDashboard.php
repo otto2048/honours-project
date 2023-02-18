@@ -1,10 +1,11 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
 
     //check if the user is allowed to be here
@@ -21,21 +22,14 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Manage Users</title>
         <?php include "../../head.php"; ?>
     </head>
     <body>
         <?php 
-            function getHeader()
-            {
-                $selected = "userDashboard.php";
-                include "../../navigation.php";
-            }
-
-            getHeader();
-
+            getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
         
         <div class="container p-3">
@@ -83,7 +77,6 @@
                                             <tr>
                                                 <th scope="col" data-tablesort-type="int">ID</th>
                                                 <th scope="col" data-tablesort-type="string">Username</th>
-                                                <th scope="col" data-tablesort-type="string">Container port</th>
                                                 <th scope="col" data-tablesort-type="string">User Group</th>
                                             </tr>
                                         </thead>
@@ -97,7 +90,6 @@
                                                     echo '<td>'.$row["userId"].'</td>';
 
                                                     echo '<td><u><a href="user.php?id='.$row["userId"].'" class="moreInfoLink">'.$row["username"].'</a></u></td>';
-                                                    echo '<td>'.$row["containerPort"].'</td>';
 
                                                     echo '<td>'.$permission->getPermissionLevel($row["permissionLevel"]).'</td>';
                                                     echo '</tr>';
@@ -161,7 +153,7 @@
                                 ?>
                             </select>
                         </div>
-                        <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
+                        <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                     </form>
                 </div>
             </div>
@@ -177,5 +169,8 @@
 
         <!-- Pagination -->
         <script src="../../js/pagination.js"></script>
+
+        <script src="../../js/setTheme.js"></script>
+
     </body>
 </html>

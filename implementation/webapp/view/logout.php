@@ -1,18 +1,19 @@
 <!-- logout message displayed here -->
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/logout.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 ?>
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Logout</title>
         <?php include "head.php"; ?>
     </head>
     <body>
         <?php 
-            include "navigation.php";
+            getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
 
         <div class="container">
@@ -28,5 +29,8 @@
                 <!-- TODO: participant debrief form here -->
             </div>
         </div>
+
+        <script src="../js/setTheme.js"></script>
+
     </body>
 </html>

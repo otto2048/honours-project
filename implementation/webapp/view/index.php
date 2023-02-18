@@ -3,8 +3,10 @@
 
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/ExerciseModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserExerciseModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
@@ -15,22 +17,16 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Homepage</title>
         <?php include "head.php"; ?>
     </head>
     <body>
-        <?php 
-            function getHeader()
-            {
-                $selected = "index.php";
-                include "navigation.php";
-            }
-
-            getHeader();
+        <?php
+            getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
-        <div class="container p-3">
+        <div class="container p-3" >
             <h1>Your Exercises</h1>
             <hr>
             <?php
@@ -39,6 +35,7 @@
 
                 $exerciseModel = new ExerciseModel();
                 $userModel = new UserModel();
+                $userExerciseModel = new UserExerciseModel();
 
                 $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], null, true);
 
@@ -54,7 +51,7 @@
                         foreach ($exercises as $exercise)
                         {
                             //get mark information to check if this exercise is completed
-                            $markJson = $userModel->getExerciseMark($_SESSION["userId"], $exercise["codeId"]);
+                            $markJson = $userExerciseModel->getExerciseMark($_SESSION["userId"], $exercise["codeId"]);
 
                             if ($markJson)
                             {
@@ -158,5 +155,8 @@
                 }
             ?>
         </div>
+        
+        <script src="js/setTheme.js"></script>
+
     </body>
 </html>

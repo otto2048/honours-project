@@ -1,5 +1,5 @@
 <?php
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Controller.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
@@ -39,6 +39,7 @@
                 //set up session variables
                 $userData = json_decode($userData, JSON_INVALID_UTF8_SUBSTITUTE);
                 $_SESSION["userId"] = $userData[0]["userId"];
+                $_SESSION["username"] = $userData[0]["username"];
                 $_SESSION["permissionLevel"] = $userData[0]["permissionLevel"];
 
                 //send to home page         
@@ -136,8 +137,6 @@
                 //guest user
                 $data -> permissionLevel = PermissionLevels::GUEST;
             }
-
-            //TODO: set container port based on some validation metric
             
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
@@ -179,7 +178,6 @@
             $data = new \stdClass();
             $data -> username = $_POST['username'];
             $data -> permissionLevel = $_POST['permissionLevel'];
-            $data -> containerPort = $_POST['containerPort'];
             $data -> userId = $_POST['userId'];
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 

@@ -8,6 +8,8 @@
     //            users are assigned into the control or experimental group
 
 
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
+
     //handle starting session
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
 
@@ -27,16 +29,8 @@
         <?php include "../head.php"; ?>
     </head>
     <body>
-        <?php 
-            function getHeader()
-            {
-                $selected = "signUp.php";
-                include "../navigation.php";
-            }
-
-            getHeader();
-
-            
+        <?php
+            getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
 
         <div class="container">
@@ -102,5 +96,6 @@
         </div>
 
         <script src="../js/signUp.js"></script>
+        
     </body>
 </html>

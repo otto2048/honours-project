@@ -3,6 +3,48 @@
     --green: #00663F;
 }
 
+[data-bs-theme=dark] {
+    --bs-body-color: #fff;
+}
+
+[data-bs-theme=light] {
+    --bs-body-color: #000;
+}
+
 .theme-darker {
     background-color: var(--green);
+}
+
+.nav-link {
+    color: #f8f9fa;
+}
+
+.navbar-nav .nav-link.active {
+    text-decoration: underline;
+}
+
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link:focus {
+    text-decoration: underline;
+}
+
+.prewrap {
+    white-space: pre-wrap;
+}
+
+#compilation-messages-box {
+    max-height: 500px;
+}
+
+/* editor */
+.editor { 
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    right: 0;
+}
+
+.editorContainer {
+    position: relative;
+    height: 30em;
 }

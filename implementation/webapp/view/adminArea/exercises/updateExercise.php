@@ -1,11 +1,12 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
@@ -21,20 +22,14 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - View Exercise</title>
         <?php include "../../head.php"; ?>
     </head>
     <body>
-        <?php 
-            function getHeader()
-            {
-                include "../../navigation.php";
-            }
-
-            getHeader();
-
+        <?php
+            getNavigation();
         ?>
         
         <div class="container p-3">
@@ -154,7 +149,7 @@
                                             ?>
                                         </select>
                                     </div>
-                                    <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
+                                    <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                                 </form>
                             
                         </div>
@@ -189,5 +184,8 @@
 
         
         </div>
+
+        <script src="../../js/setTheme.js"></script>
+
     </body>
 </html>

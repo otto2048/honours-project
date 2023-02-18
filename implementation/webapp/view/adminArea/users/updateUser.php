@@ -1,10 +1,12 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/UserModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
@@ -20,20 +22,14 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - View User</title>
         <?php include "../../head.php"; ?>
     </head>
     <body>
         <?php 
-            function getHeader()
-            {
-                include "../../navigation.php";
-            }
-
-            getHeader();
-
+            getNavigation();
         ?>
         
         <div class="container p-3">
@@ -87,10 +83,6 @@
                                         <label for="username">Username:</label>
                                         <input type="text" class="form-control" name="username" required id="username" value=<?php echo $userData[0]["username"] ?>>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="containerPort">Container Port:</label>
-                                        <input type="text" class="form-control" name="containerPort" id="containerPort" value=<?php echo $userData[0]["containerPort"] ?>>
-                                    </div>
                                     <div class="form-group pt-1">
                                         <label for="permissionLevel">User group:</label>
                                         <select name="permissionLevel" id="permissionLevel">
@@ -115,7 +107,7 @@
                                             ?>
                                         </select>
                                     </div>
-                                    <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
+                                    <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                                 </form>
                             
                         </div>
@@ -151,5 +143,8 @@
 
         
         </div>
+
+        <script src="../../js/setTheme.js"></script>
+
     </body>
 </html>

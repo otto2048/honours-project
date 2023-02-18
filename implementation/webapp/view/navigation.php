@@ -1,9 +1,10 @@
 <!-- The navigation for all the web pages -->
-<!doctype html>
 
-<html lang="en">
-    <head></head>
-    <body>
+<?php
+
+    function getNavigation($selected = null)
+    {
+?>
         <nav class="navbar navbar-expand-lg navbar-dark theme-darker">
             <div class="container-fluid">
                 <div class="d-flex">
@@ -30,13 +31,16 @@
                             //check if user is logged in
                             if (isset($_SESSION["userId"]))
                             {
+                        ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/honours/webapp/view/index.php">Home</a>
+                                </li>
+                        <?php
                                 //check if user is an admin
                                 if ($_SESSION["permissionLevel"] >= PermissionLevels::ADMIN)
                                 {
                         ?>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/honours/webapp/view/index.php">Home</a>
-                                    </li>
+                                    
 
                                     <li class="nav-item">
                                         <a class="nav-link" href="/honours/webapp/view/adminArea/users/userDashboard.php">Manage Users</a>
@@ -49,6 +53,9 @@
                         <?php
                                 }
                         ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/honours/webapp/view/userArea/settings.php">Settings</a>
+                                </li>
                         
                                 <li class="nav-item">
                                     <a class="nav-link" href="/honours/webapp/view/logout.php">Logout</a>
@@ -74,5 +81,7 @@
             </div>
         </nav>
         <script src="/honours/webapp/view/js/navigation.js"></script>
-    </body>
-</html>
+<?php
+    }
+
+?>

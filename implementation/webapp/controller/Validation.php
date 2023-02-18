@@ -30,6 +30,9 @@
                 case ModelClassTypes::EXERCISE_ANSWER:
                     return $this->validateExerciseAnswer($jsonData, $errorMessageJson);
                     break;
+                case ModelClassTypes::USER_EXERCISE:
+                    return $this->validateUserExercise($jsonData, $errorMessageJson);
+                    break;
                 default:
                     return false;
             }
@@ -84,6 +87,58 @@
             return ctype_digit($input);
         }
 
+        //validate user exercise attempt
+        private function validateUserExercise(&$jsonData, &$errorMessageJson)
+        {
+            $errorMessage = array();
+
+            $userExercise = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //sanitize data
+            $userExercise["userId"] = $this->cleanInput($userExercise["userId"]);
+            $userExercise["codeId"] = $this->cleanInput($userExercise["codeId"]);
+            $userExercise["mark"] = $this->cleanInput($userExercise["mark"]);
+            $userExercise["completed"] = $this->cleanInput($userExercise["completed"]);
+
+            //repack sanitized data
+            $jsonData = json_encode($userExercise, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //validate data
+            if (!$this->validateInt($userExercise["userId"]))
+            {
+                $errorMessage[0]["content"] = "Invalid user id";
+                $errorMessage[0]["success"] = false;
+            }
+
+            if (!$this->validateInt($userExercise["codeId"]))
+            {
+                $errorMessage[1]["content"] = "Invalid code id";
+                $errorMessage[1]["success"] = false;
+            }
+
+            if (!$this->validateInt($userExercise["mark"]))
+            {
+                $errorMessage[2]["content"] = "Invalid mark value";
+                $errorMessage[2]["success"] = false;
+            }
+
+            if (!filter_var($userExercise["completed"], FILTER_VALIDATE_BOOLEAN))
+            {
+                $errorMessage[3]["content"] = "Invalid completed value";
+                $errorMessage[3]["success"] = false;
+            }
+
+            //check if we found any errors
+            if (count($errorMessage) == 0)
+            {
+                return true;
+            }
+
+            $errorMessageJson = json_encode($errorMessage);
+
+            return false;
+        }
+
         //validate user object
         private function validateUser(&$jsonData, &$errorMessageJson)
         {
@@ -116,26 +171,6 @@
                 $errorMessage[1]["content"] = "Invalid username";
                 $errorMessage[1]["success"] = false;
             }
-
-            //validate container port
-            // if (!$this->validateInt($user["containerPort"]))
-            // {
-            //     $errorMessage[2]["content"] = "Invalid container port";
-            //     $errorMessage[2]["success"] = false;
-            // }
-
-            //TODO: replace temp container port code once all users are being assigned a port
-            if (isset($user["containerPort"]))
-            {
-            $user["containerPort"] = $this->cleanInput($user["containerPort"]);
-
-                if (!$this->validateInt($user["containerPort"]))
-                {
-                    $errorMessage[2]["content"] = "Invalid container port";
-                    $errorMessage[2]["success"] = false;
-                }
-            }
-            
 
             //validate permission level
             if (!$this->validateUserPermissionLevel($user["permissionLevel"]))
@@ -250,37 +285,50 @@
             $exerciseAnswer = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //sanitize data
-            $exerciseAnswer["codeId_fk"] = $this->cleanInput($exerciseAnswer["codeId_fk"]);
-            $exerciseAnswer["input"] = $this->cleanInput($exerciseAnswer["input"]);
-            $exerciseAnswer["inputType"] = $this->cleanInput($exerciseAnswer["inputType"]);
-            $exerciseAnswer["output"] = $this->cleanInput($exerciseAnswer["output"]);
+            $exerciseAnswer["answer"]["codeId_fk"] = $this->cleanInput($exerciseAnswer["answer"]["codeId_fk"]);
+            $exerciseAnswer["answer"]["output"] = $this->cleanInput($exerciseAnswer["answer"]["output"]);
+
+            foreach ($exerciseAnswer["inputs"] as &$input_)
+            {
+                $input_["value"] = $this->cleanInput($input_["value"]);
+                $input_["type"] = $this->cleanInput($input_["type"]);
+            }
 
             //validate code id
-            if (!$this->validateInt($exerciseAnswer["codeId_fk"]))
+            if (!$this->validateInt($exerciseAnswer["answer"]["codeId_fk"]))
             {
                 $errorMessage[1]["content"] = "Invalid code ID";
                 $errorMessage[1]["success"] = false;
             }
 
-            //validate input
-            if (!$this->validateString($exerciseAnswer["input"], Validation::EXERCISE_ANSWER_INPUT))
+            //validate each input
+            $errorCounter = 2;
+            foreach ($exerciseAnswer["inputs"] as $key => $input)
             {
-                $errorMessage[2]["content"] = "Invalid input";
-                $errorMessage[2]["success"] = false;
-            }
+                //validate input
+                if (!$this->validateString($input["value"], Validation::EXERCISE_ANSWER_INPUT))
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid input on input: ".substr($key, -1);
+                    $errorMessage[$errorCounter]["success"] = false;
 
-            //validate input type
-            if (!$this->validateInputType($exerciseAnswer["inputType"]))
-            {
-                $errorMessage[3]["content"] = "Invalid input type";
-                $errorMessage[3]["success"] = false;
+                    $errorCounter++;
+                }
+
+                //validate input type
+                if (!$this->validateInputType($input["type"]))
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid input type on input: ".substr($key, -1);
+                    $errorMessage[$errorCounter]["success"] = false;
+
+                    $errorCounter++;
+                }
             }
 
             //validate output
-            if (!$this->validateString($exerciseAnswer["output"], Validation::EXERCISE_ANSWER_OUTPUT))
+            if (!$this->validateString($exerciseAnswer["answer"]["output"], Validation::EXERCISE_ANSWER_OUTPUT))
             {
-                $errorMessage[1]["content"] = "Invalid output";
-                $errorMessage[1]["success"] = false;
+                $errorMessage[$errorCounter]["content"] = "Invalid output";
+                $errorMessage[$errorCounter]["success"] = false;
             }
 
             //repack sanitized data

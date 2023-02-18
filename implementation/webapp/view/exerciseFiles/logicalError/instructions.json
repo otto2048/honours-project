@@ -1,0 +1,12 @@
+{
+    "comments" : "This is the instruction file",
+    "frames": [
+        {
+            "TYPE" : "READ_ONLY_CODE",
+            "CONTENT" : {
+                "lines" : [10, 11, 12]
+            }
+        },
+        {}
+    ]
+}

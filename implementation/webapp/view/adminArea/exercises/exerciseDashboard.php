@@ -2,10 +2,11 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
-    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
 
     //check if the user is allowed to be here
@@ -22,21 +23,14 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Manage Exercises</title>
         <?php include "../../head.php"; ?>
     </head>
     <body>
         <?php 
-            function getHeader()
-            {
-                $selected = "exerciseDashboard.php";
-                include "../../navigation.php";
-            }
-
-            getHeader();
-
+            getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
         
         <div class="container p-3">
@@ -104,8 +98,8 @@
 
                                                     echo '<td><u><a href="exercise.php?id='.$row["codeId"].'" class="moreInfoLink">'.$row["title"].'</a></u></td>';
                                                     echo '<td class="d-none d-sm-none d-md-table-cell">'.substr($row["description"], 0, 20).'...</td>';
-                                                    echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/adminArea/exercises/exerciseFiles/'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
-                                                    echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/adminArea/exercises/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
+                                                    echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/exerciseFiles/'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
+                                                    echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
 
                                                     echo '<td>';
                                                     if ($row["visible"])
@@ -210,7 +204,7 @@
                                 ?>
                             </select>
                         </div>
-                        <button class="btn btn-dark float-end mt-2" type="submit">Submit</button>
+                        <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                     </form>
                 </div>
             </div>
@@ -226,5 +220,7 @@
 
         <!-- Pagination -->
         <script src="../../js/pagination.js"></script>
+
+        <script src="../../js/setTheme.js"></script>
     </body>
 </html>

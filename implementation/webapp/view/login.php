@@ -2,6 +2,7 @@
 
     //handle starting session
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
 
     //check if user is already logged in
     if (isset($_SESSION['userId']))
@@ -12,22 +13,14 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Login</title>
         <?php include "head.php"; ?>
     </head>
     <body>
-        <?php 
-            function getHeader()
-            {
-                $selected = "login.php";
-                include "navigation.php";
-            }
-
-            getHeader();
-
-            
+        <?php
+            getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
 
         <div class="container">
@@ -61,5 +54,8 @@
                 </form>
             </div>
         </div>
+
+        <script src="../js/setTheme.js"></script>
+
     </body>
 </html>
