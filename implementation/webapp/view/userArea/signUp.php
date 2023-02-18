@@ -23,7 +23,7 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
     <head>
         <title>Debugging Training Tool - Sign up</title>
         <?php include "../head.php"; ?>
@@ -96,6 +96,7 @@
         </div>
 
         <script src="../js/signUp.js"></script>
+        <script src="../js/setTheme.js"></script>
         
     </body>
 </html>
