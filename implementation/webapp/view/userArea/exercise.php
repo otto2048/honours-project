@@ -98,7 +98,7 @@
                             <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
 
                             <div class="row">
-                                <div class="col">
+                                <div class="col-sm">
                                     
 
                                     <div class="tab-content">
@@ -130,7 +130,7 @@
                                     
                                     
                                 </div>
-                                <div class="col">
+                                <div class="col-sm">
                                     <!-- container for terminal -->
                                     <div id="code-output"></div>
                                     <div class="d-flex justify-content-center">
