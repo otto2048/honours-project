@@ -30,6 +30,9 @@
         
         <!-- jquery terminal styles -->
         <link rel="stylesheet" href="/honours/webapp/view/js/jquery-terminal/jquery-terminal-2.35.3.css"/>
+
+        <!-- interact js -->
+        <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     </head>
     <body>
         <?php 
@@ -110,8 +113,8 @@
 
                                                 ?>
 
-                                                <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?> editorContainer" id="<?php echo $pathInfo["basename"]; ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
-                                                    <div id="<?php echo $pathInfo["basename"]; ?>" class="editor">
+                                                <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo $pathInfo["basename"]; ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
+                                                    <div id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
 <?php echo $file; ?>
                                                     </div>
                                                 </div>
@@ -131,7 +134,7 @@
                             </div>
 
                             <!-- compilation message output -->
-                            <div class="mt-2 border pb-5 ps-1">
+                            <div class="mt-2 border pb-5 ps-1 resize">
                                 <h2 class="h4 ps-2 pt-3">Compilation Output</h2>
                                 <hr>
                                 <p class="ps-2">See compilation messages here</p>
@@ -220,6 +223,7 @@
         </div>
 
         <script src="../js/setTheme.js"></script>
+        <script src="../js/resizing.js"></script>
 
     </body>
 </html>

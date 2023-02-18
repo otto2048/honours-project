@@ -15,10 +15,6 @@
     --bs-body-color: #000;
 }
 
-[data-bs-theme=light] .editor {
-    border: solid 1px black;
-}
-
 .theme {
     background-color: var(--green);
 }
@@ -85,15 +81,9 @@
 }
 
 /* editor */
-.editor { 
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    top: 0;
-    right: 0;
-}
-
-.editorContainer {
-    position: relative;
+.editor {
+    bottom: 0px;
+    font-size: medium;
     height: 30em;
+    border: solid 2px black;
 }
