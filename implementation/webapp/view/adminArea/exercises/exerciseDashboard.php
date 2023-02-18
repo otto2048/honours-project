@@ -97,9 +97,22 @@
                                                     echo '<td>'.$row["codeId"].'</td>';
 
                                                     echo '<td><u><a href="exercise.php?id='.$row["codeId"].'" class="moreInfoLink">'.$row["title"].'</a></u></td>';
-                                                    echo '<td class="d-none d-sm-none d-md-table-cell">'.substr($row["description"], 0, 20).'...</td>';
+
+                                                    echo '<td class="d-none d-sm-none d-md-table-cell">';
+                                                    if ($row["description"])
+                                                    {
+                                                        echo substr($row["description"], 0, 20)."...";
+                                                    }
+                                                    echo '</td>';
+
                                                     echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/exerciseFiles/'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
-                                                    echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u></td>';
+
+                                                    echo '<td class="d-none d-sm-none d-md-table-cell">';        
+                                                    if ($row["instructionsFile"])
+                                                    {
+                                                        echo '<u><a href="/honours/webapp/view/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u>';
+                                                    }
+                                                    echo '</td>';
 
                                                     echo '<td>';
                                                     if ($row["visible"])
