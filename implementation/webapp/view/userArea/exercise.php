@@ -171,6 +171,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn-dark btn" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn-dark theme btn" data-bs-dismiss="modal" id="switch-active-session-btn">Switch Active Session</button>
                                         </div>
                                     </div>
                                 </div>
