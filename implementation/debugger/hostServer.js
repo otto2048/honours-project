@@ -89,9 +89,6 @@ function onConnect(ws, req) {
 
         //get message
         var message = JSON.parse(message);
-        console.log(message);
-
-        console.log(OP_LAUNCH_DEBUGGER);
 
         //create response object
         var obj = new Object();
@@ -104,13 +101,10 @@ function onConnect(ws, req) {
         if (message.operation == OP_LAUNCH_DEBUGGER)
         {
             var keys = Object.keys(clients);
-            console.log(keys);
-            console.log(message.value);
 
             //if client in clients
             if (keys.includes(message.value))
             {
-                console.log("keys included");
                 //if container in stopping state
                 if (clients[message.value].containerState == CONTAINER_STOPPING)
                 {
@@ -148,7 +142,6 @@ function onConnect(ws, req) {
             }
             else
             {
-                console.log("keys not included");
                 //run new container
                 launchContainer(message, obj, ws);
             }
@@ -157,8 +150,6 @@ function onConnect(ws, req) {
         {
             console.log("Calling op move active session");
             var keys = Object.keys(clients);
-            console.log(keys);
-            console.log(message.value);
 
             //if client in clients
             if (keys.includes(message.value))
@@ -168,7 +159,9 @@ function onConnect(ws, req) {
         }
 
         //set timeout to disconnect user automatically after some inactivity time
-        timeout = setTimeout(() => ws.close(1000, "Disconnected due to inactivity"), 600000);
+        timeout = setTimeout(function () {
+            ws.close(1000, "Disconnected due to inactivity");
+        }, 600000);
     });
 
     ws.on('close', function()
@@ -204,8 +197,6 @@ function stopContainer(clientId, containerId)
             console.error(`stderr: ${stderr}`);
             return;
         }
-    
-        console.log(`stdout:\n${stdout}`);
 
         command = "docker rm " + containerId;
         exec(command, (error, stdout, stderr) => {
@@ -218,13 +209,10 @@ function stopContainer(clientId, containerId)
                 console.error(`stderr: ${stderr}`);
                 return;
             }
-        
-            console.log(`stdout:\n${stdout}`);
 
             //remove reference to client
             console.log("Deleting reference to client");
             delete clients[clientId];
-            console.log(clients);
         });
     });
 }
@@ -251,7 +239,6 @@ function launchContainer(userMessage, responseObj, ws)
 
     //run the container
     command = "docker run -d --name " + userMessage.value + " -p " + port + ":8080 debugger_app:1.1";
-    console.log(command);
 
     //launch a debugger container for this user
     exec(command, (error, stdout, stderr) => {
@@ -292,7 +279,6 @@ function generatePort(portRange, attempts)
     for (var i=0; i<attempts; i++)
     {
         gen = Math.floor(Math.random() * portRange) + 5000;
-        console.log("Generated port: "+gen);
 
         if (!values.find(doc => doc.containerPort === gen))
         {
