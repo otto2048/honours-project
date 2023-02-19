@@ -15,6 +15,7 @@ var files = $(".editor");
 window.onload = preparePage();
 
 $(document).ready(function(){
+    $("#switch-active-session-btn").hide();
     $("#load-debugger-modal").modal('show');
 });
 
@@ -202,8 +203,6 @@ socketHost.onmessage = function(event) {
                     }
     
                     connected = false;
-
-                    socketHost.close(1000, "Environment failed");
                 }
             };
             
@@ -235,6 +234,17 @@ socketHost.onmessage = function(event) {
             $("#spinner")[0].remove();
             $("#debugger-load-status")[0].innerHTML = "Failed";
         }
+        else if (message.status == constants.ENV_MULTIPLE_ERROR)
+        {
+            launchFailed = true;
+            $("#debugger-load-message")[0].innerHTML = message.message;
+
+            $("#spinner")[0].remove();
+            $("#debugger-load-status")[0].innerHTML = "Failed";
+
+            //show switch active session button
+            $("#switch-active-session-btn").show();
+        }
     }
 }
 
@@ -258,6 +268,25 @@ function preparePage()
             addCompilationBoxMessage("Compiling program...", "alert-dark");
         }
     });
+
+    $("#switch-active-session-btn")[0].addEventListener("click", function()
+    {
+        //close the active session
+        getUsername().then(function(data)
+        {
+            var obj = new Object();
+            obj.operation = constants.OP_MOVE_ACTIVE_SESSION;
+            obj.value = data.username;
+            obj.sender = constants.SENDER_USER;
+
+            console.log(obj);
+
+            socketHost.send(JSON.stringify(obj));
+
+            //reload the page
+            location.reload();
+        });
+    })
 
     $("#complete-btn")[0].addEventListener("click", function()
     {

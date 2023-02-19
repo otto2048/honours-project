@@ -12,6 +12,7 @@ const OP_CONNECTION = "CONNECTION";
 const OP_INPUT = "INPUT";
 const OP_COMPILE = "COMPILE";
 const OP_LAUNCH_DEBUGGER = "DEBUGGER_LAUNCH";
+const OP_MOVE_ACTIVE_SESSION = 5;
 const OP_PING = "PING";
 
 const SENDER_HOST = "HOST_SERVER";
@@ -25,6 +26,7 @@ const ENV_REFRESH = 0;
 const ENV_FAIL = 1;
 const ENV_LAUNCHING = 2;
 const ENV_SUCCESS = 3;
+const ENV_MULTIPLE_ERROR = 4;
 
 //keep track of the clients
 const clients = [];
@@ -139,7 +141,8 @@ function onConnect(ws, req) {
                 else
                 {
                     //return failure
-                    obj.message = "You cannot have the environment open in more than one tab. Try closing the active session and refresh this page.";
+                    obj.message = "You cannot have the environment open in more than one tab. Try closing the active session and refresh this page or press the Switch Active Session button to use the environment in this tab.";
+                    obj.status = ENV_MULTIPLE_ERROR;
                     ws.send(JSON.stringify(obj));
                 }
             }
@@ -150,6 +153,19 @@ function onConnect(ws, req) {
                 launchContainer(message, obj, ws);
             }
         }
+        else if (message.operation == OP_MOVE_ACTIVE_SESSION)
+        {
+            console.log("Calling op move active session");
+            var keys = Object.keys(clients);
+            console.log(keys);
+            console.log(message.value);
+
+            //if client in clients
+            if (keys.includes(message.value))
+            {
+                stopContainer(message.value, clients[message.value].containerId);
+            }
+        }
 
         //set timeout to disconnect user automatically after some inactivity time
         timeout = setTimeout(() => ws.close(1000, "Disconnected due to inactivity"), 600000);
@@ -157,55 +173,59 @@ function onConnect(ws, req) {
 
     ws.on('close', function()
     {
+        console.log("Calling close function");
         //get client information
         var values = Object.entries(clients);
         var client = values.find(doc => doc[1].websocket === ws);
 
         if (client)
         {
+            console.log("Calling stop function");
             //clean up container for this client
-
-            //set container state to stopping
-            clients[client[0]].containerState = CONTAINER_STOPPING;
-
-            //TODO: handle errors
-            command = "docker stop " + client[1].containerId;
-            exec(command, (error, stdout, stderr) => {
-                if (error) {
-                  console.error(`error: ${error.message}`);
-                  return;
-                }
-              
-                if (stderr) {
-                  console.error(`stderr: ${stderr}`);
-                  return;
-                }
-              
-                console.log(`stdout:\n${stdout}`);
-
-                command = "docker rm " + client[1].containerId;
-                exec(command, (error, stdout, stderr) => {
-                    if (error) {
-                        console.error(`error: ${error.message}`);
-                        return;
-                    }
-                
-                    if (stderr) {
-                        console.error(`stderr: ${stderr}`);
-                        return;
-                    }
-                
-                    console.log(`stdout:\n${stdout}`);
-
-                    //remove reference to client
-                    console.log("Deleting reference to client");
-                    delete clients[client[0]];
-                });
-             });
-            
-            
+            stopContainer(client[0], client[1].containerId);
         }
+    });
+}
 
+function stopContainer(clientId, containerId)
+{
+    //set container state to stopping
+    clients[clientId].containerState = CONTAINER_STOPPING;
+
+    //TODO: handle errors
+    command = "docker stop " + containerId;
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`error: ${error.message}`);
+            return;
+        }
+    
+        if (stderr) {
+            console.error(`stderr: ${stderr}`);
+            return;
+        }
+    
+        console.log(`stdout:\n${stdout}`);
+
+        command = "docker rm " + containerId;
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`error: ${error.message}`);
+                return;
+            }
+        
+            if (stderr) {
+                console.error(`stderr: ${stderr}`);
+                return;
+            }
+        
+            console.log(`stdout:\n${stdout}`);
+
+            //remove reference to client
+            console.log("Deleting reference to client");
+            delete clients[clientId];
+            console.log(clients);
+        });
     });
 }
 
