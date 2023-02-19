@@ -513,6 +513,39 @@ function setUpEditors()
         editors.push(ace.edit(files[i].getAttribute("id"))); 
     }
 
+    //set up breakpoint events
+    //https://ourcodeworld.com/articles/read/1052/how-to-add-toggle-breakpoints-on-the-ace-editor-gutter
+    for (var i=0; i<editors.length; i++)
+    {
+        editors[i].on("guttermousedown", function(e) {
+            var target = e.domEvent.target;
+
+            if (target.className.indexOf("ace_gutter-cell") == -1){
+                return;
+            }
+            // if (!editors[i].isFocused()){
+            //     return; 
+            // }
+
+            if (e.clientX > 25 + target.getBoundingClientRect().left){
+                return;
+            }
+
+            var breakpoints = e.editor.session.getBreakpoints(row, 0);
+            var row = e.getDocumentPosition().row;
+
+            // If there's a breakpoint already defined, it should be removed, offering the toggle feature
+            if(typeof breakpoints[row] === typeof undefined){
+                e.editor.session.setBreakpoint(row);
+            }else{
+                e.editor.session.clearBreakpoint(row);
+            }
+
+            e.stop();
+        })
+        
+    }
+
     //check if editors should be in light mode
     if (localStorage.getItem("theme"))
     {

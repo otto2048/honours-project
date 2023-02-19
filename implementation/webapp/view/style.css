@@ -87,3 +87,16 @@
     height: 30em;
     border: solid 2px black;
 }
+
+.ace_gutter-cell.ace_breakpoint{ 
+    border-radius: 20px 0px 0px 20px; 
+    box-shadow: 0px 0px 1px 1px #8c2424 inset;
+}
+.ace_gutter-cell.ace_breakpoint::before {
+    content: "\25C9";
+    position: relative;
+    right: 14px;
+    color: #cb1f1f;
+    float: right;
+    padding-right: 40%;
+}
