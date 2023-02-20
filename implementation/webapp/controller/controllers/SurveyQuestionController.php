@@ -34,6 +34,33 @@
  
             return parent::create($jsonData);
         }
+
+        public function deleteSurveyQuestion($questionId)
+        {
+            //user input into json object
+            $data = new \stdClass();
+            $data -> questionId = $questionId;
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //prepare error message
+            $failureMessage[0]["success"] = false;
+            $failureMessage[0]["content"] = "Failed to delete survey question. Try again?";
+
+            $this->failurePathVariables["message"] = json_encode($failureMessage);
+            $this->failurePathVariables["id"] = $this->validationObj->cleanInput($data->questionId);
+
+            //prepare success message
+            $successMessage[0]["success"] = true;
+            $successMessage[0]["content"] = "Successfully deleted survey question";
+
+            $this->successPathVariables["message"] = json_encode($successMessage);
+
+            //set success and failure paths
+            $this->successPath = "/honours/webapp/view/adminArea/survey/surveyDashboard.php";
+            $this->failurePath = "/honours/webapp/view/adminArea/survey/survey.php";
+
+            return parent::delete($jsonData);
+        }
     }
 
 ?>

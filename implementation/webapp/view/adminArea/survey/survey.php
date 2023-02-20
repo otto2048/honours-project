@@ -125,16 +125,16 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2 class="h5 modal-title">Are you sure you want to delete this exercise?</h2>
+                        <h2 class="h5 modal-title">Are you sure you want to delete this survey question?</h2>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="modal-body">
                         <p>Confirm deletion</p>
-                        <p>All exercise data will be lost!</p>
+                        <p>All survey question data will be lost!</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn-primary btn" data-bs-dismiss="modal">Close</button>
-                        <a href="../../../controller/actionScripts/deleteExercise.php?codeId=<?php echo $input; ?>" class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></a>
+                        <a href="../../../controller/actionScripts/deleteSurveyQuestion.php?id=<?php echo $input; ?>" class="btn btn-danger ps-3 pe-3 ms-1 me-1 float-end mb-1" role="button" id="delete-btn">Delete <span class="mdi mdi-trash-can"></span></a>
                     </div>
                 </div>
             </div>

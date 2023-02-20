@@ -23,7 +23,7 @@
         //get all survey questions
         public function getAllSurveyQuestions()
         {
-            $this->sqlStmt = 'SELECT * FROM honours_survey_question';
+            $this->sqlStmt = 'SELECT * FROM honours_survey_question ORDER BY questionId';
 
             return parent::retrieve();
         }
