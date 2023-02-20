@@ -7,6 +7,7 @@
         const EXERCISE_ANSWER = "ExerciseAnswerModel";
         const USER_EXERCISE = "UserExerciseModel";
         const SURVEY_QUESTION = "SurveyQuestionModel";
+        const USER_SURVEY = "UserSurveyModel";
     }
 
 ?>

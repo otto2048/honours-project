@@ -19,6 +19,9 @@
 
         const SURVEY_QUESTION_CONTENTS = 150;
 
+        const SUS_LIKERT_MIN = 1;
+        const SUS_LIKERT_MAX = 5;
+
         public function validate($modelClassType, &$jsonData, &$errorMessageJson)
         {
             switch ($modelClassType)
@@ -37,6 +40,9 @@
                     break;
                 case ModelClassTypes::SURVEY_QUESTION:
                     return $this->validateSurveyQuestion($jsonData, $errorMessageJson);
+                    break;
+                case ModelClassTypes::USER_SURVEY:
+                    return $this->validateUserSurvey($jsonData, $errorMessageJson);
                     break;
                 default:
                     return false;
@@ -93,6 +99,68 @@
         public function validateInt($input)
         {
             return ctype_digit($input);
+        }
+
+        //validate likert scale answer
+        public function validateLikertAnswer($input, $minVal, $maxVal)
+        {
+            //check if this input type is a valid int
+            if (!$this->validateInt($input))
+            {
+                return false;
+            }
+
+            if (intval($input) > $maxVal  || intval($input) < $minVal)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        //validate user answer to survey question
+        private function validateUserSurvey(&$jsonData, &$errorMessageJson)
+        {
+            $errorMessage = array();
+
+            $userSurveyAnswer = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //sanitize data
+            $userSurveyAnswer["questionId"] = $this->cleanInput($userSurveyAnswer["questionId"]);
+            $userSurveyAnswer["userId"] = $this->cleanInput($userSurveyAnswer["userId"]);
+            $userSurveyAnswer["answer"] = $this->cleanInput($userSurveyAnswer["answer"]);
+
+            //repack sanitized data
+            $jsonData = json_encode($userSurveyAnswer, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //validate data
+            if (!$this->validateInt($userSurveyAnswer["questionId"]))
+            {
+                $errorMessage[0]["content"] = "Invalid question id";
+                $errorMessage[0]["success"] = false;
+            }
+
+            if (!$this->validateInt($userSurveyAnswer["userId"]))
+            {
+                $errorMessage[1]["content"] = "Invalid user id";
+                $errorMessage[1]["success"] = false;
+            }
+
+            if (!$this->validateLikertAnswer($userSurveyAnswer["answer"], Validation::SUS_LIKERT_MIN, Validation::SUS_LIKERT_MAX))
+            {
+                $errorMessage[2]["content"] = "Invalid answer";
+                $errorMessage[2]["success"] = false;
+            }
+
+            //check if we found any errors
+            if (count($errorMessage) == 0)
+            {
+                return true;
+            }
+
+            $errorMessageJson = json_encode($errorMessage);
+
+            return false;
         }
 
         //validate survey question pk
