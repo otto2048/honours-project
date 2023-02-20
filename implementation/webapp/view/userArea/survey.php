@@ -42,7 +42,7 @@
                         if (!isset($questionData["isempty"]))
                         {
                 ?>
-                            <form id="form" name="form" method="post" action="../controller/actionScripts/submitSUS.php">
+                            <form id="form" name="form" method="post" action="../../controller/actionScripts/createSurveyResponse.php">
                                 <hr>
                 <?php
                             foreach ($questionData as $row)
@@ -53,19 +53,19 @@
                                     <ul class="likert">
                                         <li>Strongly Disagree</li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="1" aria-label="question <?php echo $row["questionId"]; ?>, strongly disagree"/>
+                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="1" aria-label="question <?php echo $row["questionId"]; ?>, strongly disagree" required/>
                                         </li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="2" aria-label="question <?php echo $row["questionId"]; ?>, disagree"/>
+                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="2" aria-label="question <?php echo $row["questionId"]; ?>, disagree" required/>
                                         </li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="3" aria-label="question <?php echo $row["questionId"]; ?>, neither agree or disagree"/>
+                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="3" aria-label="question <?php echo $row["questionId"]; ?>, neither agree or disagree" required/>
                                         </li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="4" aria-label="question <?php echo $row["questionId"]; ?>, agree"/>
+                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="4" aria-label="question <?php echo $row["questionId"]; ?>, agree" required/>
                                         </li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="5" aria-label="question <?php echo $row["questionId"]; ?>, strongly agree"/>
+                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="5" aria-label="question <?php echo $row["questionId"]; ?>, strongly agree" required/>
                                         </li>
                                         <li>Strongly Agree</li>
                                     </ul>

@@ -42,7 +42,7 @@
                     return $this->validateSurveyQuestion($jsonData, $errorMessageJson);
                     break;
                 case ModelClassTypes::USER_SURVEY:
-                    return $this->validateUserSurvey($jsonData, $errorMessageJson);
+                    return $this->validateUserSurveyResponse($jsonData, $errorMessageJson);
                     break;
                 default:
                     return false;
@@ -119,37 +119,58 @@
         }
 
         //validate user answer to survey question
-        private function validateUserSurvey(&$jsonData, &$errorMessageJson)
+        private function validateUserSurveyResponse(&$jsonData, &$errorMessageJson)
         {
             $errorMessage = array();
 
             $userSurveyAnswer = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //sanitize data
-            $userSurveyAnswer["questionId"] = $this->cleanInput($userSurveyAnswer["questionId"]);
             $userSurveyAnswer["userId"] = $this->cleanInput($userSurveyAnswer["userId"]);
-            $userSurveyAnswer["answer"] = $this->cleanInput($userSurveyAnswer["answer"]);
+
+            foreach ($userSurveyAnswer["answers"] as &$answers)
+            {
+                $answers[0] = $this->cleanInput($answers[0]);
+                $answers[1] = $this->cleanInput($answers[1]);
+            }
 
             //repack sanitized data
             $jsonData = json_encode($userSurveyAnswer, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //validate data
-            if (!$this->validateInt($userSurveyAnswer["questionId"]))
+            if (!$this->validateInt($userSurveyAnswer["userId"]))
             {
-                $errorMessage[0]["content"] = "Invalid question id";
+                $errorMessage[0]["content"] = "Invalid user id";
                 $errorMessage[0]["success"] = false;
             }
 
-            if (!$this->validateInt($userSurveyAnswer["userId"]))
+            if (count($userSurveyAnswer["answers"]) != 10)
             {
-                $errorMessage[1]["content"] = "Invalid user id";
+                $errorMessage[1]["content"] = "Not enough survey answers";
                 $errorMessage[1]["success"] = false;
             }
 
-            if (!$this->validateLikertAnswer($userSurveyAnswer["answer"], Validation::SUS_LIKERT_MIN, Validation::SUS_LIKERT_MAX))
+            //validate each answer
+            $errorCounter = 2;
+            foreach ($userSurveyAnswer["answers"] as $question => $answer)
             {
-                $errorMessage[2]["content"] = "Invalid answer";
-                $errorMessage[2]["success"] = false;
+                //validate question id
+                if (!$this->validateInt(strval($question)))
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid question id: ".$question;
+                    $errorMessage[$errorCounter]["success"] = false;
+
+                    $errorCounter++;
+                }
+
+                //validate question answer
+                if (!$this->validateLikertAnswer($answer, Validation::SUS_LIKERT_MIN, Validation::SUS_LIKERT_MAX))
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid answer: ".$answer;
+                    $errorMessage[$errorCounter]["success"] = false;
+
+                    $errorCounter++;
+                }
             }
 
             //check if we found any errors
