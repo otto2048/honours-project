@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
@@ -84,7 +81,7 @@ error_reporting(E_ALL);
                                                 {
                                                     echo '<tr>';
 
-                                                    echo '<td><u><a href="survey.php?id='.$row["questionId"].'" class="moreInfoLink">'.$row["questionId"].'</a></u></td>';
+                                                    echo '<td>'.$row["questionId"].'</td>';
 
                                                     echo '<td>'.$row["contents"].'</td>';
                                                     echo '</tr>';
@@ -112,7 +109,7 @@ error_reporting(E_ALL);
                 </div>
                 <div class="col">
                     <!-- create new question -->
-                    <h2>Create a new user</h2>
+                    <h2>Create a new question</h2>
                     <form role="form" method="POST" action="../../../controller/actionScripts/createSurveyQuestion.php">
                         <div class="form-group">
                             <label for="questionId">Question ID:</label>
