@@ -48,7 +48,9 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="/honours/webapp/view/adminArea/exercises/exerciseDashboard.php">Manage Exercises</a>
                                     </li>
-                       
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/honours/webapp/view/adminArea/survey/surveyDashboard.php">Manage Survey Questions</a>
+                                    </li>
 
                         <?php
                                 }
