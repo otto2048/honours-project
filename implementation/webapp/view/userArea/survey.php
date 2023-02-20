@@ -1,17 +1,41 @@
 <?php
     //SUS survey for web app
-
-    //TODO: check if the user has already completed the survey
+    //TODO: more user feedback and explanation of survey
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserSurveyModel.php");
 
     //check if user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
     {
         echo '<script type="text/javascript">window.open("/honours/webapp/view/userArea/signUp.php", name="_self")</script>';
     }
+
+    //check if the user has already completed the survey
+    $userSurveyModel = new UserSurveyModel();
+
+    $jsonData = $userSurveyModel->getUserAnswers($_SESSION["userId"]);
+
+    //if json data returned ok
+    if ($jsonData)
+    {
+        $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+        //if there is results
+        if (!isset($data["isempty"]))
+        {
+            //kick user out of this page
+            echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php", name="_self")</script>';
+        }
+    }
+    else
+    {
+        //kick user out of this page
+        echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php", name="_self")</script>';
+    }
+
 ?>
 
 <!doctype html>

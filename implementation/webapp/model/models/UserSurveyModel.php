@@ -32,7 +32,7 @@
 
                     $paramTypes = "iii";
 
-                    //parent::create(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+                    parent::create(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
                 }
 
                 //determine user SUS score and insert into into their row
@@ -83,5 +83,16 @@
         }
 
         //get all the records for a user
+        public function getUserAnswers($userId)
+        {
+            $this->sqlStmt = 'SELECT * FROM honours_user_survey WHERE userId = ?';
+
+            $WHERE_variables = new \stdClass();
+            $WHERE_variables -> userId = $userId;
+
+            $paramTypes = "i";
+
+            return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+        }
     }
 ?>
