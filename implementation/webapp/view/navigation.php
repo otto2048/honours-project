@@ -58,6 +58,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="/honours/webapp/view/userArea/settings.php">Settings</a>
                                 </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/honours/webapp/view/userArea/survey.php">Survey</a>
+                                </li>
                         
                                 <li class="nav-item">
                                     <a class="nav-link" href="/honours/webapp/view/logout.php">Logout</a>
