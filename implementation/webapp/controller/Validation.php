@@ -17,6 +17,11 @@
         const EXERCISE_ANSWER_INPUT = 50;
         const EXERCISE_ANSWER_OUTPUT = 50;
 
+        const SURVEY_QUESTION_CONTENTS = 150;
+
+        const SUS_LIKERT_MIN = 1;
+        const SUS_LIKERT_MAX = 5;
+
         public function validate($modelClassType, &$jsonData, &$errorMessageJson)
         {
             switch ($modelClassType)
@@ -32,6 +37,12 @@
                     break;
                 case ModelClassTypes::USER_EXERCISE:
                     return $this->validateUserExercise($jsonData, $errorMessageJson);
+                    break;
+                case ModelClassTypes::SURVEY_QUESTION:
+                    return $this->validateSurveyQuestion($jsonData, $errorMessageJson);
+                    break;
+                case ModelClassTypes::USER_SURVEY:
+                    return $this->validateUserSurveyResponse($jsonData, $errorMessageJson);
                     break;
                 default:
                     return false;
@@ -52,6 +63,9 @@
                     break;
                 case ModelClassTypes::EXERCISE_ANSWER:
                     return $this->validateExerciseAnswerPK($jsonData);
+                    break;
+                case ModelClassTypes::SURVEY_QUESTION:
+                    return $this->validateSurveyQuestionPK($jsonData);
                     break;
                 default:
                     return false;
@@ -85,6 +99,140 @@
         public function validateInt($input)
         {
             return ctype_digit($input);
+        }
+
+        //validate likert scale answer
+        public function validateLikertAnswer($input, $minVal, $maxVal)
+        {
+            //check if this input type is a valid int
+            if (!$this->validateInt($input))
+            {
+                return false;
+            }
+
+            if (intval($input) > $maxVal  || intval($input) < $minVal)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        //validate user answer to survey question
+        private function validateUserSurveyResponse(&$jsonData, &$errorMessageJson)
+        {
+            $errorMessage = array();
+
+            $userSurveyAnswer = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //sanitize data
+            $userSurveyAnswer["userId"] = $this->cleanInput($userSurveyAnswer["userId"]);
+
+            foreach ($userSurveyAnswer["answers"] as &$answers)
+            {
+                $answers[0] = $this->cleanInput($answers[0]);
+                $answers[1] = $this->cleanInput($answers[1]);
+            }
+
+            //repack sanitized data
+            $jsonData = json_encode($userSurveyAnswer, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //validate data
+            if (!$this->validateInt($userSurveyAnswer["userId"]))
+            {
+                $errorMessage[0]["content"] = "Invalid user id";
+                $errorMessage[0]["success"] = false;
+            }
+
+            if (count($userSurveyAnswer["answers"]) != 10)
+            {
+                $errorMessage[1]["content"] = "Not enough survey answers";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //validate each answer
+            $errorCounter = 2;
+            foreach ($userSurveyAnswer["answers"] as $question => $answer)
+            {
+                //validate question id
+                if (!$this->validateInt(strval($question)))
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid question id: ".$question;
+                    $errorMessage[$errorCounter]["success"] = false;
+
+                    $errorCounter++;
+                }
+
+                //validate question answer
+                if (!$this->validateLikertAnswer($answer, Validation::SUS_LIKERT_MIN, Validation::SUS_LIKERT_MAX))
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid answer: ".$answer;
+                    $errorMessage[$errorCounter]["success"] = false;
+
+                    $errorCounter++;
+                }
+            }
+
+            //check if we found any errors
+            if (count($errorMessage) == 0)
+            {
+                return true;
+            }
+
+            $errorMessageJson = json_encode($errorMessage);
+
+            return false;
+        }
+
+        //validate survey question pk
+        private function validateSurveyQuestionPK(&$jsonData)
+        {
+            $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            $data["questionId"] = $this->cleanInput($data["questionId"]);
+
+            //IMPORTANT: make sure jsonData is set to the sanitized version of the data
+            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            return $this->validateInt($data["questionId"]);
+        }
+
+        //validate survey question
+        private function validateSurveyQuestion(&$jsonData, &$errorMessageJson)
+        {
+            $errorMessage = array();
+
+            $surveyQuestion = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //sanitize data
+            $surveyQuestion["questionId"] = $this->cleanInput($surveyQuestion["questionId"]);
+            $surveyQuestion["contents"] = $this->cleanInput($surveyQuestion["contents"]);
+
+            //repack sanitized data
+            $jsonData = json_encode($surveyQuestion, JSON_INVALID_UTF8_SUBSTITUTE);
+
+            //validate data
+            if (!$this->validateInt($surveyQuestion["questionId"]))
+            {
+                $errorMessage[0]["content"] = "Invalid question id";
+                $errorMessage[0]["success"] = false;
+            }
+
+            if (!$this->validateString($surveyQuestion["contents"], Validation::SURVEY_QUESTION_CONTENTS))
+            {
+                $errorMessage[1]["content"] = "Invalid question contents";
+                $errorMessage[1]["success"] = false;
+            }
+
+            //check if we found any errors
+            if (count($errorMessage) == 0)
+            {
+                return true;
+            }
+
+            $errorMessageJson = json_encode($errorMessage);
+
+            return false;
         }
 
         //validate user exercise attempt

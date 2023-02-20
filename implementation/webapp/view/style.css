@@ -80,6 +80,16 @@
     border-color: #000;
 }
 
+.likert li {
+    float: left;
+    list-style-type: none;
+    padding: 0px 5px;
+}
+
+.likert .likert-option {
+    padding: 2px 14px;
+}
+
 /* editor */
 .editor {
     bottom: 0px;
