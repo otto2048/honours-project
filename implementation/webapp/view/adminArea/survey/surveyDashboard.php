@@ -83,7 +83,8 @@
 
                                                     echo '<td>'.$row["questionId"].'</td>';
 
-                                                    echo '<td>'.$row["contents"].'</td>';
+                                                    echo '<td><u><a href="survey.php?id='.$row["questionId"].'">'.$row["contents"].'</a></u></td>';
+
                                                     echo '</tr>';
                                                 }
                                             ?>
