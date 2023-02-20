@@ -129,7 +129,7 @@
                 $errorMessage[0]["success"] = false;
             }
 
-            if (!$this->validateString($surveyQuestion["contents"]), Validation::SURVEY_QUESTION_CONTENTS)
+            if (!$this->validateString($surveyQuestion["contents"], Validation::SURVEY_QUESTION_CONTENTS))
             {
                 $errorMessage[1]["content"] = "Invalid question contents";
                 $errorMessage[1]["success"] = false;

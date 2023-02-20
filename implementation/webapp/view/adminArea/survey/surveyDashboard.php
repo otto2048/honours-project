@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
@@ -81,7 +84,7 @@
                                                 {
                                                     echo '<tr>';
 
-                                                    echo '<td><u><a href="user.php?id='.$row["questionId"].'" class="moreInfoLink">'.$row["questionId"].'</a></u></td>';
+                                                    echo '<td><u><a href="survey.php?id='.$row["questionId"].'" class="moreInfoLink">'.$row["questionId"].'</a></u></td>';
 
                                                     echo '<td>'.$row["contents"].'</td>';
                                                     echo '</tr>';
@@ -110,41 +113,19 @@
                 <div class="col">
                     <!-- create new question -->
                     <h2>Create a new user</h2>
-                    <form role="form" method="POST" action="../../../controller/actionScripts/createUser.php">
+                    <form role="form" method="POST" action="../../../controller/actionScripts/createSurveyQuestion.php">
                         <div class="form-group">
-                            <label for="username">Username:</label>
-                            <input type="text" class="form-control" name="username" required id="username">
+                            <label for="questionId">Question ID:</label>
+                            <input type="text" class="form-control" name="questionId" required id="questionId">
                         </div>
                         <div class="form-group">
-                            <label for="password">Password:</label>
-                            <input type="password" class="form-control" name="password" required id="password">
-                        </div>
-                        <div class="form-group pt-1">
-                            <label for="permissionLevel">User group:</label>
-                            <select name="permissionLevel" id="permissionLevel">
-                                <?php
-                                    $permissionReflection = new \ReflectionClass("PermissionLevels");
-                                    $values = $permissionReflection->getConstants();
-
-                                    foreach ($values as $value)
-                                    {
-                                        $optionString = '<option value = "';
-                                        $optionString .= $value.'"';
-                                        $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
-
-                                        echo $optionString;
-                                    }
-                                ?>
-                            </select>
+                            <label for="contents">Contents:</label>
+                            <input type="text" class="form-control" name="contents" required id="contents">
                         </div>
                         <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                     </form>
                 </div>
             </div>
-            
-
-
-
 
     </div>
         
