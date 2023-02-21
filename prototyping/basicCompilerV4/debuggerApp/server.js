@@ -131,36 +131,131 @@ function onConnect(ws) {
                             obj.value = "Successfully compiled program \nRunning in terminal...";
                             ws.send(JSON.stringify(obj));
 
-                            //use child process to start program
-                            progProcess = spawn('gdb', ['executable']);
+                            //write gdbinit
+                            fs.writeFile('.gdbinit', 'run\n', function (err) {
+                                if (err) {
+                                } else {
+                                    // done
+                                    //write gdbinit if there are breakpoints
+                                    if (clientMsg.value.breakpoints.length > 0)
+                                    {
+                                        async.each(clientMsg.value.breakpoints, function(breakpoint, callback) {
 
-                            progProcess.stdout.on('data', function (data) {
-                                console.log('stdout: ' + data.toString());
+                                            var content = "break " + breakpoint[0] + ":" + breakpoint[1]+"\n";
+                            
+                                            fs.appendFile('.gdbinit', content, function (err)
+                                            {
+                                                if (err)
+                                                {
+                                                    console.log(err);
+                                                }
+                                                else
+                                                {
+                                                    console.log("appended file ");
+                                                }
+                            
+                                                callback();
+                                            });
+                                        }, function (err)
+                                        {
+                                            if (err) {
+                                                // One of the iterations produced an error.
+                                                // All processing will now stop.
+                                                ws.send(JSON.stringify(obj));
+                                                console.log('A breakpoint failed to append');
+                                            }
+                                            else
+                                            {
+                                                fs.appendFile('.gdbinit', "quit", function (err)
+                                                {
+                                                    if (err)
+                                                    {
+                                                        console.log(err);
+                                                    }
+                                                    else
+                                                    {
+                                                        console.log("appended file ");
 
-                                //if GDB has just started running, dont send output
-                                if (running == false)
-                                {
-                                    running = true;
+                                                        //use child process to start program
+                                                        progProcess = spawn('gdb', ['executable']);
+
+                                                        progProcess.stdout.on('data', function (data) {
+                                                            console.log('stdout: ' + data.toString());
+
+                                                            //if GDB has just started running, dont send output
+                                                            if (running == false)
+                                                            {
+                                                                running = true;
+                                                            }
+                                                            else
+                                                            {
+                                                                obj.value = data.toString();
+                                                                obj.operation = OP_INPUT;
+                                                                ws.send(JSON.stringify(obj));
+                                                            }
+                                                        });
+
+                                                        progProcess.stderr.on('data', function (data) {
+                                                            console.log('stderr: ' + data.toString());
+                                                        });
+
+                                                        progProcess.on('exit', function (code) {
+                                                            progProcess = null;
+                                                            running = false;
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+                                        fs.appendFile('.gdbinit', "quit\n", function (err)
+                                        {
+                                            if (err)
+                                            {
+                                                console.log(err);
+                                            }
+                                            else
+                                            {
+                                                console.log("appended file ");
+
+                                                //use child process to start program
+                                                progProcess = spawn('gdb', ['executable']);
+
+                                                progProcess.stdout.on('data', function (data) {
+                                                    console.log('stdout: ' + data.toString());
+
+                                                    //if GDB has just started running, dont send output
+                                                    if (running == false)
+                                                    {
+                                                        running = true;
+                                                    }
+                                                    else
+                                                    {
+                                                        obj.value = data.toString();
+                                                        obj.operation = OP_INPUT;
+                                                        ws.send(JSON.stringify(obj));
+                                                    }
+                                                });
+
+                                                progProcess.stderr.on('data', function (data) {
+                                                    console.log('stderr: ' + data.toString());
+                                                });
+
+                                                progProcess.on('exit', function (code) {
+                                                    progProcess = null;
+                                                    running = false;
+                                                });
+                                            }
+                                        });
+                                    }
                                 }
-                                else
-                                {
-                                    obj.value = data.toString();
-                                    obj.operation = OP_INPUT;
-                                    ws.send(JSON.stringify(obj));
-                                }
-                            });
+                            })
 
-                            progProcess.stderr.on('data', function (data) {
-                                console.log('stderr: ' + data.toString());
-                                obj.value = data.toString();
-                                obj.operation = OP_INPUT;
-                                ws.send(JSON.stringify(obj));
-                            });
+                            
 
-                            progProcess.on('exit', function (code) {
-                                progProcess = null;
-                                running = false;
-                            });
+                            
                         }
                     });
                 }
