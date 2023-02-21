@@ -20,6 +20,8 @@ const SENDER_HOST = "HOST_SERVER";
 const SENDER_USER = "USER_SENDER";
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
+const PROGRAM_OUTPUT_STRING = "PROGRAM_OUTPUT ";
+
 //write to files
 const fs = require('fs');
 const async = require('async');
@@ -78,6 +80,9 @@ function onConnect(ws) {
                 var fname = file[0];
                 var content = file[1];
 
+                content = content.replace(/cout/g, 'cout << "'+ PROGRAM_OUTPUT_STRING +'"');
+                console.log(content);
+
                 fs.writeFile(fname, content, function (err)
                 {
                     if (err)
@@ -122,6 +127,7 @@ function onConnect(ws) {
                         if (stderr)
                         {
                             //give compilation errors
+                            stderr = stderr.replace(' << "' + PROGRAM_OUTPUT_STRING + '"', "");
                             obj.value = "Failed to compile\nErrors:\n" + stderr;
                             ws.send(JSON.stringify(obj));
                         }
@@ -244,9 +250,21 @@ function launchGDB(obj, ws)
         }
         else
         {
-            obj.value = data.toString();
-            obj.operation = OP_INPUT;
-            ws.send(JSON.stringify(obj));
+            output = data.toString();
+            
+            if (output.indexOf(PROGRAM_OUTPUT_STRING) != -1)
+            {
+                //check if this is a breakpoint
+                if (output.indexOf("Breakpoint") != 1)
+                {
+                    console.log(output.indexOf("Breakpoint"));
+                    output = output.replace(PROGRAM_OUTPUT_STRING, "");
+                    obj.value = output;
+                    obj.operation = OP_INPUT;
+                    ws.send(JSON.stringify(obj));
+                }
+                
+            }
         }
     });
 
@@ -260,3 +278,5 @@ function launchGDB(obj, ws)
         running = false;
     });
 }
+
+//TODO: output program exit code
