@@ -20,13 +20,29 @@ socket.onmessage = function(messageEvent) {
     var message = JSON.parse(messageEvent.data);
     console.log(message);
 
-    //output response into terminal
+    if (message.operation == constants.OP_INPUT)
+    {
+        //output response into terminal
 
-    //get active terminal
-    var term = $.terminal.active();
-
-    //output received message into terminal
-    term.echo(message.value);
+        //get active terminal
+        var term = $.terminal.active();
+    
+        //output received message into terminal
+        term.echo(message.value);
+    }
+    else if (message.operation == constants.OP_COMPILE)
+    {
+        if (message.value)
+        {
+            //display compilation output
+            addCompilationBoxMessage(message.value, "alert-info");
+        }
+        else
+        {
+            addCompilationBoxMessage("Compilation operation failed. Try again?.", "alert-dark");
+        }
+        
+    }
 }
 
 socket.onclose = function(event) {
