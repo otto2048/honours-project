@@ -59,11 +59,8 @@ socket.onerror = function(error) {
 
 function preparePage()
 {
-
-     //set up ACE editors
-     setUpEditors();
-
-     
+    //set up ACE editors
+    setUpEditors();
 
     //add event listener to play button
     document.getElementById("play-btn").addEventListener("click", startProgram);
@@ -89,19 +86,27 @@ function startProgram()
 
     var filesData = [];
 
-    console.log("editors");
-     console.log(editors);
+    var breakpoints = [];
 
     for (var i=0; i<editors.length; i++)
     {
-        console.log(editors[i].session.getValue());
-        console.log("hi");
+        //set breakpoints for this editor
+        var breakpointInstances = editors[i].session.getBreakpoints();
+
+        for (var j=0; j<breakpointInstances.length; j++)
+        {
+            if (breakpointInstances[j] !== undefined)
+            {
+                breakpoints.push([files[i].getAttribute("id"), j]);
+            }
+        }
+
         filesData.push([files[i].getAttribute("id"), editors[i].session.getValue()]);
     }
 
-    obj.value = filesData;
+    obj.value = {"filesData":filesData, "breakpoints" : breakpoints};
 
-    console.log(filesData);
+    console.log(obj);
 
     socket.send(JSON.stringify(obj));  
 }
@@ -201,4 +206,10 @@ function setUpEditors()
         editors[i].setTheme("ace/theme/tomorrow_night_bright");
         editors[i].session.setMode("ace/mode/c_cpp");
     }
+}
+
+function setBreakpoint()
+{
+    //if program is running, send breakpoint info straight away
+
 }

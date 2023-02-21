@@ -74,7 +74,7 @@ function onConnect(ws) {
         else if (clientMsg.operation == OP_COMPILE)
         {
             //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
-            async.each(clientMsg.value, function(file, callback) {
+            async.each(clientMsg.value.filesData, function(file, callback) {
                 var fname = file[0];
                 var content = file[1];
 
@@ -104,12 +104,12 @@ function onConnect(ws) {
 
                     //compile program
                     var fileString = "";
-                    for (var i=0; i<clientMsg.value.length; i++)
+                    for (var i=0; i<clientMsg.value.filesData.length; i++)
                     {
-                        console.log(clientMsg.value[i][0].split('.').pop());
-                        if (clientMsg.value[i][0].split('.').pop() == "cpp")
+                        console.log(clientMsg.value.filesData[i][0].split('.').pop());
+                        if (clientMsg.value.filesData[i][0].split('.').pop() == "cpp")
                         {
-                            fileString = fileString + clientMsg.value[i][0] + " ";
+                            fileString = fileString + clientMsg.value.filesData[i][0] + " ";
                         }
                     }
 
@@ -137,11 +137,10 @@ function onConnect(ws) {
                             progProcess.stdout.on('data', function (data) {
                                 console.log('stdout: ' + data.toString());
 
-                                //if GDB has just started running, run the program
+                                //if GDB has just started running, dont send output
                                 if (running == false)
                                 {
                                     running = true;
-                                    progProcess.stdin.write("run\n");
                                 }
                                 else
                                 {
@@ -159,11 +158,6 @@ function onConnect(ws) {
                             });
 
                             progProcess.on('exit', function (code) {
-                                var data = 'Program exited with code ' + code.toString();
-                                console.log();
-                                obj.value = data.toString();
-                                obj.operation = OP_INPUT;
-                                ws.send(JSON.stringify(obj));
                                 progProcess = null;
                                 running = false;
                             });
