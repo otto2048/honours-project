@@ -75,12 +75,17 @@ function preparePage()
     }, {
         height: 500
     });
+
+    //clear the terminal
+    clearTerminal();
 }
 
 
 //tell socket that we want to compile and start the program
 function startProgram()
 {
+    clearTerminal();
+
     var obj = new Object();
     obj.operation = constants.OP_COMPILE;
 
@@ -212,4 +217,11 @@ function setBreakpoint()
 {
     //if program is running, send breakpoint info straight away
 
+}
+
+//clear terminal
+function clearTerminal()
+{
+    var term = $.terminal.active();
+    term.clear();
 }
