@@ -102,7 +102,7 @@ function startProgram()
         {
             if (breakpointInstances[j] !== undefined)
             {
-                breakpoints.push([files[i].getAttribute("id"), j]);
+                breakpoints.push([files[i].getAttribute("id"), j + 1]);
             }
         }
 

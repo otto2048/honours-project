@@ -131,42 +131,25 @@ function onConnect(ws) {
                             obj.value = "Successfully compiled program \nRunning in terminal...";
                             ws.send(JSON.stringify(obj));
 
-                            //write gdbinit
-                            fs.writeFile('.gdbinit', 'run\n', function (err) {
-                                if (err) {
-                                } else {
-                                    // done
-                                    //write gdbinit if there are breakpoints
-                                    if (clientMsg.value.breakpoints.length > 0)
+                            fs.readFile('gdbinit_base', 'utf8', function(err, data)
+                            {
+                                if (err)
+                                {
+                                    console.log(err);
+                                }
+                                else
+                                {
+                                    //write the base
+                                    writeFile('.gdbinit', data + "\n").then(function()
                                     {
-                                        async.each(clientMsg.value.breakpoints, function(breakpoint, callback) {
-
-                                            var content = "break " + breakpoint[0] + ":" + breakpoint[1]+"\n";
-                            
-                                            fs.appendFile('.gdbinit', content, function (err)
-                                            {
-                                                if (err)
-                                                {
-                                                    console.log(err);
-                                                }
-                                                else
-                                                {
-                                                    console.log("appended file ");
-                                                }
-                            
-                                                callback();
-                                            });
-                                        }, function (err)
+                                        if (clientMsg.value.breakpoints.length > 0)
                                         {
-                                            if (err) {
-                                                // One of the iterations produced an error.
-                                                // All processing will now stop.
-                                                ws.send(JSON.stringify(obj));
-                                                console.log('A breakpoint failed to append');
-                                            }
-                                            else
-                                            {
-                                                fs.appendFile('.gdbinit', "quit", function (err)
+                                            //write the breakpoints
+                                            async.each(clientMsg.value.breakpoints, function(breakpoint, callback) {
+
+                                                var content = "break " + breakpoint[0] + ":" + breakpoint[1]+"\n";
+                                
+                                                fs.appendFile('.gdbinit', content, function (err)
                                                 {
                                                     if (err)
                                                     {
@@ -175,86 +158,46 @@ function onConnect(ws) {
                                                     else
                                                     {
                                                         console.log("appended file ");
-
-                                                        //use child process to start program
-                                                        progProcess = spawn('gdb', ['executable']);
-
-                                                        progProcess.stdout.on('data', function (data) {
-                                                            console.log('stdout: ' + data.toString());
-
-                                                            //if GDB has just started running, dont send output
-                                                            if (running == false)
-                                                            {
-                                                                running = true;
-                                                            }
-                                                            else
-                                                            {
-                                                                obj.value = data.toString();
-                                                                obj.operation = OP_INPUT;
-                                                                ws.send(JSON.stringify(obj));
-                                                            }
-                                                        });
-
-                                                        progProcess.stderr.on('data', function (data) {
-                                                            console.log('stderr: ' + data.toString());
-                                                        });
-
-                                                        progProcess.on('exit', function (code) {
-                                                            progProcess = null;
-                                                            running = false;
-                                                        });
                                                     }
+                                
+                                                    callback();
                                                 });
-                                            }
-                                        });
-                                    }
-                                    else
-                                    {
-                                        fs.appendFile('.gdbinit', "quit\n", function (err)
+                                            }, function (err)
+                                            {
+                                                if (err) {
+                                                    // One of the iterations produced an error.
+                                                    // All processing will now stop.
+                                                    ws.send(JSON.stringify(obj));
+                                                    console.log('A breakpoint failed to append');
+                                                }
+                                                else
+                                                {
+                                                    //write the rest of the file
+                                                    appendFile('.gdbinit', "run").then(function() {
+                                                        //launch gdb
+                                                        launchGDB(obj, ws);
+                                                    }).catch(function(err) {
+                                                        console.log(err);
+                                                    });;
+                                                }
+                                            });
+                                        }
+                                        else
                                         {
-                                            if (err)
-                                            {
+                                            //write the rest of the file
+                                            appendFile('.gdbinit', "run").then(function() {
+                                                //launch gdb
+                                                launchGDB(obj, ws);
+                                            }).catch(function(err) {
                                                 console.log(err);
-                                            }
-                                            else
-                                            {
-                                                console.log("appended file ");
-
-                                                //use child process to start program
-                                                progProcess = spawn('gdb', ['executable']);
-
-                                                progProcess.stdout.on('data', function (data) {
-                                                    console.log('stdout: ' + data.toString());
-
-                                                    //if GDB has just started running, dont send output
-                                                    if (running == false)
-                                                    {
-                                                        running = true;
-                                                    }
-                                                    else
-                                                    {
-                                                        obj.value = data.toString();
-                                                        obj.operation = OP_INPUT;
-                                                        ws.send(JSON.stringify(obj));
-                                                    }
-                                                });
-
-                                                progProcess.stderr.on('data', function (data) {
-                                                    console.log('stderr: ' + data.toString());
-                                                });
-
-                                                progProcess.on('exit', function (code) {
-                                                    progProcess = null;
-                                                    running = false;
-                                                });
-                                            }
+                                            });
+                                        }
+                                        }).catch(function(err) {
+                                            console.log(err);
                                         });
                                     }
-                                }
-                            })
-
+                            });
                             
-
                             
                         }
                     });
@@ -262,75 +205,58 @@ function onConnect(ws) {
             });
             
         }
-        else if (clientMsg.operation == OP_TEST)
+    });
+}
+
+//https://stackoverflow.com/questions/40292837/can-multiple-fs-write-to-append-to-the-same-file-guarantee-the-order-of-executio
+function writeFile(fileName, content)
+{
+    return new Promise((resolve, reject) =>  {
+        fs.writeFile(fileName, content, (err) => {
+            if (err) return reject(err);
+            resolve();
+        });
+    });
+}
+
+function appendFile(fileName, content)
+{
+    return new Promise((resolve, reject) =>  {
+        fs.appendFile(fileName, content, (err) => {
+            if (err) return reject(err);
+            resolve();
+        });
+    });
+}
+
+function launchGDB(obj, ws)
+{
+    //use child process to start program
+    progProcess = spawn('gdb', ['executable']);
+
+    progProcess.stdout.on('data', function (data) {
+        console.log('stdout: ' + data.toString());
+
+        //if GDB has just started running, dont send output
+        if (running == false)
         {
-            //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
-            async.each(clientMsg.value, function(file, callback) {
-                //create files for testing
-                var fname_ = file[0];
-                var content_ = file[1];
-
-                fs.writeFile(fname_, content_, function (err)
-                {
-                    if (err)
-                    {
-                        console.log(err);
-                    }
-                    else
-                    {
-                        console.log("created file " + fname_);
-                    }
-
-                    callback();
-                });
-            }, function (err)
-            {
-                if (err) {
-                    // One of the iterations produced an error.
-                    // All processing will now stop.
-                    ws.send(JSON.stringify(obj));
-                    console.log('A file failed to process');
-                }
-                else {
-                    console.log('All files have been processed successfully');
-
-                    //compile program
-                    var fileString_ = "";
-                    for (var i=0; i<clientMsg.value.length; i++)
-                    {
-                        console.log(clientMsg.value[i][0].split('.').pop());
-                        if (clientMsg.value[i][0].split('.').pop() == "cpp")
-                        {
-                            fileString_ = fileString_ + clientMsg.value[i][0] + " ";
-                        }
-                    }
-
-                    console.log(fileString_);
-
-                    var command_ = "g++ -Wall -g -pthread " + fileString_ + " /usr/local/lib/libgtest.a -o unitTest";
-
-                    exec(command_, function(err, stdout, stderr)
-                    {
-                        if (stderr)
-                        {
-                            //if compilation failures, submission fails
-                            ws.send(JSON.stringify(obj));
-                        }
-                        else
-                        {
-                            //run test program
-                            exec("./unitTest --gtest_brief=1 --gtest_print_time=0", function(err, stdout, stderr)
-                            {
-                                if (stdout)
-                                {
-                                    obj.value = stdout.toString();
-                                    ws.send(JSON.stringify(obj));
-                                }
-                            });
-                        }
-                    });
-                }
-            });
+            running = true;
         }
+        else
+        {
+            obj.value = data.toString();
+            obj.operation = OP_INPUT;
+            ws.send(JSON.stringify(obj));
+        }
+    });
+
+    progProcess.stderr.on('data', function (data) {
+        console.log('stderr: ' + data.toString());
+    });
+
+    progProcess.on('exit', function (code) {
+        console.log("exited");
+        progProcess = null;
+        running = false;
     });
 }
