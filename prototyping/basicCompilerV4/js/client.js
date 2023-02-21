@@ -65,6 +65,10 @@ function preparePage()
     //add event listener to play button
     document.getElementById("play-btn").addEventListener("click", startProgram);
 
+    $("#continue-btn")[0].addEventListener("click", function() {
+        sendInput("continue");
+    });
+
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {

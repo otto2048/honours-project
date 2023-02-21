@@ -68,6 +68,7 @@
 
                             <div class="justify-content-center pt-1 pb-1 d-flex">
                                 <button type="button" class="btn btn-dark theme debugger-control ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
+                                <button type="button" class="btn btn-dark theme debugger-control ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
                             </div>
 
                             <button type="button" class="btn btn-primary float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
