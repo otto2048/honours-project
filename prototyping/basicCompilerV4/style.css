@@ -1,0 +1,29 @@
+body {
+    padding: 5px 5px;
+}
+
+#editor { 
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    right: 0;
+}
+
+#editor-container {
+    position: relative;
+    height: 500px;
+}
+
+.code-input {
+    display: none;
+}
+
+.compile-btn {
+    margin-top: 5px;
+    float: right;
+}
+
+#play-btn {
+    margin: 5px 5px 5px;
+}
