@@ -21,24 +21,48 @@ socket.onmessage = function(messageEvent) {
     var message = JSON.parse(messageEvent.data);
     console.log(message);
 
-    if (message.event == constants.EVENT_ONSTDOUT)
+    switch(message.event)
     {
-        //output response into terminal
+        case constants.EVENT_ONSTDOUT:
+            //output response into terminal
 
-        //get active terminal
-        var term = $.terminal.active();
-    
-        //output received message into terminal
-        term.echo(message.value);
-    }
-    else if (message.event == constants.EVENT_ONCOMPILE_FAILURE || message.event == constants.EVENT_ONCOMPILE_SUCCESS)
-    {
-        //display compilation output
-        addCompilationBoxMessage(message.value, "alert-info");
-    }
-    else if (message.event == null)
-    {
-        alert("Client operation failed. Try again?");
+            //get active terminal
+            var term = $.terminal.active();
+        
+            //output received message into terminal
+            term.echo(message.value);
+
+            break;
+        case constants.EVENT_ONCOMPILE_SUCCESS:
+            //display compilation output
+            addCompilationBoxMessage(message.value, "alert-info");
+
+            //show debugger live controls
+            $(".debugger-live-control").removeClass("d-none");
+
+            //enable pause, stop, and restart debugger live controls
+            $("#pause-btn")[0].disabled = false;
+            $("#pause-btn")[0].ariaDisabled = false;
+
+            $("#stop-btn")[0].disabled = false;
+            $("#stop-btn")[0].ariaDisabled = false;
+            
+            $("#restart-btn")[0].disabled = false;
+            $("#restart-btn")[0].ariaDisabled = false;
+
+            break;
+        case constants.EVENT_ONCOMPILE_FAILURE:
+            //display compilation output
+            addCompilationBoxMessage(message.value, "alert-info");
+
+            //show and enable play button
+            $("#play-btn")[0].disabled = false;
+            $("#play-btn")[0].ariaDisabled = false;
+            $("#play-btn").show();
+
+            break;
+        default:
+            alert("Client operation failed. Try again?");
     }
 }
 
@@ -113,6 +137,11 @@ function startProgram()
     obj.value = {"filesData":filesData, "breakpoints" : breakpoints};
 
     console.log(obj);
+
+    //disable and hide play button
+    $("#play-btn")[0].disabled = true;
+    $("#play-btn")[0].ariaDisabled = true;
+    $("#play-btn").hide();
 
     socket.send(JSON.stringify(obj));  
 }
