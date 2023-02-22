@@ -94,6 +94,34 @@ socket.onmessage = function(messageEvent) {
             //disable pause button
             $("#pause-btn")[0].disabled = true;
             $("#pause-btn")[0].ariaDisabled = true;
+
+            //put in arrow to show where breakpoint is
+            break;
+        case constants.EVENT_ON_CONTINUE:
+            //enable pause, stop, and restart debugger live controls
+            $("#pause-btn")[0].disabled = false;
+            $("#pause-btn")[0].ariaDisabled = false;
+
+            $("#stop-btn")[0].disabled = false;
+            $("#stop-btn")[0].ariaDisabled = false;
+            
+            $("#restart-btn")[0].disabled = false;
+            $("#restart-btn")[0].ariaDisabled = false;
+
+            //disable continue and step controls
+            $("#continue-btn")[0].disabled = true;
+            $("#continue-btn")[0].ariaDisabled = true;
+
+            var debuggerStepBtns = $(".debugger-step-control");
+
+            for (var i=0; i<debuggerStepBtns.length; i++)
+            {
+                debuggerStepBtns[i].disabled = true;
+                debuggerStepBtns[i].ariaDisabled = true;
+            }
+
+            //hide arrow
+
             break;
         default:
             alert("Client operation failed. Try again?");

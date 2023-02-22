@@ -16,6 +16,7 @@ const OP_COMPILE = "COMPILE";
 const OP_TEST = "TEST";
 
 const EVENT_ON_BREAK = "EVENT_ON_BREAK";
+const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
 const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
 const EVENT_ON_COMPILE_FAILURE = 3;
@@ -277,6 +278,11 @@ function launchGDB(obj, ws)
                 //return breakpoint location
                 obj.value = output;
                 obj.event = EVENT_ON_BREAK;
+                ws.send(JSON.stringify(obj));
+            }
+            else if (output.indexOf(EVENT_ON_CONTINUE) != -1)
+            {
+                obj.event = EVENT_ON_CONTINUE;
                 ws.send(JSON.stringify(obj));
             }
         }
