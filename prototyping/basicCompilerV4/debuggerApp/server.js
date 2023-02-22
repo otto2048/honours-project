@@ -15,11 +15,11 @@ const OP_INPUT = "INPUT";
 const OP_COMPILE = "COMPILE";
 const OP_TEST = "TEST";
 
-const EVENT_ONBREAK = 0;
-const EVENT_ONSTDOUT = 1;
-const EVENT_ONCOMPILE_SUCCESS = 2;
-const EVENT_ONCOMPILE_FAILURE = 3;
-const EVENT_ONPROGRAM_EXIT = 4;
+const EVENT_ON_BREAK = 0;
+const EVENT_ON_STDOUT = 1;
+const EVENT_ON_COMPILE_SUCCESS = 2;
+const EVENT_ON_COMPILE_FAILURE = 3;
+const EVENT_ON_PROGRAM_EXIT = 4;
 
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
@@ -129,14 +129,14 @@ function onConnect(ws) {
                             //give compilation errors
                             stderr = stderr.replace(' << "' + PROGRAM_OUTPUT_STRING + '"', "");
                             obj.value = "Failed to compile\nErrors:\n" + stderr;
-                            obj.event = EVENT_ONCOMPILE_FAILURE;
+                            obj.event = EVENT_ON_COMPILE_FAILURE;
                             ws.send(JSON.stringify(obj));
                         }
                         else
                         {
                             //send compilation success message
                             obj.value = "Successfully compiled program \nRunning in terminal...";
-                            obj.event = EVENT_ONCOMPILE_SUCCESS;
+                            obj.event = EVENT_ON_COMPILE_SUCCESS;
                             ws.send(JSON.stringify(obj));
 
                             fs.readFile('gdbinit_base', 'utf8', function(err, data)
@@ -255,7 +255,7 @@ function launchGDB(obj, ws)
                 console.log(output.indexOf("Breakpoint"));
                 output = output.replace(PROGRAM_OUTPUT_STRING, "");
                 obj.value = output;
-                obj.event = EVENT_ONSTDOUT;
+                obj.event = EVENT_ON_STDOUT;
                 ws.send(JSON.stringify(obj));
             }
         }
@@ -267,7 +267,7 @@ function launchGDB(obj, ws)
 
     progProcess.on('exit', function (code) {
         console.log("exited");
-        obj.event = EVENT_ONPROGRAM_EXIT;
+        obj.event = EVENT_ON_PROGRAM_EXIT;
         console.log(obj);
         ws.send(JSON.stringify(obj));
         progProcess = null;

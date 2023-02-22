@@ -23,7 +23,7 @@ socket.onmessage = function(messageEvent) {
 
     switch(message.event)
     {
-        case constants.EVENT_ONSTDOUT:
+        case constants.EVENT_ON_STDOUT:
             //output response into terminal
 
             //get active terminal
@@ -33,7 +33,7 @@ socket.onmessage = function(messageEvent) {
             term.echo(message.value);
 
             break;
-        case constants.EVENT_ONCOMPILE_SUCCESS:
+        case constants.EVENT_ON_COMPILE_SUCCESS:
             //display compilation output
             addCompilationBoxMessage(message.value, "alert-info");
 
@@ -51,7 +51,7 @@ socket.onmessage = function(messageEvent) {
             $("#restart-btn")[0].ariaDisabled = false;
 
             break;
-        case constants.EVENT_ONCOMPILE_FAILURE:
+        case constants.EVENT_ON_COMPILE_FAILURE:
             //display compilation output
             addCompilationBoxMessage(message.value, "alert-info");
 
@@ -61,7 +61,7 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn").show();
 
             break;
-        case constants.EVENT_ONPROGRAM_EXIT:
+        case constants.EVENT_ON_PROGRAM_EXIT:
             //hide and disable debugger live controls
             $(".debugger-live-control").addClass("d-none");
 
