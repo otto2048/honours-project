@@ -27,6 +27,7 @@ const EVENT_ON_PROGRAM_EXIT = 4;
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
 const PROGRAM_OUTPUT_STRING = "PROGRAM_OUTPUT ";
+const PROGRAM_OUTPUT_STRING_END = "PROGRAM_OUTPUT END ";
 const GDB_OUTPUT_STRING = "FOR_SERVER"
 
 //write to files
@@ -85,6 +86,20 @@ function onConnect(ws) {
                 var content = file[1];
 
                 content = content.replace(/cout/g, 'cout << "'+ PROGRAM_OUTPUT_STRING +'"');
+                
+                var contentArray = content.split('\n');
+
+                for (var i=0; i<contentArray.length; i++)
+                {
+                    if (contentArray[i].indexOf("cout") != -1)
+                    {
+                        contentArray[i] = contentArray[i].slice(0, -1);
+                        contentArray[i] = contentArray[i] + ' << "' + PROGRAM_OUTPUT_STRING_END + '";';
+                    }
+                }
+
+                content = contentArray.join("\n");
+
                 console.log(content);
 
                 fs.writeFile(fname, content, function (err)
@@ -254,10 +269,13 @@ function launchGDB(obj, ws)
         //check if this is output for the user
         if (output.indexOf(PROGRAM_OUTPUT_STRING) != -1)
         {
+            output = output.split(PROGRAM_OUTPUT_STRING_END, 1)[0];
+
             //check if this is a breakpoint
             if (output.indexOf("Breakpoint") != 1)
             {
                 output = output.replace(PROGRAM_OUTPUT_STRING, "");
+                output = output.replace(PROGRAM_OUTPUT_STRING_END, "");
                 obj.value = output;
                 obj.event = EVENT_ON_STDOUT;
                 ws.send(JSON.stringify(obj));

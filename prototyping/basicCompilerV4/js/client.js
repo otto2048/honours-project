@@ -50,6 +50,8 @@ socket.onmessage = function(messageEvent) {
             $("#restart-btn")[0].disabled = false;
             $("#restart-btn")[0].ariaDisabled = false;
 
+            //TODO: editor is readonly
+
             break;
         case constants.EVENT_ON_COMPILE_FAILURE:
             //display compilation output
