@@ -96,6 +96,27 @@ socket.onmessage = function(messageEvent) {
             $("#pause-btn")[0].ariaDisabled = true;
 
             //put in arrow to show where breakpoint is
+
+            var file = message.value.split(':', 1)[0];
+            var lineNum = message.value.split(':').pop();
+
+            console.log(file);
+            console.log(lineNum);
+
+            $(".editor").each(function() {
+                if ($(this).attr("id") == file)
+                {
+                    var breakpoints = $(this).find('.ace_breakpoint');
+
+                    $(breakpoints).each(function() {
+                        if ($(this).text() == lineNum)
+                        {
+                            $(this).addClass("on_this_line");
+                        }
+                    });
+                }
+            });
+
             break;
         case constants.EVENT_ON_CONTINUE:
             //enable pause, stop, and restart debugger live controls
@@ -121,6 +142,13 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
+            $(".editor").each(function() {
+                var breakpoints = $(this).find('.ace_breakpoint');
+
+                $(breakpoints).each(function() {
+                    $(this).removeClass("on_this_line");
+                });
+            });
 
             break;
         default:

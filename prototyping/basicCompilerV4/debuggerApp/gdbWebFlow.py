@@ -12,10 +12,12 @@ def stop_handler(event):
         print("FOR_SERVER\n")
         print("EVENT_ON_BREAK\n")
         print(event.breakpoint.location)
+        print("EVENT_ON_BREAK_END\n")
 
 def cont_handler(event):
     print("FOR_SERVER\n")
     print("EVENT_ON_CONTINUE\n")
+    print("EVENT_ON_CONTINUE_END\n")
 
 # attach handlers
 gdb.events.stop.connect(stop_handler)

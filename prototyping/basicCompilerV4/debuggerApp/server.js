@@ -16,7 +16,9 @@ const OP_COMPILE = "COMPILE";
 const OP_TEST = "TEST";
 
 const EVENT_ON_BREAK = "EVENT_ON_BREAK";
+const EVENT_ON_BREAK_END = "EVENT_ON_BREAK_END";
 const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
+const EVENT_ON_CONTINUE_END = "EVENT_ON_CONTINUE_END";
 const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
 const EVENT_ON_COMPILE_FAILURE = 3;
@@ -269,8 +271,11 @@ function launchGDB(obj, ws)
             //check what kind of gdb event this is
             if (output.indexOf(EVENT_ON_BREAK) != -1)
             {
+                output = output.split(EVENT_ON_BREAK_END, 1)[0];
+
                 //get rid of key
                 output = output.replace(EVENT_ON_BREAK, "");
+                output = output.replace(EVENT_ON_BREAK_END, "");
 
                 //get rid of whitespace
                 output = output.replace(/\s/g, "");
