@@ -9,15 +9,17 @@ const http = require('http');
 const ws = require('ws');
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
+const Response = require('./response.js');
 
-const OP_CONNECTION = "CONNECTION";
 const OP_INPUT = "INPUT";
 const OP_COMPILE = "COMPILE";
 const OP_TEST = "TEST";
-const OP_LAUNCH_DEBUGGER = "DEBUGGER_LAUNCH";
 
-const SENDER_HOST = "HOST_SERVER";
-const SENDER_USER = "USER_SENDER";
+const EVENT_ONBREAK = 0;
+const EVENT_ONSTDOUT = 1;
+const EVENT_ONCOMPILE_SUCCESS = 2;
+const EVENT_ONCOMPILE_FAILURE = 3;
+
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
 const PROGRAM_OUTPUT_STRING = "PROGRAM_OUTPUT ";
@@ -59,10 +61,7 @@ function onConnect(ws) {
         console.log(clientMsg);
 
         //create response object
-        var obj = new Object();
-        obj.operation = clientMsg.operation;
-        obj.value = null;
-        obj.sender = SENDER_DEBUGGER;
+        var obj = new Response(SENDER_DEBUGGER);
 
         //check which operation client has requested
         if (clientMsg.operation == OP_INPUT)
@@ -129,12 +128,14 @@ function onConnect(ws) {
                             //give compilation errors
                             stderr = stderr.replace(' << "' + PROGRAM_OUTPUT_STRING + '"', "");
                             obj.value = "Failed to compile\nErrors:\n" + stderr;
+                            obj.event = EVENT_ONCOMPILE_FAILURE;
                             ws.send(JSON.stringify(obj));
                         }
                         else
                         {
                             //send compilation success message
                             obj.value = "Successfully compiled program \nRunning in terminal...";
+                            obj.event = EVENT_ONCOMPILE_SUCCESS;
                             ws.send(JSON.stringify(obj));
 
                             fs.readFile('gdbinit_base', 'utf8', function(err, data)
@@ -253,7 +254,7 @@ function launchGDB(obj, ws)
                 console.log(output.indexOf("Breakpoint"));
                 output = output.replace(PROGRAM_OUTPUT_STRING, "");
                 obj.value = output;
-                obj.operation = OP_INPUT;
+                obj.event = EVENT_ONSTDOUT;
                 ws.send(JSON.stringify(obj));
             }
         }

@@ -1,6 +1,7 @@
 // Socket setup based on tutorial: https://javascript.info/websocket
 
-import * as constants from "/honours/webapp/view/js/constants.js";
+import * as constants from "/honours/webapp/view/js/debuggerConstants.js";
+import Request from "./request.js";
 
 var editors = [];
 var files = $(".editor");
@@ -20,7 +21,7 @@ socket.onmessage = function(messageEvent) {
     var message = JSON.parse(messageEvent.data);
     console.log(message);
 
-    if (message.operation == constants.OP_INPUT)
+    if (message.event == constants.EVENT_ONSTDOUT)
     {
         //output response into terminal
 
@@ -30,18 +31,14 @@ socket.onmessage = function(messageEvent) {
         //output received message into terminal
         term.echo(message.value);
     }
-    else if (message.operation == constants.OP_COMPILE)
+    else if (message.event == constants.EVENT_ONCOMPILE_FAILURE || message.event == constants.EVENT_ONCOMPILE_SUCCESS)
     {
-        if (message.value)
-        {
-            //display compilation output
-            addCompilationBoxMessage(message.value, "alert-info");
-        }
-        else
-        {
-            addCompilationBoxMessage("Compilation operation failed. Try again?.", "alert-dark");
-        }
-        
+        //display compilation output
+        addCompilationBoxMessage(message.value, "alert-info");
+    }
+    else if (message.event == null)
+    {
+        alert("Client operation failed. Try again?");
     }
 }
 
@@ -90,7 +87,7 @@ function startProgram()
 {
     clearTerminal();
 
-    var obj = new Object();
+    var obj = new Request(constants.SENDER_USER);
     obj.operation = constants.OP_COMPILE;
 
     var filesData = [];
@@ -124,7 +121,7 @@ function startProgram()
 //tell socket that we want to send some input to the program
 function sendInput(input)
 {
-    var obj = new Object();
+    var obj = new Request(constants.SENDER_USER);
     obj.operation = constants.OP_INPUT;
     obj.value = input;
     socket.send(JSON.stringify(obj));
