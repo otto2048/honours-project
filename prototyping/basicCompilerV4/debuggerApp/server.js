@@ -19,6 +19,7 @@ const EVENT_ONBREAK = 0;
 const EVENT_ONSTDOUT = 1;
 const EVENT_ONCOMPILE_SUCCESS = 2;
 const EVENT_ONCOMPILE_FAILURE = 3;
+const EVENT_ONPROGRAM_EXIT = 4;
 
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
@@ -266,6 +267,9 @@ function launchGDB(obj, ws)
 
     progProcess.on('exit', function (code) {
         console.log("exited");
+        obj.event = EVENT_ONPROGRAM_EXIT;
+        console.log(obj);
+        ws.send(JSON.stringify(obj));
         progProcess = null;
     });
 }

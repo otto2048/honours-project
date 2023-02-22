@@ -61,6 +61,23 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn").show();
 
             break;
+        case constants.EVENT_ONPROGRAM_EXIT:
+            //hide and disable debugger live controls
+            $(".debugger-live-control").addClass("d-none");
+
+            var debuggerLiveControls = $(".debugger-live-control");
+
+            for (var i=0; i<debuggerLiveControls.length; i++)
+            {
+                debuggerLiveControls[i].disabled = true;
+                debuggerLiveControls[i].ariaDisabled = true;
+            }
+
+            //show and enable play button
+            $("#play-btn")[0].disabled = false;
+            $("#play-btn")[0].ariaDisabled = false;
+            $("#play-btn").show();
+            break;
         default:
             alert("Client operation failed. Try again?");
     }
