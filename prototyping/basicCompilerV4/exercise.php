@@ -66,12 +66,15 @@
 
                             ?>
 
+                            <div class="mt-5 mb-5">
+                                <h1>Exercise: <?php echo $exerciseData[0]["title"] ?></h1>
+                                <p><?php echo $exerciseData[0]["description"] ?></p>
+                                <hr>
+                                <h2>General Instructions</h2>
+                                <p>Once you have completed the exercise, press the submit button below.</p>
+                                <button type="button" class="btn btn-primary debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
+                            </div>
                             
-
-                            <button type="button" class="btn btn-primary float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
-
-                            
-
                             <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
 
                             <div class="row">
