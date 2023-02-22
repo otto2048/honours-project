@@ -66,40 +66,32 @@
 
                             ?>
 
-                            <div class="justify-content-center pt-1 pb-1 d-flex">
-                                <button type="button" class="btn btn-dark theme debugger-control ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
-                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
-                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="pause-btn" aria-label="Pause"><span class="mdi mdi-pause me-2"></span>Pause</button>
-                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop"></span></button>
-                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="restart-btn" aria-label="Restart"><span class="mdi mdi-restart"></span></button>
-                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-into-btn" aria-label="Step into"><span class="mdi mdi-arrow-down"></span></button>
-                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-over-btn" aria-label="Step over"><span class="mdi mdi-arrow-down-right"></span></button>
-                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-out-btn" aria-label="Step out"><span class="mdi mdi-arrow-up"></span></button>
-                            </div>
+                            
 
                             <button type="button" class="btn btn-primary float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
 
-                            <ul class="nav-tabs nav" role="tablist">
-                                <?php
-                                    foreach ($exerciseFile["user_files"] as $fileName)
-                                    {
-                                        //get the contents of this file
-                                        $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
-                                        $pathInfo = pathinfo($fileName);
-
-                                        ?>
-                                        <li class="nav-item">
-                                            <button class="nav-link <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php echo $pathInfo["filename"]; ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo $pathInfo["basename"]; ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
-                                        </li>
-                                        <?php
-                                    }
-                                ?>
-                            </ul>
+                            
 
                             <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
 
                             <div class="row">
                                 <div class="col-sm">
+                                    <ul class="nav-tabs nav" role="tablist">
+                                        <?php
+                                            foreach ($exerciseFile["user_files"] as $fileName)
+                                            {
+                                                //get the contents of this file
+                                                $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
+                                                $pathInfo = pathinfo($fileName);
+
+                                                ?>
+                                                <li class="nav-item">
+                                                    <button class="nav-link <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php echo $pathInfo["filename"]; ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo $pathInfo["basename"]; ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
+                                                </li>
+                                                <?php
+                                            }
+                                        ?>
+                                    </ul>
                                     
 
                                     <div class="tab-content">
@@ -132,6 +124,25 @@
                                     
                                 </div>
                                 <div class="col-sm">
+
+                                    <div class="row  pt-1 pb-1 ">
+                                        <div class="col-8">
+                                            <button type="button" class="btn btn-dark theme debugger-control ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
+                                            <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
+                                            <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="pause-btn" aria-label="Pause"><span class="mdi mdi-pause"></span></button>
+                                            <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop"></span></button>
+                                            <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="restart-btn" aria-label="Restart"><span class="mdi mdi-restart"></span></button>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="float-end">
+                                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-into-btn" aria-label="Step into"><span class="mdi mdi-arrow-down"></span></button>
+                                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-over-btn" aria-label="Step over"><span class="mdi mdi-arrow-down-right"></span></button>
+                                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-out-btn" aria-label="Step out"><span class="mdi mdi-arrow-up"></span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    
                                     <!-- container for terminal -->
                                     <div id="code-output"></div>
                                     <div class="d-flex justify-content-center">
