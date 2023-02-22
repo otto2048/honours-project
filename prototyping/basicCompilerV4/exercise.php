@@ -68,7 +68,13 @@
 
                             <div class="justify-content-center pt-1 pb-1 d-flex">
                                 <button type="button" class="btn btn-dark theme debugger-control ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
-                                <button type="button" class="btn btn-dark theme debugger-control ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
+                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
+                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="pause-btn" aria-label="Pause"><span class="mdi mdi-pause me-2"></span>Pause</button>
+                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop"></span></button>
+                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="restart-btn" aria-label="Restart"><span class="mdi mdi-restart"></span></button>
+                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-into-btn" aria-label="Step into"><span class="mdi mdi-arrow-down"></span></button>
+                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-over-btn" aria-label="Step over"><span class="mdi mdi-arrow-down-right"></span></button>
+                                <button type="button" class="btn btn-dark theme debugger-control debugger-live-control ms-1" id="step-out-btn" aria-label="Step out"><span class="mdi mdi-arrow-up"></span></button>
                             </div>
 
                             <button type="button" class="btn btn-primary float-end debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
