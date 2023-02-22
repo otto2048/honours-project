@@ -78,6 +78,23 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn")[0].ariaDisabled = false;
             $("#play-btn").show();
             break;
+        case constants.EVENT_ON_BREAK:
+            //enable continue button and step buttons
+            $("#continue-btn")[0].disabled = false;
+            $("#continue-btn")[0].ariaDisabled = false;
+
+            var debuggerStepBtns = $(".debugger-step-control");
+
+            for (var i=0; i<debuggerStepBtns.length; i++)
+            {
+                debuggerStepBtns[i].disabled = false;
+                debuggerStepBtns[i].ariaDisabled = false;
+            }
+
+            //disable pause button
+            $("#pause-btn")[0].disabled = true;
+            $("#pause-btn")[0].ariaDisabled = true;
+            break;
         default:
             alert("Client operation failed. Try again?");
     }
