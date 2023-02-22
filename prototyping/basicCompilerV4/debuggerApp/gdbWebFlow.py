@@ -8,9 +8,9 @@ def breakpoint_handler(event):
 
 def stop_handler(event):
     if (isinstance(event, gdb.BreakpointEvent)):
+        print("FOR_SERVER\n")
+        print("EVENT_ON_BREAK\n")
         print(event.breakpoint.location)
-        print("PROGRAM_OUTPUT this is a breakpoint event")
-    print("PROGRAM_OUTPUT program has stopped")
 
 gdb.events.stop.connect(stop_handler)
 

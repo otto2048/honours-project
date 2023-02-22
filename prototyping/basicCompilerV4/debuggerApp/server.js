@@ -15,7 +15,7 @@ const OP_INPUT = "INPUT";
 const OP_COMPILE = "COMPILE";
 const OP_TEST = "TEST";
 
-const EVENT_ON_BREAK = 0;
+const EVENT_ON_BREAK = "EVENT_ON_BREAK";
 const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
 const EVENT_ON_COMPILE_FAILURE = 3;
@@ -24,6 +24,7 @@ const EVENT_ON_PROGRAM_EXIT = 4;
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
 const PROGRAM_OUTPUT_STRING = "PROGRAM_OUTPUT ";
+const GDB_OUTPUT_STRING = "FOR_SERVER"
 
 //write to files
 const fs = require('fs');
@@ -247,15 +248,35 @@ function launchGDB(obj, ws)
 
         output = data.toString();
 
+        //check if this is output for the user
         if (output.indexOf(PROGRAM_OUTPUT_STRING) != -1)
         {
             //check if this is a breakpoint
             if (output.indexOf("Breakpoint") != 1)
             {
-                console.log(output.indexOf("Breakpoint"));
                 output = output.replace(PROGRAM_OUTPUT_STRING, "");
                 obj.value = output;
                 obj.event = EVENT_ON_STDOUT;
+                ws.send(JSON.stringify(obj));
+            }
+        }
+        //check if this is output for the server to handle
+        else if (output.indexOf(GDB_OUTPUT_STRING) != -1)
+        {
+            output = output.replace(GDB_OUTPUT_STRING, "");
+
+            //check what kind of gdb event this is
+            if (output.indexOf(EVENT_ON_BREAK) != -1)
+            {
+                //get rid of key
+                output = output.replace(EVENT_ON_BREAK, "");
+
+                //get rid of whitespace
+                output = output.replace(/\s/g, "");
+                
+                //return breakpoint location
+                obj.value = output;
+                obj.event = EVENT_ON_BREAK;
                 ws.send(JSON.stringify(obj));
             }
         }
