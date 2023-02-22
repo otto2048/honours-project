@@ -1,8 +1,2 @@
-python
-
-def exit_handler (event):
-    gdb.execute("quit")
-
-gdb.events.exited.connect(exit_handler)
-
-end
+source gdbWebFlow.py
+source gdbCustomCommands.py

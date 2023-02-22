@@ -238,32 +238,23 @@ function appendFile(fileName, content)
 function launchGDB(obj, ws)
 {
     //use child process to start program
-    progProcess = spawn('gdb', ['executable']);
+    progProcess = spawn('gdb', ['-q', 'executable']);
 
     progProcess.stdout.on('data', function (data) {
         console.log('stdout: ' + data.toString());
 
-        //if GDB has just started running, dont send output
-        if (running == false)
+        output = data.toString();
+
+        if (output.indexOf(PROGRAM_OUTPUT_STRING) != -1)
         {
-            running = true;
-        }
-        else
-        {
-            output = data.toString();
-            
-            if (output.indexOf(PROGRAM_OUTPUT_STRING) != -1)
+            //check if this is a breakpoint
+            if (output.indexOf("Breakpoint") != 1)
             {
-                //check if this is a breakpoint
-                if (output.indexOf("Breakpoint") != 1)
-                {
-                    console.log(output.indexOf("Breakpoint"));
-                    output = output.replace(PROGRAM_OUTPUT_STRING, "");
-                    obj.value = output;
-                    obj.operation = OP_INPUT;
-                    ws.send(JSON.stringify(obj));
-                }
-                
+                console.log(output.indexOf("Breakpoint"));
+                output = output.replace(PROGRAM_OUTPUT_STRING, "");
+                obj.value = output;
+                obj.operation = OP_INPUT;
+                ws.send(JSON.stringify(obj));
             }
         }
     });
@@ -275,7 +266,6 @@ function launchGDB(obj, ws)
     progProcess.on('exit', function (code) {
         console.log("exited");
         progProcess = null;
-        running = false;
     });
 }
 
