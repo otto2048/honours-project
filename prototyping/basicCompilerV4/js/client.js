@@ -307,6 +307,8 @@ function setUpEditors()
             // If there's a breakpoint already defined, it should be removed, offering the toggle feature
             if(typeof breakpoints[row] === typeof undefined){
                 e.editor.session.setBreakpoint(row);
+                var sendRow = row + 1;
+                sendInput("break " + e.editor.container.id + ":" + sendRow.toString());
             }else{
                 //clear any box shadow that was set by other methods
                 $(".ace_gutter-cell").each(function() {
@@ -317,6 +319,9 @@ function setUpEditors()
                 });
 
                 e.editor.session.clearBreakpoint(row);
+
+                var sendRow = row + 1;
+                sendInput("clear " + e.editor.container.id + ":" + sendRow.toString());
             }
 
             e.stop();
