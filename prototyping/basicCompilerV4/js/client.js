@@ -109,6 +109,7 @@ socket.onmessage = function(messageEvent) {
             var end = file.split('.').pop();
             $("#" + start + end + "File").tab("show");
 
+
             $(".editor").each(function() {
                 if ($(this).attr("id") == file)
                 {
@@ -124,6 +125,14 @@ socket.onmessage = function(messageEvent) {
                     });
                 }
             });
+
+            for (var i=0; i<editors.length; i++)
+            {
+                if (editors[i].container.id == file)
+                {
+                    editors[i].gotoLine(lineNum);
+                }
+            }  
 
             break;
         case constants.EVENT_ON_CONTINUE:
