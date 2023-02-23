@@ -6,6 +6,8 @@ import Request from "./request.js";
 var editors = [];
 var files = $(".editor");
 
+var selectedElement = null;
+
 window.onload = preparePage();
 
 let socket = new WebSocket("ws://192.168.17.60:8080");
@@ -115,7 +117,9 @@ socket.onmessage = function(messageEvent) {
                     $(breakpoints).each(function() {
                         if ($(this).text() == lineNum)
                         {
-                            $(this).css("box-shadow", "0px 0px 1px 1px #fbff00 inset");
+                            $(this).addClass("on_this_line");
+                            selectedElement = $(this);
+                            //$(this).css("box-shadow", "0px 0px 1px 1px #fbff00 inset");
                         }
                     });
                 }
@@ -150,7 +154,9 @@ socket.onmessage = function(messageEvent) {
                 var breakpoints = $(this).find('.ace_breakpoint');
 
                 $(breakpoints).each(function() {
-                    $(this).css("box-shadow", "0px 0px 1px 1px #8c2424 inset");
+                    $(this).removeClass("on_this_line");
+                    selectedElement = null;
+                    //$(this).css("box-shadow", "0px 0px 1px 1px #8c2424 inset");
                 });
             });
 
@@ -311,12 +317,12 @@ function setUpEditors()
                 sendInput("break " + e.editor.container.id + ":" + sendRow.toString());
             }else{
                 //clear any box shadow that was set by other methods
-                $(".ace_gutter-cell").each(function() {
-                    if ($(this).attr("class").indexOf("ace_breakpoint") != -1 && parseInt($(this).text()) == row + 1)
-                    {
-                        $(this).css("box-shadow", "");
-                    }
-                });
+                // $(".ace_gutter-cell").each(function() {
+                //     if ($(this).attr("class").indexOf("ace_breakpoint") != -1 && parseInt($(this).text()) == row + 1)
+                //     {
+                //         $(this).css("box-shadow", "");
+                //     }
+                // });
 
                 e.editor.session.clearBreakpoint(row);
 
@@ -326,6 +332,8 @@ function setUpEditors()
 
             e.stop();
         });
+
+        
         
     }
 
