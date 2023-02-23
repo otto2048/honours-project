@@ -199,6 +199,12 @@ function preparePage()
         sendInput("continue");
     });
 
+    $("#stop-btn")[0].addEventListener("click", function() {
+        sendInput("^c");
+        //TODO: stopping
+        //https://github.com/microsoft/vscode-cpptools/issues/6636
+    });
+
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {
