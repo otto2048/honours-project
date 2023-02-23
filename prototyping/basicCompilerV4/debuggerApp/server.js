@@ -269,13 +269,15 @@ function launchGDB(obj, ws)
         //check if this is output for the user
         if (output.indexOf(PROGRAM_OUTPUT_STRING) != -1)
         {
-            var outputs = output.split(PROGRAM_OUTPUT_STRING);
-
-            for (var i=0; i<outputs.length; i++)
+            //check if this is a breakpoint
+            if (output.indexOf("Breakpoint") == -1)
             {
-                //check if this is a breakpoint
-                if (outputs[i].indexOf("Breakpoint") != 1)
+                var outputs = output.split(PROGRAM_OUTPUT_STRING);
+
+                for (var i=0; i<outputs.length; i++)
                 {
+                    console.log(i);
+                    console.log(outputs[i]);
                     //split on start of string
                     outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING).pop();
                     
@@ -285,12 +287,15 @@ function launchGDB(obj, ws)
                     obj.value = outputs[i];
                     obj.event = EVENT_ON_STDOUT;
                     ws.send(JSON.stringify(obj));
+                    
                 }
+                
             }
             
         }
+        
         //check if this is output for the server to handle
-        else if (output.indexOf(GDB_OUTPUT_STRING) != -1)
+        if (output.indexOf(GDB_OUTPUT_STRING) != -1)
         {
             output = output.split(GDB_OUTPUT_STRING).pop();
 
