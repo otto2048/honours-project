@@ -1,0 +1,14 @@
+{
+    "comments": "Darts files",
+    "user_files" : [
+        "darts/main.cpp",
+        "darts/dartboard.cpp",
+        "darts/player.cpp",
+        "darts/throwStrategy.cpp",
+        "darts/dartboard.h",
+        "darts/player.h",
+        "darts/throwStrategy.h"
+    ]
+}
+
+
