@@ -81,6 +81,17 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn")[0].disabled = false;
             $("#play-btn")[0].ariaDisabled = false;
             $("#play-btn").show();
+
+            //hide arrow
+            $(".editor").each(function() {
+                var breakpoints = $(this).find('.ace_breakpoint');
+
+                $(breakpoints).each(function() {
+                    $(this).removeClass("on_this_line");
+                    selectedElement = null;
+                    //$(this).css("box-shadow", "0px 0px 1px 1px #8c2424 inset");
+                });
+            });
             break;
         case constants.EVENT_ON_BREAK:
             //enable continue button and step buttons
@@ -200,9 +211,7 @@ function preparePage()
     });
 
     $("#stop-btn")[0].addEventListener("click", function() {
-        sendInput("^c");
-        //TODO: stopping
-        //https://github.com/microsoft/vscode-cpptools/issues/6636
+        sendInput("kill");
     });
 
     //set up jquery terminal
