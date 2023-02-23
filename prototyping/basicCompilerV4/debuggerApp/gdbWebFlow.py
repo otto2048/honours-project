@@ -5,6 +5,7 @@ def exit_handler (event):
     gdb.execute("quit")
 
 def breakpoint_handler(event):
+#TODO: need to handle if breakpoint that is set is different to the input that the user gave (eg on a curly bracket)
     print("breakpoint set")
 
 def stop_handler(event):
