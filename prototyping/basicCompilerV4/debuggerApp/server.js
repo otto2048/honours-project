@@ -27,7 +27,7 @@ const EVENT_ON_PROGRAM_EXIT = 4;
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
 const PROGRAM_OUTPUT_STRING = "PROGRAM_OUTPUT ";
-const PROGRAM_OUTPUT_STRING_END = "PROGRAM_OUTPUT END ";
+const PROGRAM_OUTPUT_STRING_END = " PROGRAM_OUTPUT_END";
 const GDB_OUTPUT_STRING = "FOR_SERVER"
 
 //write to files
@@ -269,13 +269,15 @@ function launchGDB(obj, ws)
         //check if this is output for the user
         if (output.indexOf(PROGRAM_OUTPUT_STRING) != -1)
         {
-            output = output.split(PROGRAM_OUTPUT_STRING_END, 1)[0];
-
             //check if this is a breakpoint
             if (output.indexOf("Breakpoint") != 1)
             {
-                output = output.replace(PROGRAM_OUTPUT_STRING, "");
-                output = output.replace(PROGRAM_OUTPUT_STRING_END, "");
+                //split on start of string
+                output = output.split(PROGRAM_OUTPUT_STRING).pop();
+                
+                //split on end of string
+                output = output.split(PROGRAM_OUTPUT_STRING_END, 1)[0];
+
                 obj.value = output;
                 obj.event = EVENT_ON_STDOUT;
                 ws.send(JSON.stringify(obj));
@@ -284,20 +286,20 @@ function launchGDB(obj, ws)
         //check if this is output for the server to handle
         else if (output.indexOf(GDB_OUTPUT_STRING) != -1)
         {
-            output = output.replace(GDB_OUTPUT_STRING, "");
+            output = output.split(GDB_OUTPUT_STRING).pop();
 
             //check what kind of gdb event this is
             if (output.indexOf(EVENT_ON_BREAK) != -1)
             {
-                output = output.split(EVENT_ON_BREAK_END, 1)[0];
+                //split on start string
+                output = output.substring(output.indexOf(EVENT_ON_BREAK) + EVENT_ON_BREAK.length);
 
-                //get rid of key
-                output = output.replace(EVENT_ON_BREAK, "");
-                output = output.replace(EVENT_ON_BREAK_END, "");
+                //split on end string
+                output = output.split(EVENT_ON_BREAK_END, 1)[0];
 
                 //get rid of whitespace
                 output = output.replace(/\s/g, "");
-                
+
                 //return breakpoint location
                 obj.value = output;
                 obj.event = EVENT_ON_BREAK;
