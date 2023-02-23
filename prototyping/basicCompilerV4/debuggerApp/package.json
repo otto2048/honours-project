@@ -1,0 +1,9 @@
+{
+    "name" : "debugger-server-package",
+    "version" : "1.0.0",
+    "author": "Elizabeth Blogg",
+    "dependencies": {
+        "ws":"8.12.0",
+        "async":"3.2.4"
+    }
+}

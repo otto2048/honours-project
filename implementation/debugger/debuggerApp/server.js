@@ -28,6 +28,7 @@ const wss = new ws.Server({noServer: true});
 
 //variable to hold child process that runs program
 var progProcess;
+var running = false;
 
 //create server
 function accept(req, res) {
@@ -131,30 +132,44 @@ function onConnect(ws) {
                             ws.send(JSON.stringify(obj));
 
                             //use child process to start program
-                            progProcess = spawn('./executable');
+                            progProcess = spawn('gdb executable');
 
-                            progProcess.stdout.on('data', function (data) {
-                                console.log('stdout: ' + data.toString());
-                                obj.value = data.toString();
-                                obj.operation = OP_INPUT;
-                                ws.send(JSON.stringify(obj));
-                            });
+                            // progProcess.stdout.on('data', function (data) {
+                            //     console.log('stdout: ' + data.toString());
+                            //     obj.value = data.toString();
+                            //     obj.operation = OP_INPUT;
+                            //     ws.send(JSON.stringify(obj));
 
-                            progProcess.stderr.on('data', function (data) {
-                                console.log('stderr: ' + data.toString());
-                                obj.value = data.toString();
-                                obj.operation = OP_INPUT;
-                                ws.send(JSON.stringify(obj));
-                            });
+                            //     //if GDB has just started running, run the program
+                            //     if (running == false)
+                            //     {
+                            //         running = true;
+                            //         progProcess.stdin.write("run\n");
+                            //     }
+                            //     else
+                            //     {
+                            //         obj.value = data.toString();
+                            //         obj.operation = OP_INPUT;
+                            //         ws.send(JSON.stringify(obj));
+                            //     }
+                            // });
 
-                            progProcess.on('exit', function (code) {
-                                var data = 'Program exited with code ' + code.toString();
-                                console.log();
-                                obj.value = data.toString();
-                                obj.operation = OP_INPUT;
-                                ws.send(JSON.stringify(obj));
-                                progProcess = null;
-                            });
+                            // progProcess.stderr.on('data', function (data) {
+                            //     console.log('stderr: ' + data.toString());
+                            //     obj.value = data.toString();
+                            //     obj.operation = OP_INPUT;
+                            //     ws.send(JSON.stringify(obj));
+                            // });
+
+                            // progProcess.on('exit', function (code) {
+                            //     var data = 'Program exited with code ' + code.toString();
+                            //     console.log();
+                            //     obj.value = data.toString();
+                            //     obj.operation = OP_INPUT;
+                            //     ws.send(JSON.stringify(obj));
+                            //     progProcess = null;
+                            //     running = false;
+                            // });
                         }
                     });
                 }
