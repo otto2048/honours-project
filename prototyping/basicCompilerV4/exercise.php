@@ -89,7 +89,7 @@
 
                                                 ?>
                                                 <li class="nav-item">
-                                                    <button class="nav-link <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php echo $pathInfo["filename"]; ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo $pathInfo["basename"]; ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
+                                                    <button class="nav-link <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php  echo str_replace(".", "", $pathInfo["basename"]); ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
                                                 </li>
                                                 <?php
                                             }
@@ -108,7 +108,7 @@
 
                                                 ?>
 
-                                                <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo $pathInfo["basename"]; ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
+                                                <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
                                                     <div id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
 <?php echo $file; ?>
                                                     </div>

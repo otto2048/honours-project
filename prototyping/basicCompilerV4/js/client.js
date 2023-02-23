@@ -102,8 +102,10 @@ socket.onmessage = function(messageEvent) {
             var file = message.value.split(':', 1)[0];
             var lineNum = message.value.split(':').pop();
 
-            console.log(file);
-            console.log(lineNum);
+            //switch active file
+            var start = file.split('.', 1)[0];
+            var end = file.split('.').pop();
+            $("#" + start + end + "File").tab("show");
 
             $(".editor").each(function() {
                 if ($(this).attr("id") == file)
