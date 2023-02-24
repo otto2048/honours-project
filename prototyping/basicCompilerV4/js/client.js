@@ -6,8 +6,6 @@ import Request from "./request.js";
 var editors = [];
 var files = $(".editor");
 
-var selectedElement = null;
-
 window.onload = preparePage();
 
 let socket = new WebSocket("ws://192.168.17.60:8080");
@@ -42,17 +40,15 @@ socket.onmessage = function(messageEvent) {
             //show debugger live controls
             $(".debugger-live-control").removeClass("d-none");
 
-            //enable pause, stop, and restart debugger live controls
-            $("#pause-btn")[0].disabled = false;
-            $("#pause-btn")[0].ariaDisabled = false;
-
+            //enable stop debugger live control
             $("#stop-btn")[0].disabled = false;
             $("#stop-btn")[0].ariaDisabled = false;
-            
-            $("#restart-btn")[0].disabled = false;
-            $("#restart-btn")[0].ariaDisabled = false;
 
-            //TODO: editor is readonly
+            //editor is readonly
+            for (var i=0; i<editors.length; i++)
+            {
+                editors[i]["editor"].setOption("readOnly", true);
+            }
 
             break;
         case constants.EVENT_ON_COMPILE_FAILURE:
@@ -81,6 +77,20 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn")[0].disabled = false;
             $("#play-btn")[0].ariaDisabled = false;
             $("#play-btn").show();
+
+            //hide arrow
+            if ($(".selectedLine"))
+            {
+                $(".selectedLine").html("●");
+                $(".selectedLine").removeClass(".selectedLine");
+            }
+
+            //editor is editable
+            for (var i=0; i<editors.length; i++)
+            {
+                editors[i]["editor"].setOption("readOnly", false);
+            }
+
             break;
         case constants.EVENT_ON_BREAK:
             //enable continue button and step buttons
@@ -95,10 +105,6 @@ socket.onmessage = function(messageEvent) {
                 debuggerStepBtns[i].ariaDisabled = false;
             }
 
-            //disable pause button
-            $("#pause-btn")[0].disabled = true;
-            $("#pause-btn")[0].ariaDisabled = true;
-
             //put in arrow to show where breakpoint is
 
             var file = message.value.split(':', 1)[0];
@@ -109,42 +115,26 @@ socket.onmessage = function(messageEvent) {
             var end = file.split('.').pop();
             $("#" + start + end + "File").tab("show");
 
+            var bp = $("." + start + end + "-" + lineNum);
 
-            $(".editor").each(function() {
-                if ($(this).attr("id") == file)
-                {
-                    var breakpoints = $(this).find('.ace_breakpoint');
+            bp.addClass("selectedLine");
+            bp.html("<span class='mdi mdi-arrow-right-thick'></span>");
 
-                    $(breakpoints).each(function() {
-                        if ($(this).text() == lineNum)
-                        {
-                            $(this).addClass("on_this_line");
-                            selectedElement = $(this);
-                            //$(this).css("box-shadow", "0px 0px 1px 1px #fbff00 inset");
-                        }
-                    });
-                }
-            });
+            $(".selectedLine :first-child").css("color", "#fbff00");
 
             for (var i=0; i<editors.length; i++)
             {
-                if (editors[i].container.id == file)
+                if (editors[i]["fileName"] == file)
                 {
-                    editors[i].gotoLine(lineNum);
+                    editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
                 }
             }  
 
             break;
         case constants.EVENT_ON_CONTINUE:
-            //enable pause, stop, and restart debugger live controls
-            $("#pause-btn")[0].disabled = false;
-            $("#pause-btn")[0].ariaDisabled = false;
-
+            //enable stop debugger live control
             $("#stop-btn")[0].disabled = false;
             $("#stop-btn")[0].ariaDisabled = false;
-            
-            $("#restart-btn")[0].disabled = false;
-            $("#restart-btn")[0].ariaDisabled = false;
 
             //disable continue and step controls
             $("#continue-btn")[0].disabled = true;
@@ -159,15 +149,11 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
-            $(".editor").each(function() {
-                var breakpoints = $(this).find('.ace_breakpoint');
-
-                $(breakpoints).each(function() {
-                    $(this).removeClass("on_this_line");
-                    selectedElement = null;
-                    //$(this).css("box-shadow", "0px 0px 1px 1px #8c2424 inset");
-                });
-            });
+            if ($(".selectedLine"))
+            {
+                $(".selectedLine").html("●");
+                $(".selectedLine").removeClass(".selectedLine");
+            }
 
             break;
         default:
@@ -199,6 +185,10 @@ function preparePage()
         sendInput("continue");
     });
 
+    $("#stop-btn")[0].addEventListener("click", function() {
+        sendInput("kill");
+    });
+
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {
@@ -212,6 +202,16 @@ function preparePage()
 
     //clear the terminal
     clearTerminal();
+
+    $('#increase-code-size-btn')[0].addEventListener("click", function()
+    {
+        changeCodeSize(5);
+    });
+
+    $('#decrease-code-size-btn')[0].addEventListener("click", function()
+    {
+        changeCodeSize(-5);
+    });
 }
 
 
@@ -230,22 +230,16 @@ function startProgram()
     for (var i=0; i<editors.length; i++)
     {
         //set breakpoints for this editor
-        var breakpointInstances = editors[i].session.getBreakpoints();
-
-        for (var j=0; j<breakpointInstances.length; j++)
+        var arr = Array.from(editors[i]["breakpoints"]);
+        for (var j=0; j<arr.length; j++)
         {
-            if (breakpointInstances[j] !== undefined)
-            {
-                breakpoints.push([files[i].getAttribute("id"), j + 1]);
-            }
+            breakpoints.push([editors[i]["fileName"], arr[j]]);
         }
 
-        filesData.push([files[i].getAttribute("id"), editors[i].session.getValue()]);
+        filesData.push([files[i].getAttribute("id"), editors[i]["editor"].getValue()]);
     }
 
     obj.value = {"filesData":filesData, "breakpoints" : breakpoints};
-
-    console.log(obj);
 
     //disable and hide play button
     $("#play-btn")[0].disabled = true;
@@ -289,62 +283,85 @@ function addCompilationBoxMessage(message, colour)
     $("#compilation-messages-box ul")[0].prepend(li);
 }
 
+//change code size
+function changeCodeSize(value)
+{
+    //change size of editor text
+    var newValue = parseInt($(".CodeMirror").css('font-size'), 10) + value;
+
+    if (newValue > 0)
+    {
+        $(".CodeMirror").css('font-size', newValue.toString() + "px");
+    }
+}
+
 //set up the code editors for all the files
 function setUpEditors()
 {
+    //create editors
     for (var i=0; i<files.length; i++)
     {
-        editors.push(ace.edit(files[i].getAttribute("id"))); 
+        editors.push({fileName: files[i].getAttribute("id"), editor: CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutters: ["breakpoints", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]}), breakpoints: new Set()});
     }
 
     //set up breakpoint events
-    //https://ourcodeworld.com/articles/read/1052/how-to-add-toggle-breakpoints-on-the-ace-editor-gutter
+    //https://codemirror.net/5/demo/marker.html
     for (var i=0; i<editors.length; i++)
-    {
-        editors[i].on("guttermousedown", function(e) {
-            var target = e.domEvent.target;
+    (function(i) {
+        editors[i]["editor"].on("gutterClick", function(cm, n) {
+            
+            var info = cm.lineInfo(n);
+            var sendRow = n + 1;
 
-            if (target.className.indexOf("ace_gutter-cell") == -1){
-                return;
+            if (editors[i]["breakpoints"].has(n + 1))
+            {
+                editors[i]["breakpoints"].delete(n + 1);
+                sendInput("clear " + editors[i]["fileName"] + ":" + sendRow.toString());
             }
-            // if (!editors[i].isFocused()){
-            //     return; 
-            // }
-
-            if (e.clientX > 25 + target.getBoundingClientRect().left){
-                return;
-            }
-
-            var breakpoints = e.editor.session.getBreakpoints();
-           
-            var row = e.getDocumentPosition().row;
-
-            // If there's a breakpoint already defined, it should be removed, offering the toggle feature
-            if(typeof breakpoints[row] === typeof undefined){
-                e.editor.session.setBreakpoint(row);
-                var sendRow = row + 1;
-                sendInput("break " + e.editor.container.id + ":" + sendRow.toString());
-            }else{
-                //clear any box shadow that was set by other methods
-                // $(".ace_gutter-cell").each(function() {
-                //     if ($(this).attr("class").indexOf("ace_breakpoint") != -1 && parseInt($(this).text()) == row + 1)
-                //     {
-                //         $(this).css("box-shadow", "");
-                //     }
-                // });
-
-                e.editor.session.clearBreakpoint(row);
-
-                var sendRow = row + 1;
-                sendInput("clear " + e.editor.container.id + ":" + sendRow.toString());
+            else
+            {
+                editors[i]["breakpoints"].add(n + 1);
+                sendInput("break " + editors[i]["fileName"] + ":" + sendRow.toString());
             }
 
-            e.stop();
+            cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker(editors[i]["fileName"], n + 1));
         });
 
-        
-        
-    }
+        function makeMarker(file, line) {
+            var marker = document.createElement("div");
+
+            marker.classList = file.split(".", 1)[0] + file.split(".").pop() + "-" + line;
+
+            if (localStorage.getItem("theme"))
+            {
+                if (localStorage.getItem("theme") == "light")
+                {
+                    marker.style.color = "#822";
+                }
+                else
+                {
+                    marker.style.color = "#e92929";
+                }
+            }
+            else
+            {
+                marker.style.color = "#e92929";
+            }
+
+            marker.innerHTML = "●";
+            return marker;
+        }
+    }(i));
+
+    //refresh editors when user switches tabs
+    $('.nav-tabs button').on('shown.bs.tab', function() {
+        for (var i=0; i<editors.length; i++)
+        {
+            editors[i]["editor"].refresh();
+        }
+    }); 
+    
+    $(".CodeMirror").addClass("resize");
 
     //check if editors should be in light mode
     if (localStorage.getItem("theme"))
@@ -354,24 +371,12 @@ function setUpEditors()
         {
             for (var i=0; i<editors.length; i++)
             {
-                editors[i].session.setMode("ace/mode/c_cpp");
+                editors[i]["editor"].setOption("theme", "default");
             }
 
             return;
         }
     }
-
-    for (var i=0; i<editors.length; i++)
-    {
-        editors[i].setTheme("ace/theme/tomorrow_night_bright");
-        editors[i].session.setMode("ace/mode/c_cpp");
-    }
-}
-
-function setBreakpoint()
-{
-    //if program is running, send breakpoint info straight away
-
 }
 
 //clear terminal
