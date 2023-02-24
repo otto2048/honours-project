@@ -40,15 +40,9 @@ socket.onmessage = function(messageEvent) {
             //show debugger live controls
             $(".debugger-live-control").removeClass("d-none");
 
-            //enable pause, stop, and restart debugger live controls
-            $("#pause-btn")[0].disabled = false;
-            $("#pause-btn")[0].ariaDisabled = false;
-
+            //enable stop debugger live control
             $("#stop-btn")[0].disabled = false;
             $("#stop-btn")[0].ariaDisabled = false;
-            
-            $("#restart-btn")[0].disabled = false;
-            $("#restart-btn")[0].ariaDisabled = false;
 
             //editor is readonly
             for (var i=0; i<editors.length; i++)
@@ -111,10 +105,6 @@ socket.onmessage = function(messageEvent) {
                 debuggerStepBtns[i].ariaDisabled = false;
             }
 
-            //disable pause button
-            $("#pause-btn")[0].disabled = true;
-            $("#pause-btn")[0].ariaDisabled = true;
-
             //put in arrow to show where breakpoint is
 
             var file = message.value.split(':', 1)[0];
@@ -142,15 +132,9 @@ socket.onmessage = function(messageEvent) {
 
             break;
         case constants.EVENT_ON_CONTINUE:
-            //enable pause, stop, and restart debugger live controls
-            $("#pause-btn")[0].disabled = false;
-            $("#pause-btn")[0].ariaDisabled = false;
-
+            //enable stop debugger live control
             $("#stop-btn")[0].disabled = false;
             $("#stop-btn")[0].ariaDisabled = false;
-            
-            $("#restart-btn")[0].disabled = false;
-            $("#restart-btn")[0].ariaDisabled = false;
 
             //disable continue and step controls
             $("#continue-btn")[0].disabled = true;

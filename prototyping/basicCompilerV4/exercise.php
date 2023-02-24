@@ -140,9 +140,7 @@
                                         <div class="col-8">
                                             <button type="button" class="btn btn-dark theme debugger-control ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
                                             <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
-                                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="pause-btn" aria-label="Pause"><span class="mdi mdi-pause" title="pause"></span></button>
                                             <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop" title="stop"></span></button>
-                                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="restart-btn" aria-label="Restart"><span class="mdi mdi-restart" title="restart"></span></button>
                                         </div>
                                         <div class="col-4">
                                             <div class="float-end">
