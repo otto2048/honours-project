@@ -139,9 +139,9 @@ socket.onmessage = function(messageEvent) {
 
             for (var i=0; i<editors.length; i++)
             {
-                if (editors[i].container.id == file)
+                if (editors[i]["editor"].container.id == file)
                 {
-                    editors[i].gotoLine(lineNum);
+                    editors[i]["editor"].gotoLine(lineNum);
                 }
             }  
 
@@ -255,18 +255,16 @@ function startProgram()
     for (var i=0; i<editors.length; i++)
     {
         //set breakpoints for this editor
-        // var breakpointInstances = editors[i].session.getBreakpoints();
+        var arr = Array.from(editors[i]["breakpoints"]);
+        for (var j=0; j<arr.length; j++)
+        {
+            breakpoints.push([editors[i]["fileName"], arr[j]]);
+        }
 
-        // for (var j=0; j<breakpointInstances.length; j++)
-        // {
-        //     if (breakpointInstances[j] !== undefined)
-        //     {
-        //         breakpoints.push([files[i].getAttribute("id"), j + 1]);
-        //     }
-        // }
-
-        filesData.push([files[i].getAttribute("id"), editors[i].getValue()]);
+        filesData.push([files[i].getAttribute("id"), editors[i]["editor"].getValue()]);
     }
+
+    console.log(breakpoints);
 
     obj.value = {"filesData":filesData, "breakpoints" : breakpoints};
 
@@ -332,18 +330,33 @@ function setUpEditors()
     //create editors
     for (var i=0; i<files.length; i++)
     {
-        editors.push(CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutters: ["breakpoints", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]}));
+        editors.push({fileName: files[i].getAttribute("id"), editor: CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutters: ["breakpoints", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]}), breakpoints: new Set()});
     }
 
+    console.log(editors);
     //set up breakpoint events
     //https://codemirror.net/5/demo/marker.html
+
     for (var i=0; i<editors.length; i++)
-    {
-        editors[i].on("gutterClick", function(cm, n) {
+    (function(i) {
+        editors[i]["editor"].on("gutterClick", function(cm, n) {
+            
             var info = cm.lineInfo(n);
+
+            if (editors[i]["breakpoints"].has(n + 1))
+            {
+                editors[i]["breakpoints"].delete(n + 1);
+            }
+            else
+            {
+                editors[i]["breakpoints"].add(n + 1);
+            }
+
             cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+
+            console.log(editors[i]["breakpoints"]);
         });
-        
+
         function makeMarker() {
             var marker = document.createElement("div");
 
@@ -366,13 +379,13 @@ function setUpEditors()
             marker.innerHTML = "●";
             return marker;
         }
-    }
+    }(i));
 
     //refresh editors when user switches tabs
     $('.nav-tabs button').on('shown.bs.tab', function() {
         for (var i=0; i<editors.length; i++)
         {
-            editors[i].refresh();
+            editors[i]["editor"].refresh();
         }
     }); 
     
@@ -382,13 +395,13 @@ function setUpEditors()
     //https://ourcodeworld.com/articles/read/1052/how-to-add-toggle-breakpoints-on-the-ace-editor-gutter
     // for (var i=0; i<editors.length; i++)
     // {
-    //     editors[i].on("guttermousedown", function(e) {
+    //     editors[i]["editor"].on("guttermousedown", function(e) {
     //         var target = e.domEvent.target;
 
     //         if (target.className.indexOf("ace_gutter-cell") == -1){
     //             return;
     //         }
-    //         // if (!editors[i].isFocused()){
+    //         // if (!editors[i]["editor"].isFocused()){
     //         //     return; 
     //         // }
 
@@ -435,7 +448,7 @@ function setUpEditors()
         {
             for (var i=0; i<editors.length; i++)
             {
-                editors[i].setOption("theme", "default");
+                editors[i]["editor"].setOption("theme", "default");
             }
 
             return;
