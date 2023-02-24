@@ -115,20 +115,20 @@ socket.onmessage = function(messageEvent) {
             var end = file.split('.').pop();
             $("#" + start + end + "File").tab("show");
 
-            var bp = $("." + start + end + "-" + lineNum);
-
-            bp.addClass("selectedLine");
-            bp.html("<span class='mdi mdi-arrow-right-thick'></span>");
-
-            $(".selectedLine :first-child").css("color", "#fbff00");
-
             for (var i=0; i<editors.length; i++)
             {
                 if (editors[i]["fileName"] == file)
                 {
                     editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
                 }
-            }  
+            }
+
+            var bp = $("." + start + end + "-" + lineNum);
+
+            bp.addClass("selectedLine");
+            bp.html("<span class='mdi mdi-arrow-right-thick'></span>");
+
+            $(".selectedLine :first-child").css("color", "#fbff00");
 
             break;
         case constants.EVENT_ON_CONTINUE:
@@ -149,7 +149,7 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
-            if ($(".selectedLine"))
+            if ($(".selectedLine").length > 0)
             {
                 $(".selectedLine").html("●");
                 $(".selectedLine").removeClass(".selectedLine");
@@ -316,12 +316,12 @@ function setUpEditors()
             if (editors[i]["breakpoints"].has(n + 1))
             {
                 editors[i]["breakpoints"].delete(n + 1);
-                sendInput("clear " + editors[i]["fileName"] + ":" + sendRow.toString());
+                sendInput("clear_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
             }
             else
             {
                 editors[i]["breakpoints"].add(n + 1);
-                sendInput("break " + editors[i]["fileName"] + ":" + sendRow.toString());
+                sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
             }
 
             cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker(editors[i]["fileName"], n + 1));

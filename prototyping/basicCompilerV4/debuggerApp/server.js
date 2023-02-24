@@ -174,7 +174,7 @@ function onConnect(ws) {
                                             //write the breakpoints
                                             async.each(clientMsg.value.breakpoints, function(breakpoint, callback) {
 
-                                                var content = "break " + breakpoint[0] + ":" + breakpoint[1]+"\n";
+                                                var content = "break_silent " + breakpoint[0] + ":" + breakpoint[1]+"\n";
                                 
                                                 fs.appendFile('.gdbinit', content, function (err)
                                                 {
