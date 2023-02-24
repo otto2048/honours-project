@@ -6,8 +6,6 @@ import Request from "./request.js";
 var editors = [];
 var files = $(".editor");
 
-var selectedElement = null;
-
 window.onload = preparePage();
 
 let socket = new WebSocket("ws://192.168.17.60:8080");
@@ -125,11 +123,7 @@ socket.onmessage = function(messageEvent) {
             bp.addClass("selectedLine");
             bp.html("<span class='mdi mdi-arrow-right-thick'></span>");
 
-            console.log($(".selectedLine:first-child"));
-
             $(".selectedLine :first-child").css("color", "#fbff00");
-
-            console.log("." + start + end + "-" + lineNum);
 
             for (var i=0; i<editors.length; i++)
             {
@@ -254,11 +248,7 @@ function startProgram()
         filesData.push([files[i].getAttribute("id"), editors[i]["editor"].getValue()]);
     }
 
-    console.log(breakpoints);
-
     obj.value = {"filesData":filesData, "breakpoints" : breakpoints};
-
-    console.log(obj);
 
     //disable and hide play button
     $("#play-btn")[0].disabled = true;
@@ -323,10 +313,8 @@ function setUpEditors()
         editors.push({fileName: files[i].getAttribute("id"), editor: CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutters: ["breakpoints", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]}), breakpoints: new Set()});
     }
 
-    console.log(editors);
     //set up breakpoint events
     //https://codemirror.net/5/demo/marker.html
-
     for (var i=0; i<editors.length; i++)
     (function(i) {
         editors[i]["editor"].on("gutterClick", function(cm, n) {
@@ -346,8 +334,6 @@ function setUpEditors()
             }
 
             cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker(editors[i]["fileName"], n + 1));
-
-            console.log(editors[i]["breakpoints"]);
         });
 
         function makeMarker(file, line) {
@@ -385,55 +371,6 @@ function setUpEditors()
     }); 
     
     $(".CodeMirror").addClass("resize");
-
-    //set up breakpoint events
-    //https://ourcodeworld.com/articles/read/1052/how-to-add-toggle-breakpoints-on-the-ace-editor-gutter
-    // for (var i=0; i<editors.length; i++)
-    // {
-    //     editors[i]["editor"].on("guttermousedown", function(e) {
-    //         var target = e.domEvent.target;
-
-    //         if (target.className.indexOf("ace_gutter-cell") == -1){
-    //             return;
-    //         }
-    //         // if (!editors[i]["editor"].isFocused()){
-    //         //     return; 
-    //         // }
-
-    //         if (e.clientX > 25 + target.getBoundingClientRect().left){
-    //             return;
-    //         }
-
-    //         var breakpoints = e.editor.session.getBreakpoints();
-           
-    //         var row = e.getDocumentPosition().row;
-
-    //         // If there's a breakpoint already defined, it should be removed, offering the toggle feature
-    //         if(typeof breakpoints[row] === typeof undefined){
-    //             e.editor.session.setBreakpoint(row);
-    //             var sendRow = row + 1;
-    //             sendInput("break " + e.editor.container.id + ":" + sendRow.toString());
-    //         }else{
-    //             //clear any box shadow that was set by other methods
-    //             // $(".ace_gutter-cell").each(function() {
-    //             //     if ($(this).attr("class").indexOf("ace_breakpoint") != -1 && parseInt($(this).text()) == row + 1)
-    //             //     {
-    //             //         $(this).css("box-shadow", "");
-    //             //     }
-    //             // });
-
-    //             e.editor.session.clearBreakpoint(row);
-
-    //             var sendRow = row + 1;
-    //             sendInput("clear " + e.editor.container.id + ":" + sendRow.toString());
-    //         }
-
-    //         e.stop();
-    //     });
-
-        
-        
-    // }
 
     //check if editors should be in light mode
     if (localStorage.getItem("theme"))
