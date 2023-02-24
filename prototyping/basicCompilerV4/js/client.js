@@ -332,14 +332,17 @@ function setUpEditors()
         editors[i]["editor"].on("gutterClick", function(cm, n) {
             
             var info = cm.lineInfo(n);
+            var sendRow = n + 1;
 
             if (editors[i]["breakpoints"].has(n + 1))
             {
                 editors[i]["breakpoints"].delete(n + 1);
+                sendInput("clear " + editors[i]["fileName"] + ":" + sendRow.toString());
             }
             else
             {
                 editors[i]["breakpoints"].add(n + 1);
+                sendInput("break " + editors[i]["fileName"] + ":" + sendRow.toString());
             }
 
             cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker(editors[i]["fileName"], n + 1));
