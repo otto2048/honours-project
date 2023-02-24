@@ -50,7 +50,11 @@ socket.onmessage = function(messageEvent) {
             $("#restart-btn")[0].disabled = false;
             $("#restart-btn")[0].ariaDisabled = false;
 
-            //TODO: editor is readonly
+            //editor is readonly
+            for (var i=0; i<editors.length; i++)
+            {
+                editors[i]["editor"].setOption("readOnly", true);
+            }
 
             break;
         case constants.EVENT_ON_COMPILE_FAILURE:
@@ -81,15 +85,18 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn").show();
 
             //hide arrow
-            $(".editor").each(function() {
-                var breakpoints = $(this).find('.ace_breakpoint');
+            if ($(".selectedLine"))
+            {
+                $(".selectedLine").html("●");
+                $(".selectedLine").removeClass(".selectedLine");
+            }
 
-                $(breakpoints).each(function() {
-                    $(this).removeClass("on_this_line");
-                    selectedElement = null;
-                    //$(this).css("box-shadow", "0px 0px 1px 1px #8c2424 inset");
-                });
-            });
+            //editor is editable
+            for (var i=0; i<editors.length; i++)
+            {
+                editors[i]["editor"].setOption("readOnly", false);
+            }
+
             break;
         case constants.EVENT_ON_BREAK:
             //enable continue button and step buttons
