@@ -13,13 +13,15 @@ class StepForward(gdb.Command):
     def invoke(self, args, from_tty):
         gdb.execute("s", to_string = True)
 
-        print("EVENT_ON_STEP")
+        print("FOR_SERVER\n")
+
+        print("EVENT_ON_STEP\n")
 
         result = gdb.execute("where", to_string=True)
         result_arr = result.split()
         print(result_arr[-1])
-        
-        print("EVENT_ON_STEP_END")
+
+        print("EVENT_ON_STEP_END\n")
 
 
 class BreakSilent(gdb.Command):

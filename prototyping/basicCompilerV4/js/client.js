@@ -156,6 +156,60 @@ socket.onmessage = function(messageEvent) {
             }
 
             break;
+        case constants.EVENT_ON_STEP:
+            //hide current arrow
+            if ($(".selectedLine").length > 0)
+            {
+                $(".selectedLine").html("●");
+                $(".selectedLine").removeClass(".selectedLine");
+            }
+
+            //put in arrow to show where breakpoint is
+            var file = message.value.split(':', 1)[0];
+            var lineNum = message.value.split(':').pop();
+
+            //switch active file
+            var start = file.split('.', 1)[0];
+            var end = file.split('.').pop();
+            $("#" + start + end + "File").tab("show");
+
+            for (var i=0; i<editors.length; i++)
+            {
+                if (editors[i]["fileName"] == file)
+                {
+                    //add a marker to the new line
+                    editors[i]["editor"].setGutterMarker(lineNum, "breakpoints", setMarker());
+
+                    function setMarker()
+                    {
+                        var marker = document.createElement("div");
+
+                        if (localStorage.getItem("theme"))
+                        {
+                            if (localStorage.getItem("theme") == "light")
+                            {
+                                marker.style.color = "#822";
+                            }
+                            else
+                            {
+                                marker.style.color = "#e92929";
+                            }
+                        }
+                        else
+                        {
+                            marker.style.color = "#e92929";
+                        }
+
+                        marker.innerHTML = "●";
+                        return marker;
+                    }
+
+                    editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
+
+                    
+                }
+            }
+            break;
         default:
             alert("Client operation failed. Try again?");
     }
@@ -187,6 +241,10 @@ function preparePage()
 
     $("#stop-btn")[0].addEventListener("click", function() {
         sendInput("kill");
+    });
+
+    $("#step-over-btn")[0].addEventListener("click", function() {
+        sendInput("step_forward");
     });
 
     //set up jquery terminal
@@ -317,14 +375,15 @@ function setUpEditors()
             {
                 editors[i]["breakpoints"].delete(n + 1);
                 sendInput("clear_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+                cm.setGutterMarker(n, "breakpoints", null);
             }
             else
             {
                 editors[i]["breakpoints"].add(n + 1);
                 sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+                cm.setGutterMarker(n, "breakpoints", makeMarker(editors[i]["fileName"], n + 1));
             }
 
-            cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker(editors[i]["fileName"], n + 1));
         });
 
         function makeMarker(file, line) {
