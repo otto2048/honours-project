@@ -255,17 +255,17 @@ function startProgram()
     for (var i=0; i<editors.length; i++)
     {
         //set breakpoints for this editor
-        var breakpointInstances = editors[i].session.getBreakpoints();
+        // var breakpointInstances = editors[i].session.getBreakpoints();
 
-        for (var j=0; j<breakpointInstances.length; j++)
-        {
-            if (breakpointInstances[j] !== undefined)
-            {
-                breakpoints.push([files[i].getAttribute("id"), j + 1]);
-            }
-        }
+        // for (var j=0; j<breakpointInstances.length; j++)
+        // {
+        //     if (breakpointInstances[j] !== undefined)
+        //     {
+        //         breakpoints.push([files[i].getAttribute("id"), j + 1]);
+        //     }
+        // }
 
-        filesData.push([files[i].getAttribute("id"), editors[i].session.getValue()]);
+        filesData.push([files[i].getAttribute("id"), editors[i].getValue()]);
     }
 
     obj.value = {"filesData":filesData, "breakpoints" : breakpoints};
