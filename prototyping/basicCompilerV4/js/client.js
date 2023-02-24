@@ -346,7 +346,23 @@ function setUpEditors()
         
         function makeMarker() {
             var marker = document.createElement("div");
-            marker.style.color = "#822";
+
+            if (localStorage.getItem("theme"))
+            {
+                if (localStorage.getItem("theme") == "light")
+                {
+                    marker.style.color = "#822";
+                }
+                else
+                {
+                    marker.style.color = "#e92929";
+                }
+            }
+            else
+            {
+                marker.style.color = "#e92929";
+            }
+
             marker.innerHTML = "●";
             return marker;
         }
