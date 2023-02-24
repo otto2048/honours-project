@@ -120,28 +120,22 @@ socket.onmessage = function(messageEvent) {
             var end = file.split('.').pop();
             $("#" + start + end + "File").tab("show");
 
+            var bp = $("." + start + end + "-" + lineNum);
 
-            $(".editor").each(function() {
-                if ($(this).attr("id") == file)
-                {
-                    var breakpoints = $(this).find('.ace_breakpoint');
+            bp.addClass("selectedLine");
+            bp.html("<span class='mdi mdi-arrow-right-thick'></span>");
 
-                    $(breakpoints).each(function() {
-                        if ($(this).text() == lineNum)
-                        {
-                            $(this).addClass("on_this_line");
-                            selectedElement = $(this);
-                            //$(this).css("box-shadow", "0px 0px 1px 1px #fbff00 inset");
-                        }
-                    });
-                }
-            });
+            console.log($(".selectedLine:first-child"));
+
+            $(".selectedLine :first-child").css("color", "#fbff00");
+
+            console.log("." + start + end + "-" + lineNum);
 
             for (var i=0; i<editors.length; i++)
             {
-                if (editors[i]["editor"].container.id == file)
+                if (editors[i]["fileName"] == file)
                 {
-                    editors[i]["editor"].gotoLine(lineNum);
+                    editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
                 }
             }  
 
@@ -170,15 +164,11 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
-            $(".editor").each(function() {
-                var breakpoints = $(this).find('.ace_breakpoint');
-
-                $(breakpoints).each(function() {
-                    $(this).removeClass("on_this_line");
-                    selectedElement = null;
-                    //$(this).css("box-shadow", "0px 0px 1px 1px #8c2424 inset");
-                });
-            });
+            if ($(".selectedLine"))
+            {
+                $(".selectedLine").html("●");
+                $(".selectedLine").removeClass(".selectedLine");
+            }
 
             break;
         default:
@@ -352,13 +342,15 @@ function setUpEditors()
                 editors[i]["breakpoints"].add(n + 1);
             }
 
-            cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+            cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker(editors[i]["fileName"], n + 1));
 
             console.log(editors[i]["breakpoints"]);
         });
 
-        function makeMarker() {
+        function makeMarker(file, line) {
             var marker = document.createElement("div");
+
+            marker.classList = file.split(".", 1)[0] + file.split(".").pop() + "-" + line;
 
             if (localStorage.getItem("theme"))
             {
