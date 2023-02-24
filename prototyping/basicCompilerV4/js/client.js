@@ -332,7 +332,7 @@ function setUpEditors()
     //create editors
     for (var i=0; i<files.length; i++)
     {
-        editors.push(CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, gutters: ["breakpoints", "CodeMirror-linenumbers"]}));
+        editors.push(CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutters: ["breakpoints", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]}));
     }
 
     //set up breakpoint events
