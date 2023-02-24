@@ -19,9 +19,11 @@
         <!-- jquery terminal -->
         <script src="/honours/webapp/view/js/jquery-terminal/jquery-terminal-2.35.3.js"></script>
 
-        <!-- ACE editor -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.13.1/ace.js" integrity="sha512-IQmiIneKUJhTJElpHOlsrb3jpF7r54AzhCTi7BTDLiBVg0f7mrEqWVCmOeoqKv5hDdyf3rbbxBUgYf4u3O/QcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        
+        <!-- code mirror -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.js" integrity="sha512-8BriEp3cRkqmcBqIT7n59KpFSZLoLbsELo15jhB0EKac1OwlHaPBbhKcmAIpdX78n64SewuBBt3YQ3nm/6f56Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/abcdef.min.css" integrity="sha512-Gzm0Fa7gFAThiSK+XOmw4e5Iou/zUMNPgyHcx+RemJUS8KeusL4DlvTM2qfP+A5mfeDexq5uOjFBz29VJP+EMA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <!-- jquery terminal styles -->
         <link rel="stylesheet" href="/honours/webapp/view/js/jquery-terminal/jquery-terminal-2.35.3.css"/>
 
@@ -109,9 +111,9 @@
                                                 ?>
 
                                                 <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
-                                                    <div id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
+                                                    <textarea id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
 <?php echo $file; ?>
-                                                    </div>
+                                                    </textarea>
                                                 </div>
 
                                                 <?php
@@ -249,6 +251,7 @@
 
         
         <script src="/honours/basicCompilerV4/js/resizing.js"></script>
+        <script src="/honours/webapp/view/js/setTheme.js"></script>
 
     </body>
 </html>

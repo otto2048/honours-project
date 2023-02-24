@@ -227,6 +227,16 @@ function preparePage()
 
     //clear the terminal
     clearTerminal();
+
+    $('#increase-code-size-btn')[0].addEventListener("click", function()
+    {
+        changeCodeSize(5);
+    });
+
+    $('#decrease-code-size-btn')[0].addEventListener("click", function()
+    {
+        changeCodeSize(-5);
+    });
 }
 
 
@@ -304,62 +314,102 @@ function addCompilationBoxMessage(message, colour)
     $("#compilation-messages-box ul")[0].prepend(li);
 }
 
+//change code size
+function changeCodeSize(value)
+{
+    //change size of editor text
+    var newValue = parseInt($(".CodeMirror").css('font-size'), 10) + value;
+
+    if (newValue > 0)
+    {
+        $(".CodeMirror").css('font-size', newValue.toString() + "px");
+    }
+}
+
 //set up the code editors for all the files
 function setUpEditors()
 {
+    //create editors
     for (var i=0; i<files.length; i++)
     {
-        editors.push(ace.edit(files[i].getAttribute("id"))); 
+        editors.push(CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, gutters: ["breakpoints", "CodeMirror-linenumbers"]}));
     }
 
     //set up breakpoint events
-    //https://ourcodeworld.com/articles/read/1052/how-to-add-toggle-breakpoints-on-the-ace-editor-gutter
+    //https://codemirror.net/5/demo/marker.html
     for (var i=0; i<editors.length; i++)
     {
-        editors[i].on("guttermousedown", function(e) {
-            var target = e.domEvent.target;
-
-            if (target.className.indexOf("ace_gutter-cell") == -1){
-                return;
-            }
-            // if (!editors[i].isFocused()){
-            //     return; 
-            // }
-
-            if (e.clientX > 25 + target.getBoundingClientRect().left){
-                return;
-            }
-
-            var breakpoints = e.editor.session.getBreakpoints();
-           
-            var row = e.getDocumentPosition().row;
-
-            // If there's a breakpoint already defined, it should be removed, offering the toggle feature
-            if(typeof breakpoints[row] === typeof undefined){
-                e.editor.session.setBreakpoint(row);
-                var sendRow = row + 1;
-                sendInput("break " + e.editor.container.id + ":" + sendRow.toString());
-            }else{
-                //clear any box shadow that was set by other methods
-                // $(".ace_gutter-cell").each(function() {
-                //     if ($(this).attr("class").indexOf("ace_breakpoint") != -1 && parseInt($(this).text()) == row + 1)
-                //     {
-                //         $(this).css("box-shadow", "");
-                //     }
-                // });
-
-                e.editor.session.clearBreakpoint(row);
-
-                var sendRow = row + 1;
-                sendInput("clear " + e.editor.container.id + ":" + sendRow.toString());
-            }
-
-            e.stop();
+        editors[i].on("gutterClick", function(cm, n) {
+            var info = cm.lineInfo(n);
+            cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
         });
+        
+        function makeMarker() {
+            var marker = document.createElement("div");
+            marker.style.color = "#822";
+            marker.innerHTML = "●";
+            return marker;
+        }
+    }
+
+    //refresh editors when user switches tabs
+    $('.nav-tabs button').on('shown.bs.tab', function() {
+        for (var i=0; i<editors.length; i++)
+        {
+            editors[i].refresh();
+        }
+    }); 
+    
+    $(".CodeMirror").addClass("resize");
+
+    //set up breakpoint events
+    //https://ourcodeworld.com/articles/read/1052/how-to-add-toggle-breakpoints-on-the-ace-editor-gutter
+    // for (var i=0; i<editors.length; i++)
+    // {
+    //     editors[i].on("guttermousedown", function(e) {
+    //         var target = e.domEvent.target;
+
+    //         if (target.className.indexOf("ace_gutter-cell") == -1){
+    //             return;
+    //         }
+    //         // if (!editors[i].isFocused()){
+    //         //     return; 
+    //         // }
+
+    //         if (e.clientX > 25 + target.getBoundingClientRect().left){
+    //             return;
+    //         }
+
+    //         var breakpoints = e.editor.session.getBreakpoints();
+           
+    //         var row = e.getDocumentPosition().row;
+
+    //         // If there's a breakpoint already defined, it should be removed, offering the toggle feature
+    //         if(typeof breakpoints[row] === typeof undefined){
+    //             e.editor.session.setBreakpoint(row);
+    //             var sendRow = row + 1;
+    //             sendInput("break " + e.editor.container.id + ":" + sendRow.toString());
+    //         }else{
+    //             //clear any box shadow that was set by other methods
+    //             // $(".ace_gutter-cell").each(function() {
+    //             //     if ($(this).attr("class").indexOf("ace_breakpoint") != -1 && parseInt($(this).text()) == row + 1)
+    //             //     {
+    //             //         $(this).css("box-shadow", "");
+    //             //     }
+    //             // });
+
+    //             e.editor.session.clearBreakpoint(row);
+
+    //             var sendRow = row + 1;
+    //             sendInput("clear " + e.editor.container.id + ":" + sendRow.toString());
+    //         }
+
+    //         e.stop();
+    //     });
 
         
         
-    }
+    // }
 
     //check if editors should be in light mode
     if (localStorage.getItem("theme"))
@@ -369,24 +419,12 @@ function setUpEditors()
         {
             for (var i=0; i<editors.length; i++)
             {
-                editors[i].session.setMode("ace/mode/c_cpp");
+                editors[i].setOption("theme", "default");
             }
 
             return;
         }
     }
-
-    for (var i=0; i<editors.length; i++)
-    {
-        editors[i].setTheme("ace/theme/tomorrow_night_bright");
-        editors[i].session.setMode("ace/mode/c_cpp");
-    }
-}
-
-function setBreakpoint()
-{
-    //if program is running, send breakpoint info straight away
-
 }
 
 //clear terminal
