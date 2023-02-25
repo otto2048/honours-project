@@ -37,10 +37,17 @@ class BreakSilent(gdb.Command):
     
     def invoke(self, args, from_tty):
         result = gdb.execute("break " + args, to_string=True)
-        # result_arr = result.split()
-        # result_arr.pop(-1)
+        result_arr = result.split()
+        result_arr.pop(-1)
 
-        # if (result_arr[-1] is not args):
+        if (result_arr[-1].split(".")[0] != args.split(":")[1]):
+            print("FOR_SERVER")
+            print("EVENT_ON_BP_CHANGED")
+            #print old location
+            print(args)
+            #print the new location
+            print(result_arr[5].split(",")[0] + ":" + result_arr[-1].split(".")[0])
+            print("EVENT_ON_BP_CHANGED_END")
         #     changedBreakpoints.append(result_arr[-1])
 
 class ClearSilent(gdb.Command):

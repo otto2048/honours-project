@@ -177,6 +177,21 @@ socket.onmessage = function(messageEvent) {
                 addBreakpoint(file, lineNum);
             }
             break;
+        case constants.EVENT_ON_BREAKPOINT_CHANGED:
+            //clear the breakpoint at the old position
+            var breaks = message.value.trim().split("\n");
+
+            var file = breaks[0].split(':', 1)[0];
+            var lineNum = breaks[0].split(':').pop();
+
+            deleteBreakpoint(file, lineNum);
+
+            var file = breaks[1].split(':', 1)[0];
+            var lineNum = breaks[1].split(':').pop();
+
+            addBreakpoint(file, lineNum);
+
+            break;
         default:
             alert(message.event + "Client operation failed. Try again?");
     }
@@ -480,6 +495,18 @@ function addBreakpoint(file, lineNum)
         {
             editors[i]["breakpoints"].add(parseInt(lineNum));
             editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "breakpoints", makeBreakpoint());
+        }
+    }
+}
+
+function deleteBreakpoint(file, lineNum)
+{
+    for (var i=0; i<editors.length; i++)
+    {
+        if (editors[i]["fileName"] == file)
+        {
+            editors[i]["breakpoints"].delete(parseInt(lineNum));
+            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "breakpoints", null);
         }
     }
 }

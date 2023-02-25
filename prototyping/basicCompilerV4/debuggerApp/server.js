@@ -28,6 +28,8 @@ const EVENT_ON_COMPILE_SUCCESS = 2;
 const EVENT_ON_COMPILE_FAILURE = 3;
 const EVENT_ON_PROGRAM_EXIT = 4;
 const EVENT_ON_MOVE_BREAKPOINTS = 5;
+const EVENT_ON_BREAKPOINT_CHANGED = "EVENT_ON_BP_CHANGED";
+const EVENT_ON_BREAKPOINT_CHANGED_END = "EVENT_ON_BP_CHANGED_END";
 
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
@@ -356,6 +358,18 @@ function launchGDB(obj, ws)
                 ws.send(JSON.stringify(obj));
 
                 progProcess.stdin.write("run\n");
+            }
+            else if (output.indexOf(EVENT_ON_BREAKPOINT_CHANGED) != -1)
+            {
+                //split on start string
+                output = output.substring(output.indexOf(EVENT_ON_BREAKPOINT_CHANGED) + EVENT_ON_BREAKPOINT_CHANGED.length);
+
+                //split on end string
+                output = output.split(EVENT_ON_BREAKPOINT_CHANGED_END, 1)[0];
+
+                obj.value = output;
+                obj.event = EVENT_ON_BREAKPOINT_CHANGED;
+                ws.send(JSON.stringify(obj));
             }
         }
     });
