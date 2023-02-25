@@ -192,7 +192,7 @@ function preparePage()
     });
 
     $("#step-over-btn")[0].addEventListener("click", function() {
-        sendInput("step_forward");
+        sendInput("step_over");
     });
 
     //set up jquery terminal

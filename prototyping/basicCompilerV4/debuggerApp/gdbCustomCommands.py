@@ -1,17 +1,17 @@
 import gdb
 
-class StepForward(gdb.Command):
+class StepOver(gdb.Command):
 
     def __init__(self):
-        super(StepForward, self).__init__(
-            "step_forward", gdb.COMMAND_USER
+        super(StepOver, self).__init__(
+            "step_over", gdb.COMMAND_USER
         )
 
     def complete(self, text, word):
         return gdb.COMPLETE_SYMBOL
     
     def invoke(self, args, from_tty):
-        gdb.execute("s", to_string = True)
+        gdb.execute("next", to_string = True)
 
         print("FOR_SERVER\n")
 
@@ -49,6 +49,6 @@ class ClearSilent(gdb.Command):
     def invoke(self, args, from_tty):
         result = gdb.execute("clear " + args, to_string = True)
 
-StepForward()
+StepOver()
 BreakSilent()
 ClearSilent()
