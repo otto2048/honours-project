@@ -158,8 +158,27 @@ socket.onmessage = function(messageEvent) {
             addTracker(file, lineNum);
 
             break;
+        case constants.EVENT_ON_MOVE_BREAKPOINTS:
+            //clear all breakpoints in breakpoint gutters
+            for (var i=0; i<editors.length; i++)
+            {
+                editors[i]["editor"].clearGutter("breakpoints");
+                editors[i]["breakpoints"].clear();
+            }
+
+            //add breakpoints that were set into breakpoint gutters
+            var breaks = message.value.split("\n");
+
+            for (var i=0; i<breaks.length; i++)
+            {
+                var file = breaks[i].split(':', 1)[0];
+                var lineNum = breaks[i].split(':').pop();
+
+                addBreakpoint(file, lineNum);
+            }
+            break;
         default:
-            alert("Client operation failed. Try again?");
+            alert(message.event + "Client operation failed. Try again?");
     }
 }
 
@@ -335,7 +354,7 @@ function setUpEditors()
             {
                 editors[i]["breakpoints"].add(n + 1);
                 sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
-                cm.setGutterMarker(n, "breakpoints", makeBreakpoint(editors[i]["fileName"], n + 1));
+                cm.setGutterMarker(n, "breakpoints", makeBreakpoint());
             }
 
         });
@@ -374,10 +393,8 @@ function clearTerminal()
     term.clear();
 }
 
-function makeBreakpoint(file, line) {
+function makeBreakpoint() {
     var marker = document.createElement("div");
-
-    marker.classList = file.split(".", 1)[0] + file.split(".").pop() + "-" + line;
 
     if (localStorage.getItem("theme"))
     {
@@ -451,6 +468,18 @@ function addTracker(file, lineNum)
             //add a marker to the new line
             editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeTracker());
             trackingFile = file;
+        }
+    }
+}
+
+function addBreakpoint(file, lineNum)
+{
+    for (var i=0; i<editors.length; i++)
+    {
+        if (editors[i]["fileName"] == file)
+        {
+            editors[i]["breakpoints"].add(parseInt(lineNum));
+            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "breakpoints", makeBreakpoint());
         }
     }
 }

@@ -1,0 +1,11 @@
+installing newer version of gdb:
+
+sudo apt-get install python3-dev
+sudo apt-get install libgmp-dev
+
+wget "http://ftp.gnu.org/gnu/gdb/gdb-13.1.tar.gz"
+tar -xvzf gdb-13.1.tar.gz
+cd gdb-13.1
+./configure --with-python=/usr/bin/python3
+make CXXFLAGS="-static-libstdc++"
+sudo make install

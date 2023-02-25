@@ -1,0 +1,5 @@
+source files
+
+initial breakpoints
+
+command to tell the server we are ready to run the program
