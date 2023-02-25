@@ -105,7 +105,6 @@ socket.onmessage = function(messageEvent) {
                 debuggerStepBtns[i].ariaDisabled = false;
             }
 
-            //put in arrow to show where breakpoint is
 
             var file = message.value.split(':', 1)[0];
             var lineNum = message.value.split(':').pop();
@@ -119,16 +118,13 @@ socket.onmessage = function(messageEvent) {
             {
                 if (editors[i]["fileName"] == file)
                 {
+                    //scroll to line
                     editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
+
+                    //put in arrow
+                    editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeTracker());
                 }
             }
-
-            var bp = $("." + start + end + "-" + lineNum);
-
-            bp.addClass("selectedLine");
-            bp.html("<span class='mdi mdi-arrow-right-thick'></span>");
-
-            $(".selectedLine :first-child").css("color", "#fbff00");
 
             break;
         case constants.EVENT_ON_CONTINUE:
@@ -149,19 +145,17 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
-            if ($(".selectedLine").length > 0)
+            if ($("#program-position").length > 0)
             {
-                $(".selectedLine").html("●");
-                $(".selectedLine").removeClass(".selectedLine");
+                $("#program-position")[0].remove();
             }
 
             break;
         case constants.EVENT_ON_STEP:
             //hide current arrow
-            if ($(".selectedLine").length > 0)
+            if ($("#program-position").length > 0)
             {
-                $(".selectedLine").html("●");
-                $(".selectedLine").removeClass(".selectedLine");
+                $("#program-position")[0].remove();
             }
 
             //put in arrow to show where breakpoint is
@@ -177,36 +171,11 @@ socket.onmessage = function(messageEvent) {
             {
                 if (editors[i]["fileName"] == file)
                 {
-                    //add a marker to the new line
-                    editors[i]["editor"].setGutterMarker(lineNum, "breakpoints", setMarker());
-
-                    function setMarker()
-                    {
-                        var marker = document.createElement("div");
-
-                        if (localStorage.getItem("theme"))
-                        {
-                            if (localStorage.getItem("theme") == "light")
-                            {
-                                marker.style.color = "#822";
-                            }
-                            else
-                            {
-                                marker.style.color = "#e92929";
-                            }
-                        }
-                        else
-                        {
-                            marker.style.color = "#e92929";
-                        }
-
-                        marker.innerHTML = "●";
-                        return marker;
-                    }
-
+                    //scroll to line
                     editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
 
-                    
+                    //add a marker to the new line
+                    editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeTracker());                    
                 }
             }
             break;
@@ -359,7 +328,13 @@ function setUpEditors()
     //create editors
     for (var i=0; i<files.length; i++)
     {
-        editors.push({fileName: files[i].getAttribute("id"), editor: CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutters: ["breakpoints", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]}), breakpoints: new Set()});
+        editors.push({
+            fileName: files[i].getAttribute("id"), 
+            editor: CodeMirror.fromTextArea(files[i], 
+                {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
+                gutters: ["breakpoints", "CodeMirror-linenumbers", "tracking", "CodeMirror-foldgutter"]}), 
+            breakpoints: new Set()
+        });
     }
 
     //set up breakpoint events
@@ -381,35 +356,10 @@ function setUpEditors()
             {
                 editors[i]["breakpoints"].add(n + 1);
                 sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
-                cm.setGutterMarker(n, "breakpoints", makeMarker(editors[i]["fileName"], n + 1));
+                cm.setGutterMarker(n, "breakpoints", makeBreakpoint(editors[i]["fileName"], n + 1));
             }
 
         });
-
-        function makeMarker(file, line) {
-            var marker = document.createElement("div");
-
-            marker.classList = file.split(".", 1)[0] + file.split(".").pop() + "-" + line;
-
-            if (localStorage.getItem("theme"))
-            {
-                if (localStorage.getItem("theme") == "light")
-                {
-                    marker.style.color = "#822";
-                }
-                else
-                {
-                    marker.style.color = "#e92929";
-                }
-            }
-            else
-            {
-                marker.style.color = "#e92929";
-            }
-
-            marker.innerHTML = "●";
-            return marker;
-        }
     }(i));
 
     //refresh editors when user switches tabs
@@ -443,4 +393,55 @@ function clearTerminal()
 {
     var term = $.terminal.active();
     term.clear();
+}
+
+function makeBreakpoint(file, line) {
+    var marker = document.createElement("div");
+
+    marker.classList = file.split(".", 1)[0] + file.split(".").pop() + "-" + line;
+
+    if (localStorage.getItem("theme"))
+    {
+        if (localStorage.getItem("theme") == "light")
+        {
+            marker.style.color = "#822";
+        }
+        else
+        {
+            marker.style.color = "#e92929";
+        }
+    }
+    else
+    {
+        marker.style.color = "#e92929";
+    }
+
+    marker.innerHTML = "●";
+    return marker;
+}
+
+function makeTracker() {
+    var marker = document.createElement("div");
+
+    marker.innerHTML = "<span class='mdi mdi-arrow-right-thick'></span>";
+
+    marker.setAttribute("id", "program-position")
+
+    if (localStorage.getItem("theme"))
+    {
+        if (localStorage.getItem("theme") == "light")
+        {
+            marker.style.color = "#0A12FF";
+        }
+        else
+        {
+            marker.style.color = "#fbff00";
+        }
+    }
+    else
+    {
+        marker.style.color = "#fbff00";
+    }
+
+    return marker;
 }
