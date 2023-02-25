@@ -6,6 +6,8 @@ import Request from "./request.js";
 var editors = [];
 var files = $(".editor");
 
+var trackingFile = null;
+
 window.onload = preparePage();
 
 let socket = new WebSocket("ws://192.168.17.60:8080");
@@ -79,11 +81,7 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn").show();
 
             //hide arrow
-            if ($(".selectedLine"))
-            {
-                $(".selectedLine").html("●");
-                $(".selectedLine").removeClass(".selectedLine");
-            }
+            clearTracker();
 
             //editor is editable
             for (var i=0; i<editors.length; i++)
@@ -93,6 +91,9 @@ socket.onmessage = function(messageEvent) {
 
             break;
         case constants.EVENT_ON_BREAK:
+            //hide arrow
+            clearTracker();
+
             //enable continue button and step buttons
             $("#continue-btn")[0].disabled = false;
             $("#continue-btn")[0].ariaDisabled = false;
@@ -114,17 +115,8 @@ socket.onmessage = function(messageEvent) {
             var end = file.split('.').pop();
             $("#" + start + end + "File").tab("show");
 
-            for (var i=0; i<editors.length; i++)
-            {
-                if (editors[i]["fileName"] == file)
-                {
-                    //scroll to line
-                    editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
-
-                    //put in arrow
-                    editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeTracker());
-                }
-            }
+            //add tracker
+            addTracker(file, lineNum);
 
             break;
         case constants.EVENT_ON_CONTINUE:
@@ -145,18 +137,13 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
-            if ($("#program-position").length > 0)
-            {
-                $("#program-position")[0].remove();
-            }
+            clearTracker();
+
 
             break;
         case constants.EVENT_ON_STEP:
             //hide current arrow
-            if ($("#program-position").length > 0)
-            {
-                $("#program-position")[0].remove();
-            }
+            clearTracker();
 
             //put in arrow to show where breakpoint is
             var file = message.value.split(':', 1)[0];
@@ -167,17 +154,9 @@ socket.onmessage = function(messageEvent) {
             var end = file.split('.').pop();
             $("#" + start + end + "File").tab("show");
 
-            for (var i=0; i<editors.length; i++)
-            {
-                if (editors[i]["fileName"] == file)
-                {
-                    //scroll to line
-                    editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
+            //add tracker
+            addTracker(file, lineNum);
 
-                    //add a marker to the new line
-                    editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeTracker());                    
-                }
-            }
             break;
         default:
             alert("Client operation failed. Try again?");
@@ -425,8 +404,6 @@ function makeTracker() {
 
     marker.innerHTML = "<span class='mdi mdi-arrow-right-thick'></span>";
 
-    marker.setAttribute("id", "program-position")
-
     if (localStorage.getItem("theme"))
     {
         if (localStorage.getItem("theme") == "light")
@@ -444,4 +421,36 @@ function makeTracker() {
     }
 
     return marker;
+}
+
+function clearTracker()
+{
+    if (trackingFile)
+    {
+        for (var i=0; i<editors.length; i++)
+        {
+            if (editors[i]["fileName"] == trackingFile)
+            {
+                editors[i]["editor"].clearGutter("tracking");
+                trackingFile = null;
+                break;
+            }
+        }
+    }
+}
+
+function addTracker(file, lineNum)
+{
+    for (var i=0; i<editors.length; i++)
+    {
+        if (editors[i]["fileName"] == file)
+        {
+            //scroll to line
+            editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
+
+            //add a marker to the new line
+            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeTracker());
+            trackingFile = file;
+        }
+    }
 }
