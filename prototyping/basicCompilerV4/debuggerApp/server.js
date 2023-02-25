@@ -19,15 +19,12 @@ const EVENT_ON_BREAK = "EVENT_ON_BREAK";
 const EVENT_ON_BREAK_END = "EVENT_ON_BREAK_END";
 const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
 const EVENT_ON_CONTINUE_END = "EVENT_ON_CONTINUE_END";
-const EVENT_ON_RUN_READY = "EVENT_ON_READY_TO_RUN";
-const EVENT_ON_RUN_READY_END = "EVENT_ON_READY_TO_RUN_END";
 const EVENT_ON_STEP = "EVENT_ON_STEP";
 const EVENT_ON_STEP_END = "EVENT_ON_STEP_END";
 const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
 const EVENT_ON_COMPILE_FAILURE = 3;
 const EVENT_ON_PROGRAM_EXIT = 4;
-const EVENT_ON_MOVE_BREAKPOINTS = 5;
 const EVENT_ON_BREAKPOINT_CHANGED = "EVENT_ON_BP_CHANGED";
 const EVENT_ON_BREAKPOINT_CHANGED_END = "EVENT_ON_BP_CHANGED_END";
 
@@ -207,7 +204,7 @@ function onConnect(ws) {
                                                 else
                                                 {
                                                     //write the rest of the file
-                                                    appendFile('.gdbinit', "run_ready").then(function() {
+                                                    appendFile('.gdbinit', "run").then(function() {
                                                         //launch gdb
                                                         launchGDB(obj, ws);
                                                     }).catch(function(err) {
@@ -219,7 +216,7 @@ function onConnect(ws) {
                                         else
                                         {
                                             //write the rest of the file
-                                            appendFile('.gdbinit', "run_ready").then(function() {
+                                            appendFile('.gdbinit', "run").then(function() {
                                                 //launch gdb
                                                 launchGDB(obj, ws);
                                             }).catch(function(err) {
@@ -343,21 +340,6 @@ function launchGDB(obj, ws)
                 obj.value = output;
                 obj.event = EVENT_ON_STEP;
                 ws.send(JSON.stringify(obj));
-            }
-            else if (output.indexOf(EVENT_ON_RUN_READY) != -1)
-            {
-                //send actual breakpoint locations
-                //split on start string
-                output = output.substring(output.indexOf(EVENT_ON_RUN_READY) + EVENT_ON_RUN_READY.length);
-
-                //split on end string
-                output = output.split(EVENT_ON_RUN_READY_END, 1)[0];
-
-                obj.value = output;
-                obj.event = EVENT_ON_MOVE_BREAKPOINTS;
-                ws.send(JSON.stringify(obj));
-
-                progProcess.stdin.write("run\n");
             }
             else if (output.indexOf(EVENT_ON_BREAKPOINT_CHANGED) != -1)
             {

@@ -158,25 +158,6 @@ socket.onmessage = function(messageEvent) {
             addTracker(file, lineNum);
 
             break;
-        case constants.EVENT_ON_MOVE_BREAKPOINTS:
-            //clear all breakpoints in breakpoint gutters
-            for (var i=0; i<editors.length; i++)
-            {
-                editors[i]["editor"].clearGutter("breakpoints");
-                editors[i]["breakpoints"].clear();
-            }
-
-            //add breakpoints that were set into breakpoint gutters
-            var breaks = message.value.split("\n");
-
-            for (var i=0; i<breaks.length; i++)
-            {
-                var file = breaks[i].split(':', 1)[0];
-                var lineNum = breaks[i].split(':').pop();
-
-                addBreakpoint(file, lineNum);
-            }
-            break;
         case constants.EVENT_ON_BREAKPOINT_CHANGED:
             //clear the breakpoint at the old position
             var breaks = message.value.trim().split("\n");
