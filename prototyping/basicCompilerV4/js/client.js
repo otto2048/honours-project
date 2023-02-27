@@ -165,12 +165,12 @@ socket.onmessage = function(messageEvent) {
             var file = breaks[0].split(':', 1)[0];
             var lineNum = breaks[0].split(':').pop();
 
-            deleteBreakpoint(file, lineNum);
+            toggleBreakpoint(file, parseInt(lineNum));
 
             var file = breaks[1].split(':', 1)[0];
             var lineNum = breaks[1].split(':').pop();
 
-            addBreakpoint(file, lineNum);
+            toggleBreakpoint(file, parseInt(lineNum));
 
             break;
         default:
@@ -337,7 +337,6 @@ function setUpEditors()
     (function(i) {
         editors[i]["editor"].on("gutterClick", function(cm, n) {
             
-            var info = cm.lineInfo(n);
             var sendRow = n + 1;
 
             if (editors[i]["breakpoints"].has(n + 1))
@@ -350,7 +349,7 @@ function setUpEditors()
             {
                 editors[i]["breakpoints"].add(n + 1);
                 sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
-                cm.setGutterMarker(n, "breakpoints", makeBreakpoint());
+                cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
             }
 
         });
@@ -364,6 +363,7 @@ function setUpEditors()
         }
     }); 
     
+    //allow user to resize editors
     $(".CodeMirror").addClass("resize");
 
     //check if editors should be in light mode
@@ -389,50 +389,20 @@ function clearTerminal()
     term.clear();
 }
 
-function makeBreakpoint() {
+//create dom element for gutter
+function makeGutterDecoration(html, lightThemeColour, darkThemeColour) {
     var marker = document.createElement("div");
+    marker.style.color = darkThemeColour;
 
     if (localStorage.getItem("theme"))
     {
         if (localStorage.getItem("theme") == "light")
         {
-            marker.style.color = "#822";
-        }
-        else
-        {
-            marker.style.color = "#e92929";
+            marker.style.color = lightThemeColour;
         }
     }
-    else
-    {
-        marker.style.color = "#e92929";
-    }
 
-    marker.innerHTML = "●";
-    return marker;
-}
-
-function makeTracker() {
-    var marker = document.createElement("div");
-
-    marker.innerHTML = "<span class='mdi mdi-arrow-right-thick'></span>";
-
-    if (localStorage.getItem("theme"))
-    {
-        if (localStorage.getItem("theme") == "light")
-        {
-            marker.style.color = "#0A12FF";
-        }
-        else
-        {
-            marker.style.color = "#fbff00";
-        }
-    }
-    else
-    {
-        marker.style.color = "#fbff00";
-    }
-
+    marker.innerHTML = html;
     return marker;
 }
 
@@ -462,32 +432,29 @@ function addTracker(file, lineNum)
             editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
 
             //add a marker to the new line
-            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeTracker());
+            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeGutterDecoration("<span class='mdi mdi-arrow-right-thick'></span>", "#0A12FF", "#fbff00"));
             trackingFile = file;
         }
     }
 }
 
-function addBreakpoint(file, lineNum)
+//toggle a breakpoint marker in a file manually, without gutter click event
+function toggleBreakpoint(file, lineNum)
 {
     for (var i=0; i<editors.length; i++)
     {
         if (editors[i]["fileName"] == file)
         {
-            editors[i]["breakpoints"].add(parseInt(lineNum));
-            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "breakpoints", makeBreakpoint());
-        }
-    }
-}
-
-function deleteBreakpoint(file, lineNum)
-{
-    for (var i=0; i<editors.length; i++)
-    {
-        if (editors[i]["fileName"] == file)
-        {
-            editors[i]["breakpoints"].delete(parseInt(lineNum));
-            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "breakpoints", null);
+            if (editors[i]["breakpoints"].has(lineNum))
+            {
+                editors[i]["breakpoints"].delete(lineNum);
+                editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", null);
+            }
+            else
+            {
+                editors[i]["breakpoints"].add(lineNum);
+                editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));    
+            }
         }
     }
 }

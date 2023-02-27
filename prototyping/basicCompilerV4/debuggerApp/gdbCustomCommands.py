@@ -25,7 +25,6 @@ class StepOver(gdb.Command):
 
         print("EVENT_ON_STEP_END\n")
 
-
 class BreakSilent(gdb.Command):
     def __init__(self):
         super(BreakSilent, self).__init__(
