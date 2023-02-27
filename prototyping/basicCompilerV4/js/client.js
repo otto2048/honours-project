@@ -21,7 +21,7 @@ socket.onmessage = function(messageEvent) {
 
     //handle message
     var message = JSON.parse(messageEvent.data);
-    console.log(message);
+    //console.log(message);
 
     switch(message.event)
     {
@@ -106,7 +106,6 @@ socket.onmessage = function(messageEvent) {
                 debuggerStepBtns[i].ariaDisabled = false;
             }
 
-
             var file = message.value.split(':', 1)[0];
             var lineNum = message.value.split(':').pop();
 
@@ -115,8 +114,8 @@ socket.onmessage = function(messageEvent) {
             var end = file.split('.').pop();
             $("#" + start + end + "File").tab("show");
 
-            //add tracker
             addTracker(file, lineNum);
+
 
             break;
         case constants.EVENT_ON_CONTINUE:
@@ -150,12 +149,20 @@ socket.onmessage = function(messageEvent) {
             var lineNum = message.value.split(':').pop();
 
             //switch active file
+            //TODO: this not finishing before add tracker?
             var start = file.split('.', 1)[0];
             var end = file.split('.').pop();
             $("#" + start + end + "File").tab("show");
 
-            //add tracker
             addTracker(file, lineNum);
+
+            // $("#" + start + end + "File").on("shown.bs.tab", function(E)
+            // {
+            //     //add tracker
+            //     addTracker(file, lineNum);
+            //     $("#" + start + end + "File").off("shown.bs.tab");
+            // });
+
 
             break;
         case constants.EVENT_ON_BREAKPOINT_CHANGED:
@@ -212,6 +219,10 @@ function preparePage()
 
     $("#step-into-btn")[0].addEventListener("click", function() {
         sendInput("step_into");
+    });
+
+    $("#step-out-btn")[0].addEventListener("click", function() {
+        sendInput("step_out");
     });
 
     //set up jquery terminal
@@ -438,6 +449,7 @@ function addTracker(file, lineNum)
             //add a marker to the new line
             editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeGutterDecoration("<span class='mdi mdi-arrow-right-thick'></span>", "#0A12FF", "#fbff00"));
             trackingFile = file;
+
         }
     }
 }
