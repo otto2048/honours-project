@@ -20,7 +20,9 @@ const EVENT_ON_BREAK_END = "EVENT_ON_BREAK_END";
 const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
 const EVENT_ON_CONTINUE_END = "EVENT_ON_CONTINUE_END";
 const EVENT_ON_STEP = "EVENT_ON_STEP";
+const EVENT_ON_STEP_INTO = "EVENT_ON_SINTO";
 const EVENT_ON_STEP_END = "EVENT_ON_STEP_END";
+const EVENT_ON_STEP_INTO_END = "EVENT_ON_SINTO_END";
 const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
 const EVENT_ON_COMPILE_FAILURE = 3;
@@ -351,6 +353,22 @@ function launchGDB(obj, ws)
 
                 obj.value = output;
                 obj.event = EVENT_ON_BREAKPOINT_CHANGED;
+                ws.send(JSON.stringify(obj));
+            }
+            else if (output.indexOf(EVENT_ON_STEP_INTO) != -1)
+            {
+                //split on start string
+                output = output.substring(output.indexOf(EVENT_ON_STEP_INTO) + EVENT_ON_STEP_INTO.length);
+
+                //split on end string
+                output = output.split(EVENT_ON_STEP_INTO_END, 1)[0];
+
+                //get rid of whitespace
+                output = output.replace(/\s/g, "");
+
+                //return current location
+                obj.value = output;
+                obj.event = EVENT_ON_STEP;
                 ws.send(JSON.stringify(obj));
             }
         }

@@ -210,6 +210,10 @@ function preparePage()
         sendInput("step_over");
     });
 
+    $("#step-into-btn")[0].addEventListener("click", function() {
+        sendInput("step_into");
+    });
+
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {
