@@ -433,8 +433,10 @@ function addTracker(file, lineNum)
     {
         if (editors[i]["fileName"] == file)
         {
+            console.log("scrolling into view");
+
             //scroll to line
-            editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
+            jumpToLine(lineNum, editors[i]["editor"]);
 
             //add a marker to the new line
             editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeGutterDecoration("<span class='mdi mdi-arrow-right-thick'></span>", "#0A12FF", "#fbff00"));
@@ -444,6 +446,13 @@ function addTracker(file, lineNum)
         }
     }
 }
+
+//https://stackoverflow.com/questions/10575343/codemirror-is-it-possible-to-scroll-to-a-line-so-that-it-is-in-the-middle-of-w
+function jumpToLine(i, editor) { 
+    var t = editor.charCoords({line: i, ch: 0}, "local").top; 
+    var middleHeight = editor.getScrollerElement().offsetHeight / 2; 
+    editor.scrollTo(null, t - middleHeight - 5); 
+} 
 
 function moveTracker(newFile, lineNum)
 {
@@ -458,13 +467,17 @@ function moveTracker(newFile, lineNum)
 
         $("#" + start + end + "File").on("shown.bs.tab", function(e)
         {
-            addTracker(newFile, lineNum);
-            currentFile = newFile;
+            console.log("shown");
+
+            console.log("refresh");
 
             for (var j=0; j<editors.length; j++)
             {
                 editors[j]["editor"].refresh();
             }
+
+            addTracker(newFile, lineNum);
+            currentFile = newFile;
 
             $("#" + start + end + "File").off("shown.bs.tab");
         });
