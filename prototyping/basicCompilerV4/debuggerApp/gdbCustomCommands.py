@@ -87,17 +87,22 @@ class BreakSilent(gdb.Command):
     
     def invoke(self, args, from_tty):
         result = gdb.execute("break " + args, to_string=True)
-        print(result)
-        result_arr = result.split()
-        result_arr.pop(-1)
+        result_arr = result.split(",")
 
-        if (result_arr[-1].split(".")[0] != args.split(":")[1]):
+        print(result_arr)
+
+        file = result_arr[0].split()[-1]
+        line = result_arr[1].split()[-1].split(".")[0]
+
+        file_line = file + ":" + line
+
+        if (line != args.split(":")[1]):
             print("FOR_SERVER")
             print("EVENT_ON_BP_CHANGED")
             #print old location
             print(args)
             #print the new location
-            print(result_arr[5].split(",")[0] + ":" + result_arr[-1].split(".")[0])
+            print(file_line)
             print("EVENT_ON_BP_CHANGED_END")
 
 class ClearSilent(gdb.Command):
