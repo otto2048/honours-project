@@ -5,7 +5,9 @@
         "dartsSimplified/player.cpp",
         "dartsSimplified/throwStrategy.cpp",
         "dartsSimplified/player.h",
-        "dartsSimplified/throwStrategy.h"
+        "dartsSimplified/throwStrategy.h",
+        "dartsSimplified/dartboard.h",
+        "dartsSimplified/dartboard.cpp"
     ]
 }
 

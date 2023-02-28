@@ -9,8 +9,8 @@ using namespace std;
 
 int main()
 {
-	joepoints = 0;
-	sidpoints = 0;
+	int joepoints = 0;
+	int sidpoints = 0;
 
 	srand(time(0)); //initialise random number generator with time
 
