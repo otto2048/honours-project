@@ -6,7 +6,7 @@ import Request from "./request.js";
 var editors = [];
 var files = $(".editor");
 
-var trackingFile = null;
+var currentFile = "main.cpp";
 
 window.onload = preparePage();
 
@@ -81,7 +81,7 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn").show();
 
             //hide arrow
-            clearTracker();
+            clearTracker(currentFile);
 
             //editor is editable
             for (var i=0; i<editors.length; i++)
@@ -91,9 +91,6 @@ socket.onmessage = function(messageEvent) {
 
             break;
         case constants.EVENT_ON_BREAK:
-            //hide arrow
-            clearTracker();
-
             //enable continue button and step buttons
             $("#continue-btn")[0].disabled = false;
             $("#continue-btn")[0].ariaDisabled = false;
@@ -106,16 +103,11 @@ socket.onmessage = function(messageEvent) {
                 debuggerStepBtns[i].ariaDisabled = false;
             }
 
+            //put in arrow to show where breakpoint is
             var file = message.value.split(':', 1)[0];
             var lineNum = message.value.split(':').pop();
 
-            //switch active file
-            var start = file.split('.', 1)[0];
-            var end = file.split('.').pop();
-            $("#" + start + end + "File").tab("show");
-
-            addTracker(file, lineNum);
-
+            moveTracker(file, lineNum);
 
             break;
         case constants.EVENT_ON_CONTINUE:
@@ -136,33 +128,16 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
-            clearTracker();
+            clearTracker(currentFile);
 
 
             break;
         case constants.EVENT_ON_STEP:
-            //hide current arrow
-            clearTracker();
-
             //put in arrow to show where breakpoint is
             var file = message.value.split(':', 1)[0];
             var lineNum = message.value.split(':').pop();
 
-            //switch active file
-            //TODO: this not finishing before add tracker?
-            var start = file.split('.', 1)[0];
-            var end = file.split('.').pop();
-            $("#" + start + end + "File").tab("show");
-
-            addTracker(file, lineNum);
-
-            // $("#" + start + end + "File").on("shown.bs.tab", function(E)
-            // {
-            //     //add tracker
-            //     addTracker(file, lineNum);
-            //     $("#" + start + end + "File").off("shown.bs.tab");
-            // });
-
+            moveTracker(file, lineNum);
 
             break;
         case constants.EVENT_ON_BREAKPOINT_CHANGED:
@@ -421,18 +396,14 @@ function makeGutterDecoration(html, lightThemeColour, darkThemeColour) {
     return marker;
 }
 
-function clearTracker()
+function clearTracker(file)
 {
-    if (trackingFile)
+    for (var i=0; i<editors.length; i++)
     {
-        for (var i=0; i<editors.length; i++)
+        if (editors[i]["fileName"] == file)
         {
-            if (editors[i]["fileName"] == trackingFile)
-            {
-                editors[i]["editor"].clearGutter("tracking");
-                trackingFile = null;
-                break;
-            }
+            editors[i]["editor"].clearGutter("tracking");
+            break;
         }
     }
 }
@@ -448,9 +419,36 @@ function addTracker(file, lineNum)
 
             //add a marker to the new line
             editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeGutterDecoration("<span class='mdi mdi-arrow-right-thick'></span>", "#0A12FF", "#fbff00"));
-            trackingFile = file;
-
         }
+    }
+}
+
+function moveTracker(newFile, lineNum)
+{
+    //hide current arrow
+    clearTracker(currentFile);
+
+    var oldFile = currentFile;
+
+    currentFile = newFile;
+
+    if (oldFile != currentFile)
+    {
+        //switch active file
+        var start = newFile.split('.', 1)[0];
+        var end = newFile.split('.').pop();
+
+        $("#" + start + end + "File").on("shown.bs.tab", function(e)
+        {
+            addTracker(newFile, lineNum);
+            $("#" + start + end + "File").off("shown.bs.tab");
+        });
+
+        $("#" + start + end + "File").tab("show");
+    }
+    else
+    {
+        addTracker(newFile, lineNum);
     }
 }
 
