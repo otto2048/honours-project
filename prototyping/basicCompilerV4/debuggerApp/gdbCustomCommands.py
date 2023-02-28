@@ -87,9 +87,12 @@ class BreakSilent(gdb.Command):
     
     def invoke(self, args, from_tty):
         result = gdb.execute("break " + args, to_string=True)
+
         result_arr = result.split(",")
 
-        print(result_arr)
+        #silence the output from this breakpoint
+        bp_num = result_arr[0].split()[1]
+        gdb.execute("commands " + bp_num + " \nsilent \n end")
 
         file = result_arr[0].split()[-1]
         line = result_arr[1].split()[-1].split(".")[0]

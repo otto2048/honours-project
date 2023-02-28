@@ -68,8 +68,6 @@ function onConnect(ws) {
     ws.on('message', function (message) {
         const clientMsg = JSON.parse(message);
 
-        console.log(clientMsg);
-
         //create response object
         var obj = new Response(SENDER_DEBUGGER);
 
@@ -104,8 +102,6 @@ function onConnect(ws) {
 
                 content = contentArray.join("\n");
 
-                console.log(content);
-
                 fs.writeFile(fname, content, function (err)
                 {
                     if (err)
@@ -134,14 +130,11 @@ function onConnect(ws) {
                     var fileString = "";
                     for (var i=0; i<clientMsg.value.filesData.length; i++)
                     {
-                        console.log(clientMsg.value.filesData[i][0].split('.').pop());
                         if (clientMsg.value.filesData[i][0].split('.').pop() == "cpp")
                         {
                             fileString = fileString + clientMsg.value.filesData[i][0] + " ";
                         }
                     }
-
-                    console.log(fileString);
 
                     var command = "g++ -g " + fileString + " -o executable";
 
@@ -271,37 +264,14 @@ function launchGDB(obj, ws)
 
         output = data.toString();
 
+        //TODO: still getting output if breaking on line with cout
         output = output.split(GDB_OUTPUT_STRING);
 
         output.forEach(element => {
             element = element.split(GDB_OUTPUT_STRING).pop();
 
-            //check if this is output for the user
-            if (element.indexOf(PROGRAM_OUTPUT_STRING) != -1)
-            {
-                //check if this is a breakpoint
-                if (element.indexOf("Breakpoint") == -1)
-                {
-                    var outputs = element.split(PROGRAM_OUTPUT_STRING);
-
-                    for (var i=0; i<outputs.length; i++)
-                    {
-                        console.log(i);
-                        console.log(outputs[i]);
-                        //split on start of string
-                        outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING).pop();
-                        
-                        //split on end of string
-                        outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING_END, 1)[0];
-
-                        obj.value = outputs[i];
-                        obj.event = EVENT_ON_STDOUT;
-                        ws.send(JSON.stringify(obj));
-                    }
-                }
-            }
             //check what kind of gdb event this is
-            else if (element.indexOf(EVENT_ON_BREAK) != -1)
+            if (element.indexOf(EVENT_ON_BREAK) != -1)
             {
                 //split on start string
                 element = element.substring(element.indexOf(EVENT_ON_BREAK) + EVENT_ON_BREAK.length);
@@ -349,6 +319,24 @@ function launchGDB(obj, ws)
                 obj.value = element;
                 obj.event = EVENT_ON_BREAKPOINT_CHANGED;
                 ws.send(JSON.stringify(obj));
+            }
+            //check if this is output for the user
+            else if (element.indexOf(PROGRAM_OUTPUT_STRING) != -1)
+            {
+                var outputs = element.split(PROGRAM_OUTPUT_STRING);
+
+                for (var i=0; i<outputs.length; i++)
+                {
+                    //split on start of string
+                    outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING).pop();
+                    
+                    //split on end of string
+                    outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING_END, 1)[0];
+
+                    obj.value = outputs[i];
+                    obj.event = EVENT_ON_STDOUT;
+                    ws.send(JSON.stringify(obj));
+                }
             }
             
         });
