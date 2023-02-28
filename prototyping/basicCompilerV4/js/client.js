@@ -7,6 +7,7 @@ var editors = [];
 var files = $(".editor");
 
 var currentFile = "main.cpp";
+var trackingFile = null;
 
 window.onload = preparePage();
 
@@ -81,7 +82,7 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn").show();
 
             //hide arrow
-            clearTracker(currentFile);
+            clearTracker();
 
             //editor is editable
             for (var i=0; i<editors.length; i++)
@@ -128,7 +129,7 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
-            clearTracker(currentFile);
+            clearTracker();
 
 
             break;
@@ -223,6 +224,19 @@ function preparePage()
     {
         changeCodeSize(-5);
     });
+
+    //keep track of the current file being displayed
+    var tabs = $(".tab-header");
+
+    for (var i=0; i<tabs.length; i++)
+    (function(i) {
+        tabs[i].addEventListener("click", function() {
+            
+            var content = tabs[i].innerText;
+
+            currentFile = content;
+        });
+    }(i));
 }
 
 
@@ -396,16 +410,21 @@ function makeGutterDecoration(html, lightThemeColour, darkThemeColour) {
     return marker;
 }
 
-function clearTracker(file)
+function clearTracker()
 {
-    for (var i=0; i<editors.length; i++)
+    if (trackingFile)
     {
-        if (editors[i]["fileName"] == file)
+        for (var i=0; i<editors.length; i++)
         {
-            editors[i]["editor"].clearGutter("tracking");
-            break;
+            if (editors[i]["fileName"] == trackingFile)
+            {
+                editors[i]["editor"].clearGutter("tracking");
+                trackingFile = null;
+                break;
+            }
         }
     }
+    
 }
 
 function addTracker(file, lineNum)
@@ -419,6 +438,9 @@ function addTracker(file, lineNum)
 
             //add a marker to the new line
             editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeGutterDecoration("<span class='mdi mdi-arrow-right-thick'></span>", "#0A12FF", "#fbff00"));
+
+            //keep track of the file tracker is in
+            trackingFile = file;
         }
     }
 }
@@ -426,13 +448,9 @@ function addTracker(file, lineNum)
 function moveTracker(newFile, lineNum)
 {
     //hide current arrow
-    clearTracker(currentFile);
+    clearTracker();
 
-    var oldFile = currentFile;
-
-    currentFile = newFile;
-
-    if (oldFile != currentFile)
+    if (currentFile != newFile)
     {
         //switch active file
         var start = newFile.split('.', 1)[0];
@@ -441,6 +459,8 @@ function moveTracker(newFile, lineNum)
         $("#" + start + end + "File").on("shown.bs.tab", function(e)
         {
             addTracker(newFile, lineNum);
+            currentFile = newFile;
+
             $("#" + start + end + "File").off("shown.bs.tab");
         });
 
