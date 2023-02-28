@@ -235,6 +235,14 @@ function preparePage()
             var content = tabs[i].innerText;
 
             currentFile = content;
+
+            console.log("refresh editors");
+
+            for (var j=0; j<editors.length; j++)
+            {
+                editors[j]["editor"].refresh();
+            }
+
         });
     }(i));
 }
@@ -358,14 +366,6 @@ function setUpEditors()
 
         });
     }(i));
-
-    //refresh editors when user switches tabs
-    $('.nav-tabs button').on('shown.bs.tab', function() {
-        for (var i=0; i<editors.length; i++)
-        {
-            editors[i]["editor"].refresh();
-        }
-    }); 
     
     //allow user to resize editors
     $(".CodeMirror").addClass("resize");
@@ -460,6 +460,11 @@ function moveTracker(newFile, lineNum)
         {
             addTracker(newFile, lineNum);
             currentFile = newFile;
+
+            for (var j=0; j<editors.length; j++)
+            {
+                editors[j]["editor"].refresh();
+            }
 
             $("#" + start + end + "File").off("shown.bs.tab");
         });
