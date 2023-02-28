@@ -1,6 +1,6 @@
 import gdb
 
-changedBreakpoints = []
+#TODO: handle nested functions (multiple frames), also test on recursion
 
 class StepOver(gdb.Command):
 
@@ -98,7 +98,6 @@ class BreakSilent(gdb.Command):
             #print the new location
             print(result_arr[5].split(",")[0] + ":" + result_arr[-1].split(".")[0])
             print("EVENT_ON_BP_CHANGED_END")
-        #     changedBreakpoints.append(result_arr[-1])
 
 class ClearSilent(gdb.Command):
     def __init__(self):
