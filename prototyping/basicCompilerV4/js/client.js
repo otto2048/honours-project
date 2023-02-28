@@ -6,6 +6,9 @@ import Request from "./request.js";
 var editors = [];
 var files = $(".editor");
 
+var currentFile = "main.cpp";
+var trackingFile = null;
+
 window.onload = preparePage();
 
 let socket = new WebSocket("ws://192.168.17.60:8080");
@@ -19,7 +22,7 @@ socket.onmessage = function(messageEvent) {
 
     //handle message
     var message = JSON.parse(messageEvent.data);
-    console.log(message);
+    //console.log(message);
 
     switch(message.event)
     {
@@ -79,11 +82,7 @@ socket.onmessage = function(messageEvent) {
             $("#play-btn").show();
 
             //hide arrow
-            if ($(".selectedLine"))
-            {
-                $(".selectedLine").html("●");
-                $(".selectedLine").removeClass(".selectedLine");
-            }
+            clearTracker();
 
             //editor is editable
             for (var i=0; i<editors.length; i++)
@@ -106,29 +105,10 @@ socket.onmessage = function(messageEvent) {
             }
 
             //put in arrow to show where breakpoint is
-
             var file = message.value.split(':', 1)[0];
             var lineNum = message.value.split(':').pop();
 
-            //switch active file
-            var start = file.split('.', 1)[0];
-            var end = file.split('.').pop();
-            $("#" + start + end + "File").tab("show");
-
-            var bp = $("." + start + end + "-" + lineNum);
-
-            bp.addClass("selectedLine");
-            bp.html("<span class='mdi mdi-arrow-right-thick'></span>");
-
-            $(".selectedLine :first-child").css("color", "#fbff00");
-
-            for (var i=0; i<editors.length; i++)
-            {
-                if (editors[i]["fileName"] == file)
-                {
-                    editors[i]["editor"].scrollIntoView({line: lineNum}, 200);
-                }
-            }  
+            moveTracker(file, lineNum);
 
             break;
         case constants.EVENT_ON_CONTINUE:
@@ -149,15 +129,35 @@ socket.onmessage = function(messageEvent) {
             }
 
             //hide arrow
-            if ($(".selectedLine"))
-            {
-                $(".selectedLine").html("●");
-                $(".selectedLine").removeClass(".selectedLine");
-            }
+            clearTracker();
+
+
+            break;
+        case constants.EVENT_ON_STEP:
+            //put in arrow to show where breakpoint is
+            var file = message.value.split(':', 1)[0];
+            var lineNum = message.value.split(':').pop();
+
+            moveTracker(file, lineNum);
+
+            break;
+        case constants.EVENT_ON_BREAKPOINT_CHANGED:
+            //clear the breakpoint at the old position
+            var breaks = message.value.trim().split("\n");
+
+            var file = breaks[0].split(':', 1)[0];
+            var lineNum = breaks[0].split(':').pop();
+
+            toggleBreakpoint(file, parseInt(lineNum));
+
+            var file = breaks[1].split(':', 1)[0];
+            var lineNum = breaks[1].split(':').pop();
+
+            toggleBreakpoint(file, parseInt(lineNum));
 
             break;
         default:
-            alert("Client operation failed. Try again?");
+            alert(message.event + "Client operation failed. Try again?");
     }
 }
 
@@ -189,6 +189,18 @@ function preparePage()
         sendInput("kill");
     });
 
+    $("#step-over-btn")[0].addEventListener("click", function() {
+        sendInput("step_over");
+    });
+
+    $("#step-into-btn")[0].addEventListener("click", function() {
+        sendInput("step_into");
+    });
+
+    $("#step-out-btn")[0].addEventListener("click", function() {
+        sendInput("step_out");
+    });
+
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {
@@ -212,6 +224,27 @@ function preparePage()
     {
         changeCodeSize(-5);
     });
+
+    //keep track of the current file being displayed
+    var tabs = $(".tab-header");
+
+    for (var i=0; i<tabs.length; i++)
+    (function(i) {
+        tabs[i].addEventListener("click", function() {
+            
+            var content = tabs[i].innerText;
+
+            currentFile = content;
+
+            console.log("refresh editors");
+
+            for (var j=0; j<editors.length; j++)
+            {
+                editors[j]["editor"].refresh();
+            }
+
+        });
+    }(i));
 }
 
 
@@ -301,7 +334,13 @@ function setUpEditors()
     //create editors
     for (var i=0; i<files.length; i++)
     {
-        editors.push({fileName: files[i].getAttribute("id"), editor: CodeMirror.fromTextArea(files[i], {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutters: ["breakpoints", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]}), breakpoints: new Set()});
+        editors.push({
+            fileName: files[i].getAttribute("id"), 
+            editor: CodeMirror.fromTextArea(files[i], 
+                {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
+                gutters: ["breakpoints", "CodeMirror-linenumbers", "tracking", "CodeMirror-foldgutter"]}), 
+            breakpoints: new Set()
+        });
     }
 
     //set up breakpoint events
@@ -310,57 +349,25 @@ function setUpEditors()
     (function(i) {
         editors[i]["editor"].on("gutterClick", function(cm, n) {
             
-            var info = cm.lineInfo(n);
             var sendRow = n + 1;
 
             if (editors[i]["breakpoints"].has(n + 1))
             {
                 editors[i]["breakpoints"].delete(n + 1);
-                sendInput("clear " + editors[i]["fileName"] + ":" + sendRow.toString());
+                sendInput("clear_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+                cm.setGutterMarker(n, "breakpoints", null);
             }
             else
             {
                 editors[i]["breakpoints"].add(n + 1);
-                sendInput("break " + editors[i]["fileName"] + ":" + sendRow.toString());
+                sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+                cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
             }
 
-            cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker(editors[i]["fileName"], n + 1));
         });
-
-        function makeMarker(file, line) {
-            var marker = document.createElement("div");
-
-            marker.classList = file.split(".", 1)[0] + file.split(".").pop() + "-" + line;
-
-            if (localStorage.getItem("theme"))
-            {
-                if (localStorage.getItem("theme") == "light")
-                {
-                    marker.style.color = "#822";
-                }
-                else
-                {
-                    marker.style.color = "#e92929";
-                }
-            }
-            else
-            {
-                marker.style.color = "#e92929";
-            }
-
-            marker.innerHTML = "●";
-            return marker;
-        }
     }(i));
-
-    //refresh editors when user switches tabs
-    $('.nav-tabs button').on('shown.bs.tab', function() {
-        for (var i=0; i<editors.length; i++)
-        {
-            editors[i]["editor"].refresh();
-        }
-    }); 
     
+    //allow user to resize editors
     $(".CodeMirror").addClass("resize");
 
     //check if editors should be in light mode
@@ -384,4 +391,122 @@ function clearTerminal()
 {
     var term = $.terminal.active();
     term.clear();
+}
+
+//create dom element for gutter
+function makeGutterDecoration(html, lightThemeColour, darkThemeColour) {
+    var marker = document.createElement("div");
+    marker.style.color = darkThemeColour;
+
+    if (localStorage.getItem("theme"))
+    {
+        if (localStorage.getItem("theme") == "light")
+        {
+            marker.style.color = lightThemeColour;
+        }
+    }
+
+    marker.innerHTML = html;
+    return marker;
+}
+
+function clearTracker()
+{
+    if (trackingFile)
+    {
+        for (var i=0; i<editors.length; i++)
+        {
+            if (editors[i]["fileName"] == trackingFile)
+            {
+                editors[i]["editor"].clearGutter("tracking");
+                trackingFile = null;
+                break;
+            }
+        }
+    }
+    
+}
+
+function addTracker(file, lineNum)
+{
+    for (var i=0; i<editors.length; i++)
+    {
+        if (editors[i]["fileName"] == file)
+        {
+            console.log("scrolling into view");
+
+            //scroll to line
+            jumpToLine(lineNum, editors[i]["editor"]);
+
+            //add a marker to the new line
+            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeGutterDecoration("<span class='mdi mdi-arrow-right-thick'></span>", "#0A12FF", "#fbff00"));
+
+            //keep track of the file tracker is in
+            trackingFile = file;
+        }
+    }
+}
+
+//https://stackoverflow.com/questions/10575343/codemirror-is-it-possible-to-scroll-to-a-line-so-that-it-is-in-the-middle-of-w
+function jumpToLine(i, editor) { 
+    var t = editor.charCoords({line: i, ch: 0}, "local").top; 
+    var middleHeight = editor.getScrollerElement().offsetHeight / 2; 
+    editor.scrollTo(null, t - middleHeight - 5); 
+} 
+
+function moveTracker(newFile, lineNum)
+{
+    //hide current arrow
+    clearTracker();
+
+    if (currentFile != newFile)
+    {
+        //switch active file
+        var start = newFile.split('.', 1)[0];
+        var end = newFile.split('.').pop();
+
+        $("#" + start + end + "File").on("shown.bs.tab", function(e)
+        {
+            console.log("shown");
+
+            console.log("refresh");
+
+            for (var j=0; j<editors.length; j++)
+            {
+                editors[j]["editor"].refresh();
+            }
+
+            addTracker(newFile, lineNum);
+            currentFile = newFile;
+
+            $("#" + start + end + "File").off("shown.bs.tab");
+        });
+
+        $("#" + start + end + "File").tab("show");
+    }
+    else
+    {
+        addTracker(newFile, lineNum);
+    }
+}
+
+//toggle a breakpoint marker in a file manually, without gutter click event
+function toggleBreakpoint(file, lineNum)
+{
+    for (var i=0; i<editors.length; i++)
+    {
+        if (editors[i]["fileName"] == file)
+        {
+            if (editors[i]["breakpoints"].has(lineNum))
+            {
+                editors[i]["breakpoints"].delete(lineNum);
+                editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", null);
+            }
+            else
+            {
+                editors[i]["breakpoints"].add(lineNum);
+                editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));    
+            }
+        }
+    }
 }
