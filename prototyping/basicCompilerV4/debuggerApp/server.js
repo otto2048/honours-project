@@ -89,7 +89,7 @@ function onConnect(ws) {
                 var fname = file[0];
                 var content = file[1];
 
-                content = content.replace(/cout/g, 'cout << "'+ PROGRAM_OUTPUT_STRING +'"');
+                content = content.replace(/cout/g, 'cout << "'+ GDB_OUTPUT_STRING + " " + PROGRAM_OUTPUT_STRING +'"');
                 
                 var contentArray = content.split('\n');
 
@@ -150,7 +150,8 @@ function onConnect(ws) {
                         if (stderr)
                         {
                             //give compilation errors
-                            stderr = stderr.replace(' << "' + PROGRAM_OUTPUT_STRING + '"', "");
+                            stderr = stderr.replace(' << "'+ GDB_OUTPUT_STRING + " " + PROGRAM_OUTPUT_STRING + '"', "");
+                            stderr = stderr.replace(' << "' + PROGRAM_OUTPUT_STRING_END + '"', "");
                             obj.value = "Failed to compile\nErrors:\n" + stderr;
                             obj.event = EVENT_ON_COMPILE_FAILURE;
                             ws.send(JSON.stringify(obj));
@@ -270,90 +271,87 @@ function launchGDB(obj, ws)
 
         output = data.toString();
 
-        //check if this is output for the user
-        if (output.indexOf(PROGRAM_OUTPUT_STRING) != -1)
-        {
-            //check if this is a breakpoint
-            if (output.indexOf("Breakpoint") == -1)
+        output = output.split(GDB_OUTPUT_STRING);
+
+        output.forEach(element => {
+            element = element.split(GDB_OUTPUT_STRING).pop();
+
+            //check if this is output for the user
+            if (element.indexOf(PROGRAM_OUTPUT_STRING) != -1)
             {
-                var outputs = output.split(PROGRAM_OUTPUT_STRING);
-
-                for (var i=0; i<outputs.length; i++)
+                //check if this is a breakpoint
+                if (element.indexOf("Breakpoint") == -1)
                 {
-                    console.log(i);
-                    console.log(outputs[i]);
-                    //split on start of string
-                    outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING).pop();
-                    
-                    //split on end of string
-                    outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING_END, 1)[0];
+                    var outputs = element.split(PROGRAM_OUTPUT_STRING);
 
-                    obj.value = outputs[i];
-                    obj.event = EVENT_ON_STDOUT;
-                    ws.send(JSON.stringify(obj));
-                    
+                    for (var i=0; i<outputs.length; i++)
+                    {
+                        console.log(i);
+                        console.log(outputs[i]);
+                        //split on start of string
+                        outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING).pop();
+                        
+                        //split on end of string
+                        outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING_END, 1)[0];
+
+                        obj.value = outputs[i];
+                        obj.event = EVENT_ON_STDOUT;
+                        ws.send(JSON.stringify(obj));
+                    }
                 }
-                
             }
-            
-        }
-        
-        //check if this is output for the server to handle
-        if (output.indexOf(GDB_OUTPUT_STRING) != -1)
-        {
-            output = output.split(GDB_OUTPUT_STRING).pop();
-
             //check what kind of gdb event this is
-            if (output.indexOf(EVENT_ON_BREAK) != -1)
+            else if (element.indexOf(EVENT_ON_BREAK) != -1)
             {
                 //split on start string
-                output = output.substring(output.indexOf(EVENT_ON_BREAK) + EVENT_ON_BREAK.length);
+                element = element.substring(element.indexOf(EVENT_ON_BREAK) + EVENT_ON_BREAK.length);
 
                 //split on end string
-                output = output.split(EVENT_ON_BREAK_END, 1)[0];
+                element = element.split(EVENT_ON_BREAK_END, 1)[0];
 
                 //get rid of whitespace
-                output = output.replace(/\s/g, "");
+                element = element.replace(/\s/g, "");
 
                 //return breakpoint location
-                obj.value = output;
+                obj.value = element;
                 obj.event = EVENT_ON_BREAK;
                 ws.send(JSON.stringify(obj));
             }
-            else if (output.indexOf(EVENT_ON_CONTINUE) != -1)
+            else if (element.indexOf(EVENT_ON_CONTINUE) != -1)
             {
                 obj.event = EVENT_ON_CONTINUE;
                 ws.send(JSON.stringify(obj));
             }
-            else if (output.indexOf(EVENT_ON_STEP) != -1)
+            else if (element.indexOf(EVENT_ON_STEP) != -1)
             {
                 //split on start string
-                output = output.substring(output.indexOf(EVENT_ON_STEP) + EVENT_ON_STEP.length);
+                element = element.substring(element.indexOf(EVENT_ON_STEP) + EVENT_ON_STEP.length);
 
                 //split on end string
-                output = output.split(EVENT_ON_STEP_END, 1)[0];
+                element = element.split(EVENT_ON_STEP_END, 1)[0];
 
                 //get rid of whitespace
-                output = output.replace(/\s/g, "");
+                element = element.replace(/\s/g, "");
 
                 //return current location
-                obj.value = output;
+                obj.value = element;
                 obj.event = EVENT_ON_STEP;
                 ws.send(JSON.stringify(obj));
             }
-            else if (output.indexOf(EVENT_ON_BREAKPOINT_CHANGED) != -1)
+            else if (element.indexOf(EVENT_ON_BREAKPOINT_CHANGED) != -1)
             {
                 //split on start string
-                output = output.substring(output.indexOf(EVENT_ON_BREAKPOINT_CHANGED) + EVENT_ON_BREAKPOINT_CHANGED.length);
+                element = element.substring(element.indexOf(EVENT_ON_BREAKPOINT_CHANGED) + EVENT_ON_BREAKPOINT_CHANGED.length);
 
                 //split on end string
-                output = output.split(EVENT_ON_BREAKPOINT_CHANGED_END, 1)[0];
+                element = element.split(EVENT_ON_BREAKPOINT_CHANGED_END, 1)[0];
 
-                obj.value = output;
+                obj.value = element;
                 obj.event = EVENT_ON_BREAKPOINT_CHANGED;
                 ws.send(JSON.stringify(obj));
             }
-        }
+            
+        });
     });
 
     progProcess.stderr.on('data', function (data) {

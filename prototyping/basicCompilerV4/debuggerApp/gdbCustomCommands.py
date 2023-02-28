@@ -87,6 +87,7 @@ class BreakSilent(gdb.Command):
     
     def invoke(self, args, from_tty):
         result = gdb.execute("break " + args, to_string=True)
+        print(result)
         result_arr = result.split()
         result_arr.pop(-1)
 

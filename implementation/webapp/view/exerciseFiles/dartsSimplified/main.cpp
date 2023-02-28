@@ -31,5 +31,7 @@ int main()
 	{
 		joepoints = throwType.bullThrow(joe.getSuccessRate());
 		sidpoints = throwType.bullThrow(sid.getSuccessRate());
+
+		cout << "joe: " << joepoints << " sid: " << sidpoints << endl;
 	}
 }
