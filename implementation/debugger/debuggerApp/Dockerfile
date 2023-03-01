@@ -20,10 +20,6 @@ RUN ./configure --with-python=/usr/bin/python3
 RUN make
 RUN make install
 
-# set up gdbinit
-WORKDIR /home/node
-COPY .gdbinit .
-
 WORKDIR /
 
 # build googletest framework
@@ -35,6 +31,11 @@ RUN cmake /googletest -DBUILD_GMOCK=OFF
 RUN make
 RUN make install
 
+# set up gdbinit
+WORKDIR /root/.config/gdb
+COPY gdbinit .
+
+# add app files
 WORKDIR /debuggerApp
 
 COPY /app .
