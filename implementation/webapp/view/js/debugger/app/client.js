@@ -36,7 +36,7 @@ function prepareDebuggerClient()
 function on_open() 
 {
     //allow user to interact with compiler, enable buttons
-    var debuggerBtns = $(".debugger-control");
+    var debuggerBtns = $(".on-connected");
 
     for (var i=0; i<debuggerBtns.length; i++)
     {
@@ -47,7 +47,7 @@ function on_open()
 
 function on_close()
 {
-    var debuggerBtns = $(".debugger-control");
+    var debuggerBtns = $(".on-connected");
     
     for (var i=0; i<debuggerBtns.length; i++)
     {

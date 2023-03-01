@@ -86,7 +86,7 @@
                                 <hr>
                                 <h2>General Instructions</h2>
                                 <p>Once you have completed the exercise, press the submit button below.</p>
-                                <button type="button" class="btn btn-primary debugger-control" disabled aria-disabled=true id="complete-btn">Submit</button>
+                                <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
                             </div>
 
                             <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
@@ -144,7 +144,7 @@
 
                                     <div class="row  pt-1 pb-1 ">
                                         <div class="col-8">
-                                            <button type="button" class="btn btn-dark theme debugger-control ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
+                                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control on-connected ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
                                             <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
                                             <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop" title="stop"></span></button>
                                         </div>
