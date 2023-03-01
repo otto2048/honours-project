@@ -144,9 +144,14 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="float-end">
+                                                
                                                 <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-into-btn" aria-label="Step into"><span class="mdi mdi-arrow-down" title="step into"></span></button>
                                                 <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-over-btn" aria-label="Step over"><span class="mdi mdi-arrow-down-right" title="step over"></span></button>
                                                 <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-out-btn" aria-label="Step out"><span class="mdi mdi-arrow-up" title="step out"></span></button>
+
+                                                <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="reverse-single-btn" aria-label="Reverse execution by one step"><span class="mdi mdi-play mdi-flip-h" title="reverse one step"></span></button>
+                                                <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="reverse-double-btn" aria-label="Reverse execution by one line"><span class="mdi mdi-rewind" title="reverse one line"></span></button>
+
                                             </div>
                                         </div>
                                     </div>

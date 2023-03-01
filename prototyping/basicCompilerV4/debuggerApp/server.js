@@ -198,7 +198,7 @@ function onConnect(ws) {
                                                 else
                                                 {
                                                     //write the rest of the file
-                                                    appendFile('.gdbinit', "run").then(function() {
+                                                    appendFile('.gdbinit', "run\ntarget record-full").then(function() {
                                                         //launch gdb
                                                         launchGDB(obj, ws);
                                                     }).catch(function(err) {
@@ -210,7 +210,7 @@ function onConnect(ws) {
                                         else
                                         {
                                             //write the rest of the file
-                                            appendFile('.gdbinit', "run").then(function() {
+                                            appendFile('.gdbinit', "run\ntarget record-full").then(function() {
                                                 //launch gdb
                                                 launchGDB(obj, ws);
                                             }).catch(function(err) {

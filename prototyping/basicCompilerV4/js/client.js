@@ -201,6 +201,14 @@ function preparePage()
         sendInput("step_out");
     });
 
+    $("#reverse-single-btn")[0].addEventListener("click", function() {
+        sendInput("step_back_into");
+    });
+
+    $("#reverse-double-btn")[0].addEventListener("click", function() {
+        sendInput("step_back_over");
+    });
+
     //set up jquery terminal
     $('#code-output').terminal(function(command)
     {

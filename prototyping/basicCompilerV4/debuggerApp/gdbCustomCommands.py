@@ -51,6 +51,56 @@ class StepInto(gdb.Command):
 
         print("EVENT_ON_STEP_END\n")
 
+
+class StepBackOver(gdb.Command):
+
+    def __init__(self):
+        super(StepBackOver, self).__init__(
+            "step_back_over", gdb.COMMAND_USER
+        )
+
+    def complete(self, text, word):
+        return gdb.COMPLETE_SYMBOL
+    
+    def invoke(self, args, from_tty):
+        gdb.execute("reverse-next", to_string = True)
+        result = gdb.execute("where", to_string=True)
+        print(result)
+
+        print("FOR_SERVER\n")
+
+        print("EVENT_ON_STEP\n")
+
+        result_arr = result.split("\n")
+        print(result_arr[0].split()[-1])
+
+        print("EVENT_ON_STEP_END\n")
+
+
+class StepBackInto(gdb.Command):
+    def __init__(self):
+        super(StepBackInto, self).__init__(
+            "step_back_into", gdb.COMMAND_USER
+        )
+
+    def complete(self, text, word):
+        return gdb.COMPLETE_SYMBOL
+    
+    def invoke(self, args, from_tty):
+        gdb.execute("reverse-step", to_string = True)
+        result = gdb.execute("where", to_string=True)
+        print(result)
+
+        result_arr = result.split("\n")
+
+        print("FOR_SERVER\n")
+
+        print("EVENT_ON_STEP\n")
+
+        print(result_arr[0].split()[-1])
+
+        print("EVENT_ON_STEP_END\n")
+
    
 class StepOut(gdb.Command):
     def __init__(self):
@@ -121,7 +171,9 @@ class ClearSilent(gdb.Command):
         result = gdb.execute("clear " + args, to_string = True)
 
 StepOver()
+StepBackOver()
 StepInto()
+StepBackInto()
 StepOut()
 BreakSilent()
 ClearSilent()
