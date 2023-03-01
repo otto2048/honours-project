@@ -246,7 +246,7 @@
                                 </div>
                             </div>
 
-                            <script src="../js/exerciseClient.js" type="module"></script>
+                            <script src="../js/debugger/host/client.js" type="module"></script>
 
                             <?php
                         }

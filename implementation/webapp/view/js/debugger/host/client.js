@@ -5,7 +5,7 @@
 // need to handle instruction file if it exists
 
 import * as constants from "/honours/webapp/view/js/debugger/host/hostConstants.js";
-import Request from "./request.js";
+import Request from "/honours/webapp/view/js/debugger/request.js";
 
 var startedLaunching = false;
 var launchFailed = false;
