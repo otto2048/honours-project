@@ -9,6 +9,10 @@ var files = $(".editor");
 var currentFile = "main.cpp";
 var trackingFile = null;
 
+let socketObj = {
+    socket: null
+};
+
 function prepareDebuggerClient()
 {
     //keep track of the current file being displayed
@@ -200,7 +204,7 @@ function on_message(messageEvent)
 }
 
 //tell socket that we want to compile and start the program
-function startProgram(socket)
+function startProgram()
 {
     clearTerminal();
 
@@ -230,16 +234,16 @@ function startProgram(socket)
     $("#play-btn")[0].ariaDisabled = true;
     $("#play-btn").hide();
 
-    socket.send(JSON.stringify(obj));  
+    socketObj.socket.send(JSON.stringify(obj));  
 }
 
 //tell socket that we want to send some input to the program
-function sendInput(input, socket)
+function sendInput(input)
 {
     var obj = new Request(constants.SENDER_USER);
     obj.operation = constants.OP_INPUT;
     obj.value = input;
-    socket.send(JSON.stringify(obj));
+    socketObj.socket.send(JSON.stringify(obj));
 }
 
 function addCompilationBoxMessage(message, colour)
@@ -292,13 +296,17 @@ function setUpEditors()
             if (editors[i]["breakpoints"].has(n + 1))
             {
                 editors[i]["breakpoints"].delete(n + 1);
-                //sendInput("clear_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+
+                sendInput("clear_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+
                 cm.setGutterMarker(n, "breakpoints", null);
             }
             else
             {
                 editors[i]["breakpoints"].add(n + 1);
-                //sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+
+                sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+
                 cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
             }
 
@@ -449,4 +457,4 @@ function toggleBreakpoint(file, lineNum)
     }
 }
 
-export {on_open, on_close, on_message, startProgram, sendInput, addCompilationBoxMessage, setUpEditors, prepareDebuggerClient, clearTerminal}
+export {on_open, on_close, on_message, startProgram, sendInput, addCompilationBoxMessage, setUpEditors, prepareDebuggerClient, clearTerminal, socketObj}

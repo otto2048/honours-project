@@ -22,7 +22,6 @@ $(document).ready(function(){
 let socketHost = new WebSocket("ws://192.168.17.60:8080");
 
 //set up sockets
-let socket = null;
 
 var connected = false;
 
@@ -79,9 +78,9 @@ socketHost.onmessage = function(event) {
             $("#debugger-load-message")[0].innerHTML = message.message;
             //successfully launched environment
             //connect to the container wss
-            socket = new WebSocket("ws://192.168.17.60:" + message.value);
+            debug.socketObj.socket = new WebSocket("ws://192.168.17.60:" + message.value);
 
-            socket.onopen = function(e) {
+            debug.socketObj.socket.onopen = function(e) {
                 console.log("Connection established with compiler");
 
                 //client on onopen function
@@ -95,14 +94,14 @@ socketHost.onmessage = function(event) {
                 $("#load-debugger-modal").modal('hide');
             };
 
-            socket.onmessage = function(messageEvent) {
+            debug.socketObj.socket.onmessage = function(messageEvent) {
 
                 //client on message function
                 debug.on_message(messageEvent);
                 
             };
 
-            socket.onclose = function(event) {
+            debug.socketObj.socket.onclose = function(event) {
                 if (connected)
                 {
                     $("#debugger-load-message")[0].innerHTML = "Environment failed.";
@@ -116,7 +115,7 @@ socketHost.onmessage = function(event) {
                 }
             };
             
-            socket.onerror = function(error) {
+            debug.socketObj.socket.onerror = function(error) {
                 $("#spinner")[0].remove();
                 $("#debugger-load-status")[0].innerHTML = "Failed";
             };
@@ -170,7 +169,7 @@ function preparePage()
         if (connected)
         {
             //send compilation request to server
-            debug.startProgram(socket);
+            debug.startProgram();
 
             //add a new message to compilation box to tell the user we are compiling the program
             debug.addCompilationBoxMessage("Compiling program...", "alert-dark");
@@ -180,35 +179,35 @@ function preparePage()
     $("#continue-btn")[0].addEventListener("click", function() {
         if (connected)
         {
-            debug.sendInput("continue", socket);
+            debug.sendInput("continue");
         }
     });
 
     $("#stop-btn")[0].addEventListener("click", function() {
         if (connected)
         {
-            debug.sendInput("kill", socket);
+            debug.sendInput("kill");
         }
     });
 
     $("#step-over-btn")[0].addEventListener("click", function() {
         if (connected)
         {
-            debug.sendInput("step_over", socket);
+            debug.sendInput("step_over");
         }
     });
 
     $("#step-into-btn")[0].addEventListener("click", function() {
         if (connected)
         {
-            debug.sendInput("step_into", socket);
+            debug.sendInput("step_into");
         }
     });
 
     $("#step-out-btn")[0].addEventListener("click", function() {
         if (connected)
         {
-            debug.sendInput("step_out", socket);
+            debug.sendInput("step_out");
         }
     });
 
@@ -217,7 +216,7 @@ function preparePage()
     {
         if (command !== '')
         {
-            sendInput(command, socket);
+            sendInput(command);
         }
     }, {
         height: 500
@@ -286,11 +285,11 @@ function getUsername()
 function changeCodeSize(value)
 {
     //change size of editor text
-    var newValue = parseInt($(".editor").css('font-size'), 10) + value;
+    var newValue = parseInt($(".CodeMirror").css('font-size'), 10) + value;
 
     if (newValue > 0)
     {
-        $(".editor").css('font-size', newValue.toString() + "px");
+        $(".CodeMirror").css('font-size', newValue.toString() + "px");
     }
 }
 
