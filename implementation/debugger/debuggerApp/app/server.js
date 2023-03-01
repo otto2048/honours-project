@@ -25,6 +25,8 @@ const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
 const EVENT_ON_COMPILE_FAILURE = 3;
 const EVENT_ON_PROGRAM_EXIT = 4;
+const EVENT_ON_TEST_SUCCESS = 5;
+const EVENT_ON_TEST_FAILURE = 6;
 const EVENT_ON_BREAKPOINT_CHANGED = "EVENT_ON_BP_CHANGED";
 const EVENT_ON_BREAKPOINT_CHANGED_END = "EVENT_ON_BP_CHANGED_END";
 
@@ -256,6 +258,7 @@ function onConnect(ws) {
                 if (err) {
                     // One of the iterations produced an error.
                     // All processing will now stop.
+                    obj.event = EVENT_ON_TEST_FAILURE;
                     ws.send(JSON.stringify(obj));
                     console.log('A file failed to process');
                 }
@@ -282,6 +285,7 @@ function onConnect(ws) {
                         if (stderr)
                         {
                             //if compilation failures, submission fails
+                            obj.event = EVENT_ON_TEST_FAILURE;
                             ws.send(JSON.stringify(obj));
                         }
                         else
@@ -292,7 +296,7 @@ function onConnect(ws) {
                                 if (stdout)
                                 {
                                     obj.value = stdout.toString();
-                                    obj.event = OP_TEST;
+                                    obj.event = EVENT_ON_TEST_SUCCESS;
                                     ws.send(JSON.stringify(obj));
                                 }
                             });

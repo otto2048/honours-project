@@ -11,6 +11,9 @@ import Request from "/honours/webapp/view/js/debugger/request.js";
 var startedLaunching = false;
 var launchFailed = false;
 
+var pingHostObj = new Request(constants.SENDER_USER);
+pingHostObj.value = "PING";
+
 window.onload = preparePage();
 
 $(document).ready(function(){
@@ -170,6 +173,7 @@ function preparePage()
         {
             //send compilation request to server
             debug.startProgram();
+            socketHost.send(JSON.stringify(pingHostObj));    
 
             //add a new message to compilation box to tell the user we are compiling the program
             debug.addCompilationBoxMessage("Compiling program...", "alert-dark");
@@ -180,6 +184,7 @@ function preparePage()
         if (connected)
         {
             debug.sendInput("continue");
+            socketHost.send(JSON.stringify(pingHostObj));
         }
     });
 
@@ -187,6 +192,7 @@ function preparePage()
         if (connected)
         {
             debug.sendInput("kill");
+            socketHost.send(JSON.stringify(pingHostObj));
         }
     });
 
@@ -194,6 +200,7 @@ function preparePage()
         if (connected)
         {
             debug.sendInput("step_over");
+            socketHost.send(JSON.stringify(pingHostObj));
         }
     });
 
@@ -201,6 +208,7 @@ function preparePage()
         if (connected)
         {
             debug.sendInput("step_into");
+            socketHost.send(JSON.stringify(pingHostObj));
         }
     });
 
@@ -208,6 +216,7 @@ function preparePage()
         if (connected)
         {
             debug.sendInput("step_out");
+            socketHost.send(JSON.stringify(pingHostObj));
         }
     });
 
@@ -216,10 +225,35 @@ function preparePage()
     {
         if (command !== '')
         {
-            sendInput(command);
+            debug.sendInput(command);
+            socketHost.send(JSON.stringify(pingHostObj));
         }
     }, {
         height: 500
+    });
+
+    $("#complete-btn")[0].addEventListener("click", function()
+    {
+        if (connected)
+        {
+            //confirm that the user wants to submit their answer
+            $("#confirm-modal").modal("show");
+        }
+    });
+
+    $("#confirm-complete-btn")[0].addEventListener("click", function()
+    {
+        if (connected)
+        {
+            $("#submitting-exercise-message")[0].innerHTML = "Submitting exercise...";
+            $("#spinner-exercise").show();
+            $("#submitting-exercise-status")[0].innerHTML = "Submitting...";
+            $("#submit-exercise-modal").modal("show");
+
+            //submit user answer
+            debug.testProgram();
+            socketHost.send(JSON.stringify(pingHostObj));
+        }
     });
 
     //clear the terminal

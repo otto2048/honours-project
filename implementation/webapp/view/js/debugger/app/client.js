@@ -198,6 +198,51 @@ function on_message(messageEvent)
             toggleBreakpoint(file, parseInt(lineNum));
 
             break;
+        case constants.EVENT_ON_TEST_SUCCESS:
+            //get number of tests succeeded
+            var value = message.value.replace(/\s/g, "");
+
+            value = value.split("DEBUGGING_TOOL_RESULT:").pop();
+
+            console.log(value);
+
+            const urlParams = new URLSearchParams(window.location.search);
+
+            //mark this in the database
+            $.ajax({
+                type: "POST",
+                url: "/honours/webapp/controller/ajaxScripts/logUserExerciseAttempt.php",
+                data: {codeId: urlParams.get("id"), mark: value},
+                success: function(data) {
+                    if (data != 0)
+                    {
+                        console.log("ajax succeed");
+
+                        $("#submitting-exercise-message")[0].innerHTML = "Successfully submitted exercise";
+                        $("#spinner-exercise").hide();
+                        $("#submitting-exercise-status")[0].innerHTML = "Success";
+
+                        //take user back to homepage
+                        window.open("/honours/webapp/view/index.php", name="_self");
+                    }
+                    else
+                    {
+                        console.log("ajax failed");
+                        $("#submitting-exercise-message")[0].innerHTML = "Failed to submit exercise. Try again?";
+                        $("#spinner-exercise").hide();
+                        $("#submitting-exercise-status")[0].innerHTML = "Failed";
+
+                    }
+                }
+            });
+            break;
+
+        case constants.EVENT_ON_TEST_FAILURE:
+            console.log("server failed");
+            $("#submitting-exercise-message")[0].innerHTML = "Failed to submit exercise. Try again?";
+            $("#spinner-exercise").hide();
+            $("#submitting-exercise-status")[0].innerHTML = "Failed";
+            break;
         default:
             alert(message.event + "Client operation failed. Try again?");
     }
@@ -297,6 +342,7 @@ function setUpEditors()
             {
                 editors[i]["breakpoints"].delete(n + 1);
 
+                //TODO: this doesnt ping the host?
                 sendInput("clear_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
 
                 cm.setGutterMarker(n, "breakpoints", null);
@@ -305,6 +351,7 @@ function setUpEditors()
             {
                 editors[i]["breakpoints"].add(n + 1);
 
+                //TODO: this doesnt ping the host?
                 sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
 
                 cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
@@ -457,4 +504,63 @@ function toggleBreakpoint(file, lineNum)
     }
 }
 
-export {on_open, on_close, on_message, startProgram, sendInput, addCompilationBoxMessage, setUpEditors, prepareDebuggerClient, clearTerminal, socketObj}
+//tell socket to run unit test on program code
+function testProgram()
+{
+    var obj = new Request(constants.SENDER_USER);
+    obj.operation = constants.OP_TEST;
+
+    var filesData = [];
+    var editorFiles = [];
+    var sysFiles = [];
+
+    //read exercise file to see what files to get
+    $.ajax({
+        type: "GET",
+        url: $("#exerciseFileLocation")[0].innerHTML,
+        dataType: "json",
+        async: false,
+        success: function(data) {
+            sysFiles = data.sys_files;
+        }
+    });
+
+    //read all the files into filesData
+    for (var i=0; i<sysFiles.length; i++)
+    {
+        $.ajax({
+            type: "GET",
+            url: "/honours/webapp/view/exerciseFiles/" + sysFiles[i],
+            async: false,
+            success: function(data) {
+                filesData.push([sysFiles[i].split('/').pop(), data]);
+            }
+        });
+    }
+
+    //get the files in the editor
+    for (var i=0; i<editors.length; i++)
+    {
+        editorFiles.push([files[i].getAttribute("id"), editors[i]["editor"].getValue()]);
+    }
+
+    //update the files if they match anything in the editor
+    for (var i=0; i<filesData.length; i++)
+    {
+        for (var j=0; j<editorFiles.length; j++)
+        {
+            if (filesData[i][0] == editorFiles[j][0])
+            {
+                filesData[i][1] = editorFiles[j][1];
+            }
+        }
+    }
+
+    obj.value = filesData;
+
+    console.log(obj);
+
+    socketObj.socket.send(JSON.stringify(obj));
+}
+
+export {on_open, on_close, on_message, startProgram, sendInput, addCompilationBoxMessage, setUpEditors, prepareDebuggerClient, clearTerminal, testProgram, socketObj}
