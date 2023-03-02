@@ -15,7 +15,6 @@ class StepOver(gdb.Command):
     def invoke(self, args, from_tty):
         gdb.execute("next", to_string = True)
         result = gdb.execute("where", to_string=True)
-        print(result)
 
         print("FOR_SERVER\n")
 
@@ -39,7 +38,6 @@ class StepInto(gdb.Command):
     def invoke(self, args, from_tty):
         gdb.execute("step", to_string = True)
         result = gdb.execute("where", to_string=True)
-        print(result)
 
         result_arr = result.split("\n")
 
@@ -64,8 +62,6 @@ class StepOut(gdb.Command):
     def invoke(self, args, from_tty):
         gdb.execute("finish", to_string = True)
         result = gdb.execute("where", to_string=True)
-
-        print(result)
 
         print("FOR_SERVER\n")
 
