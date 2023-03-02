@@ -342,7 +342,7 @@ function setUpEditors(breakpointFunc)
             {
                 editors[i]["breakpoints"].delete(n + 1);
 
-                breakpointFunc(editors[i]["fileName"], sendRow.toString());
+                breakpointFunc(editors[i]["fileName"], sendRow.toString(), false);
 
                 cm.setGutterMarker(n, "breakpoints", null);
             }
@@ -350,7 +350,7 @@ function setUpEditors(breakpointFunc)
             {
                 editors[i]["breakpoints"].add(n + 1);
 
-                breakpointFunc(editors[i]["fileName"], sendRow.toString());
+                breakpointFunc(editors[i]["fileName"], sendRow.toString(), true);
 
                 cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
             }

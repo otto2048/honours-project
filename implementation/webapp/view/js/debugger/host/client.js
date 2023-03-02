@@ -316,11 +316,19 @@ function getUsername()
 }
 
 //send a new breakpoint to the debugger
-function sendBreakpoint(file, row)
+function sendBreakpoint(file, row, adding)
 {
     if (connected)
     {
-        debug.sendInput("clear_silent " + file + ":" + row);
+        if (adding)
+        {
+            debug.sendInput("break_silent " + file + ":" + row);
+        }
+        else
+        {
+            debug.sendInput("clear_silent " + file + ":" + row);
+        }
+
         socketHost.send(JSON.stringify(pingHostObj));
     }
 }
