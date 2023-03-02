@@ -5,7 +5,8 @@
     function getNavigation($selected = null)
     {
 ?>
-        <nav class="navbar navbar-expand-lg navbar-dark theme">
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-dark theme pt-3 pb-3">
             <div class="container-fluid">
                 <div class="d-flex">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,8 +89,24 @@
                         ?>
                     </ul>
                 </div>
+
+                
             </div>
         </nav>
+        <?php //check if user is logged in
+            if (isset($_SESSION["userId"]))
+            {
+        ?>
+                <div class="container-fluid theme-darker clearfix">
+                    <p class="float-end m-0 p-2">
+                        <?php
+                            echo "Logged in as: ".$_SESSION["username"];
+                        ?>
+                    </p>
+                </div>
+        <?php
+            } ?>
+    </div>
         <script src="/honours/webapp/view/js/navigation.js"></script>
 <?php
     }
