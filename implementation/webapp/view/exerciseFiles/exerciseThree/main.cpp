@@ -7,6 +7,8 @@ int main()
     int factor = 5;
     int factorTwo = 3;
 
+    std::cin >> num;
+
     if (testFactors(num, factor, factorTwo))
     {
         std::cout << "Both " << factor << " and " << factorTwo << " are factors of " << num;

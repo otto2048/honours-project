@@ -7,6 +7,7 @@ const ws = require('ws');
 const wss = new ws.Server({noServer: true});
 const exec = require('child_process').exec;
 const { v4: uuidv4 } = require('uuid');
+const Response = require('./response.js');
 
 const OP_CONNECTION = "CONNECTION";
 const OP_INPUT = "INPUT";
@@ -91,12 +92,11 @@ function onConnect(ws, req) {
         var message = JSON.parse(message);
 
         //create response object
-        var obj = new Object();
+        var obj = new Response(SENDER_HOST);
         obj.operation = OP_LAUNCH_DEBUGGER;
         obj.value = null;
         obj.status = ENV_FAIL;
         obj.message = "Oh no! Something went wrong!";
-        obj.sender = SENDER_HOST;
 
         if (message.operation == OP_LAUNCH_DEBUGGER)
         {
@@ -226,7 +226,7 @@ function launchContainer(userMessage, responseObj, ws)
     ws.send(JSON.stringify(responseObj));
 
     //generate a port for the container
-    var port = generatePort(3, 5);
+    var port = generatePort(3, 15);
 
     if (!port)
     {
