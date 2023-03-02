@@ -98,7 +98,7 @@
             {
         ?>
                 <div class="container-fluid theme-darker clearfix">
-                    <p class="float-end m-0 p-2">
+                    <p class="float-end m-0 p-2 text-light">
                         <?php
                             echo "Logged in as: ".$_SESSION["username"];
                         ?>
