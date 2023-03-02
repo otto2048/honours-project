@@ -162,7 +162,7 @@ socketHost.onmessage = function(event) {
 
 function preparePage()
 {
-    debug.setUpEditors();
+    debug.setUpEditors(sendBreakpoint);
 
     debug.prepareDebuggerClient();
 
@@ -313,6 +313,16 @@ function getUsername()
             return result.username;
         }
     }));
+}
+
+//send a new breakpoint to the debugger
+function sendBreakpoint(file, row)
+{
+    if (connected)
+    {
+        debug.sendInput("clear_silent " + file + ":" + row);
+        socketHost.send(JSON.stringify(pingHostObj));
+    }
 }
 
 //change code size

@@ -316,7 +316,7 @@ function addCompilationBoxMessage(message, colour)
 }
 
 //set up the code editors for all the files
-function setUpEditors()
+function setUpEditors(breakpointFunc)
 {
     //create editors
     for (var i=0; i<files.length; i++)
@@ -342,8 +342,7 @@ function setUpEditors()
             {
                 editors[i]["breakpoints"].delete(n + 1);
 
-                //TODO: this doesnt ping the host?
-                sendInput("clear_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+                breakpointFunc(editors[i]["fileName"], sendRow.toString());
 
                 cm.setGutterMarker(n, "breakpoints", null);
             }
@@ -351,8 +350,7 @@ function setUpEditors()
             {
                 editors[i]["breakpoints"].add(n + 1);
 
-                //TODO: this doesnt ping the host?
-                sendInput("break_silent " + editors[i]["fileName"] + ":" + sendRow.toString());
+                breakpointFunc(editors[i]["fileName"], sendRow.toString());
 
                 cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
             }
