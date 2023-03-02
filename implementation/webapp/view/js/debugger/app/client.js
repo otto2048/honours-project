@@ -99,6 +99,7 @@ function on_message(messageEvent)
         case constants.EVENT_ON_COMPILE_FAILURE:
             //display compilation output
             addCompilationBoxMessage(message.value, "alert-info");
+            $("#compilation-messages-box ul")[0].scrollIntoView();
 
             //show and enable play button
             $("#play-btn")[0].disabled = false;
@@ -313,6 +314,8 @@ function addCompilationBoxMessage(message, colour)
     li.append(alertDiv);
 
     $("#compilation-messages-box ul")[0].prepend(li);
+
+
 }
 
 //set up the code editors for all the files
