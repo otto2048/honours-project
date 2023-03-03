@@ -161,7 +161,7 @@ function onConnect(ws) {
                         {
                             //give compilation errors
                             stderr = stderr.replace(' << "'+ GDB_OUTPUT_STRING + " " + PROGRAM_OUTPUT_STRING + '"', "");
-                            stderr = stderr.replace(' << "' + PROGRAM_OUTPUT_STRING_END + '"', "");
+                            stderr = stderr.replace(' << " ' + PROGRAM_OUTPUT_STRING_END + '"', "");
                             obj.value = "Failed to compile\nErrors:\n" + stderr;
                             obj.event = EVENT_ON_COMPILE_FAILURE;
                             ws.send(JSON.stringify(obj));

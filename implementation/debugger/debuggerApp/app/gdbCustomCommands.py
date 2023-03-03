@@ -13,8 +13,11 @@ class StepOver(gdb.Command):
         return gdb.COMPLETE_SYMBOL
     
     def invoke(self, args, from_tty):
+        print("here")
+        #to_string not working?
         gdb.execute("next", to_string = True)
         result = gdb.execute("where", to_string=True)
+        print(result)
 
         print("FOR_SERVER\n")
 
