@@ -40,6 +40,21 @@ const GDB_OUTPUT_STRING = "FOR_SERVER"
 const fs = require('fs');
 const async = require('async');
 
+//logging
+const winston = require("winston");
+
+const logger = winston.createLogger({
+    level: 'info',
+    transports: [
+      //
+      // - Write all logs with importance level of `error` or less to `error.log`
+      // - Write all logs with importance level of `info` or less to `combined.log`
+      //
+      new winston.transports.File({ filename: 'error.log', level: 'error' }),
+      new winston.transports.File({ filename: 'combined.log' }),
+    ],
+  });
+
 const wss = new ws.Server({noServer: true});
 
 //variable to hold child process that runs program
@@ -108,11 +123,11 @@ function onConnect(ws) {
                 {
                     if (err)
                     {
-                        console.log(err);
+                        logger.info(err);
                     }
                     else
                     {
-                        console.log("created file " + fname);
+                        logger.info("created file " + fname);
                     }
 
                     callback();
@@ -123,10 +138,10 @@ function onConnect(ws) {
                     // One of the iterations produced an error.
                     // All processing will now stop.
                     ws.send(JSON.stringify(obj));
-                    console.log('A file failed to process');
+                    logger.info('A file failed to process');
                 }
                 else {
-                    console.log('All files have been processed successfully');
+                    logger.info('All files have been processed successfully');
 
                     //compile program
                     var fileString = "";
@@ -162,7 +177,7 @@ function onConnect(ws) {
                             {
                                 if (err)
                                 {
-                                    console.log(err);
+                                    logger.info(err);
                                 }
                                 else
                                 {
@@ -180,11 +195,11 @@ function onConnect(ws) {
                                                 {
                                                     if (err)
                                                     {
-                                                        console.log(err);
+                                                        logger.info(err);
                                                     }
                                                     else
                                                     {
-                                                        console.log("appended file ");
+                                                        logger.info("appended file ");
                                                     }
                                 
                                                     callback();
@@ -195,7 +210,7 @@ function onConnect(ws) {
                                                     // One of the iterations produced an error.
                                                     // All processing will now stop.
                                                     ws.send(JSON.stringify(obj));
-                                                    console.log('A breakpoint failed to append');
+                                                    logger.info('A breakpoint failed to append');
                                                 }
                                                 else
                                                 {
@@ -204,7 +219,7 @@ function onConnect(ws) {
                                                         //launch gdb
                                                         launchGDB(obj, ws);
                                                     }).catch(function(err) {
-                                                        console.log(err);
+                                                        logger.info(err);
                                                     });;
                                                 }
                                             });
@@ -216,11 +231,11 @@ function onConnect(ws) {
                                                 //launch gdb
                                                 launchGDB(obj, ws);
                                             }).catch(function(err) {
-                                                console.log(err);
+                                                logger.info(err);
                                             });
                                         }
                                         }).catch(function(err) {
-                                            console.log(err);
+                                            logger.info(err);
                                         });
                                     }
                             });
@@ -244,11 +259,11 @@ function onConnect(ws) {
                 {
                     if (err)
                     {
-                        console.log(err);
+                        logger.info(err);
                     }
                     else
                     {
-                        console.log("created file " + fname_);
+                        logger.info("created file " + fname_);
                     }
 
                     callback();
@@ -260,23 +275,23 @@ function onConnect(ws) {
                     // All processing will now stop.
                     obj.event = EVENT_ON_TEST_FAILURE;
                     ws.send(JSON.stringify(obj));
-                    console.log('A file failed to process');
+                    logger.info('A file failed to process');
                 }
                 else {
-                    console.log('All files have been processed successfully');
+                    logger.info('All files have been processed successfully');
 
                     //compile program
                     var fileString_ = "";
                     for (var i=0; i<clientMsg.value.length; i++)
                     {
-                        console.log(clientMsg.value[i][0].split('.').pop());
+                        logger.info(clientMsg.value[i][0].split('.').pop());
                         if (clientMsg.value[i][0].split('.').pop() == "cpp")
                         {
                             fileString_ = fileString_ + clientMsg.value[i][0] + " ";
                         }
                     }
 
-                    console.log(fileString_);
+                    logger.info(fileString_);
 
                     var command_ = "g++ -Wall -g -pthread " + fileString_ + " /usr/local/lib/libgtest.a -o unitTest";
 
@@ -335,7 +350,7 @@ function launchGDB(obj, ws)
     progProcess = spawn('gdb', ['-q', 'executable']);
 
     progProcess.stdout.on('data', function (data) {
-        console.log('stdout: ' + data.toString());
+        logger.info('stdout: ' + data.toString());
 
         output = data.toString();
 
@@ -417,13 +432,13 @@ function launchGDB(obj, ws)
     });
 
     progProcess.stderr.on('data', function (data) {
-        console.log('stderr: ' + data.toString());
+        logger.info('stderr: ' + data.toString());
     });
 
     progProcess.on('exit', function (code) {
-        console.log("exited");
+        logger.info("exited");
         obj.event = EVENT_ON_PROGRAM_EXIT;
-        console.log(obj);
+        logger.info(obj);
         ws.send(JSON.stringify(obj));
         progProcess = null;
     });

@@ -4,6 +4,7 @@
     "author": "Elizabeth Blogg",
     "dependencies": {
         "ws":"8.12.0",
-        "async":"3.2.4"
+        "async":"3.2.4",
+        "winston":"3.8.2"
     }
 }
