@@ -9,11 +9,11 @@ var files = $(".editor");
 var currentFile = "main.cpp";
 var trackingFile = null;
 
-let socketObj = {
+export let socketObj = {
     socket: null
 };
 
-function prepareDebuggerClient()
+export function prepareDebuggerClient()
 {
     //keep track of the current file being displayed
     var tabs = $(".tab-header");
@@ -37,7 +37,7 @@ function prepareDebuggerClient()
     }(i));
 }
 
-function on_open() 
+export function on_open() 
 {
     //allow user to interact with compiler, enable buttons
     var debuggerBtns = $(".on-connected");
@@ -49,7 +49,7 @@ function on_open()
     }
 }
 
-function on_close()
+export function on_close()
 {
     var debuggerBtns = $(".on-connected");
     
@@ -60,7 +60,7 @@ function on_close()
     }
 }
 
-function on_message(messageEvent)
+export function on_message(messageEvent)
 {
     //handle message
     var message = JSON.parse(messageEvent.data);
@@ -250,7 +250,7 @@ function on_message(messageEvent)
 }
 
 //tell socket that we want to compile and start the program
-function startProgram()
+export function startProgram()
 {
     clearTerminal();
 
@@ -284,7 +284,7 @@ function startProgram()
 }
 
 //tell socket that we want to send some input to the program
-function sendInput(input)
+export function sendInput(input)
 {
     var obj = new Request(constants.SENDER_USER);
     obj.operation = constants.OP_INPUT;
@@ -292,7 +292,7 @@ function sendInput(input)
     socketObj.socket.send(JSON.stringify(obj));
 }
 
-function addCompilationBoxMessage(message, colour)
+export function addCompilationBoxMessage(message, colour)
 {
     var li = document.createElement("li");
     
@@ -319,7 +319,7 @@ function addCompilationBoxMessage(message, colour)
 }
 
 //set up the code editors for all the files
-function setUpEditors(breakpointFunc)
+export function setUpEditors(breakpointFunc)
 {
     //create editors
     for (var i=0; i<files.length; i++)
@@ -381,7 +381,7 @@ function setUpEditors(breakpointFunc)
 }
 
 //clear terminal
-function clearTerminal()
+export function clearTerminal()
 {
     var term = $.terminal.active();
     term.clear();
@@ -506,7 +506,7 @@ function toggleBreakpoint(file, lineNum)
 }
 
 //tell socket to run unit test on program code
-function testProgram()
+export function testProgram()
 {
     var obj = new Request(constants.SENDER_USER);
     obj.operation = constants.OP_TEST;
@@ -563,5 +563,3 @@ function testProgram()
 
     socketObj.socket.send(JSON.stringify(obj));
 }
-
-export {on_open, on_close, on_message, startProgram, sendInput, addCompilationBoxMessage, setUpEditors, prepareDebuggerClient, clearTerminal, testProgram, socketObj}
