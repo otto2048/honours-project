@@ -19,6 +19,8 @@ const OP_TEST = "TEST";
 const EVENT_ON_BREAK = "EVENT_ON_BREAK";
 const EVENT_ON_BREAK_END = "EVENT_ON_BREAK_END";
 const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
+const EVENT_ON_PROG_EXIT = "EVENT_ON_PROG_EXIT";
+const EVENT_ON_PROG_EXIT_END = "EVENT_ON_PROG_EXIT_END";
 const EVENT_ON_CONTINUE_END = "EVENT_ON_CONTINUE_END";
 const EVENT_ON_STEP = "EVENT_ON_STEP";
 const EVENT_ON_STEP_END = "EVENT_ON_STEP_END";
@@ -60,8 +62,6 @@ const wss = new ws.Server({noServer: true});
 
 //variable to hold child process that runs program
 var progProcess;
-
-
 
 //create server
 function accept(req, res) {
@@ -438,9 +438,17 @@ function launchGDB(obj, ws)
                 ws.send(JSON.stringify(obj));
             }
             //check if this is output for the user
-            else if (element.indexOf(PROGRAM_OUTPUT_STRING) != -1)
+            else if (element.indexOf(EVENT_ON_PROG_EXIT) != -1)
             {
+                //split on start of string
+                element = element.substring(element.indexOf(EVENT_ON_PROG_EXIT) + EVENT_ON_PROG_EXIT.length);
                 
+                //split on end of string
+                element = element.split(EVENT_ON_PROG_EXIT_END, 1)[0];
+
+                obj.value = element;
+                obj.event = EVENT_ON_STDOUT;
+                ws.send(JSON.stringify(obj));
             }
             
         });
@@ -461,3 +469,6 @@ function launchGDB(obj, ws)
 }
 
 //TODO: output program exit code
+
+//TODO: tail only outputs a line after endl
+//TODO: sometimes exit code is printed before output
