@@ -138,6 +138,8 @@
 
             $result = json_decode($resultJSON, JSON_INVALID_UTF8_SUBSTITUTE|JSON_OBJECT_AS_ARRAY);
 
+            echo $result;
+
             //check if user exists
             if (isset($result["isempty"]))
             {

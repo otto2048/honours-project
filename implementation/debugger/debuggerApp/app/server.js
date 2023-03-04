@@ -10,6 +10,7 @@ const ws = require('ws');
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 const Response = require('./response.js');
+const tail = require("tail").Tail;
 
 const OP_INPUT = "INPUT";
 const OP_COMPILE = "COMPILE";
@@ -59,7 +60,8 @@ const wss = new ws.Server({noServer: true});
 
 //variable to hold child process that runs program
 var progProcess;
-var running = false;
+
+
 
 //create server
 function accept(req, res) {
@@ -104,20 +106,20 @@ function onConnect(ws) {
                 var fname = file[0];
                 var content = file[1];
 
-                content = content.replace(/cout/g, 'cout << "'+ GDB_OUTPUT_STRING + " " + PROGRAM_OUTPUT_STRING +'"');
+                content = content.replace(/cout/g, 'cout << "' + PROGRAM_OUTPUT_STRING +'"');
                 
-                var contentArray = content.split('\n');
+                // var contentArray = content.split('\n');
 
-                for (var i=0; i<contentArray.length; i++)
-                {
-                    if (contentArray[i].indexOf("cout") != -1)
-                    {
-                        contentArray[i] = contentArray[i].slice(0, -1);
-                        contentArray[i] = contentArray[i] + ' << "' + PROGRAM_OUTPUT_STRING_END + '";';
-                    }
-                }
+                // for (var i=0; i<contentArray.length; i++)
+                // {
+                //     if (contentArray[i].indexOf("cout") != -1)
+                //     {
+                //         contentArray[i] = contentArray[i].slice(0, -1);
+                //         contentArray[i] = contentArray[i] + ' << "' + PROGRAM_OUTPUT_STRING_END + '";';
+                //     }
+                // }
 
-                content = contentArray.join("\n");
+                // content = contentArray.join("\n");
 
                 fs.writeFile(fname, content, function (err)
                 {
@@ -215,7 +217,7 @@ function onConnect(ws) {
                                                 else
                                                 {
                                                     //write the rest of the file
-                                                    appendFile('.gdbinit', "run").then(function() {
+                                                    appendFile('.gdbinit', "run > outfile").then(function() {
                                                         //launch gdb
                                                         launchGDB(obj, ws);
                                                     }).catch(function(err) {
@@ -227,7 +229,7 @@ function onConnect(ws) {
                                         else
                                         {
                                             //write the rest of the file
-                                            appendFile('.gdbinit', "run").then(function() {
+                                            appendFile('.gdbinit', "run > outfile").then(function() {
                                                 //launch gdb
                                                 launchGDB(obj, ws);
                                             }).catch(function(err) {
@@ -349,6 +351,32 @@ function launchGDB(obj, ws)
     //use child process to start program
     progProcess = spawn('gdb', ['-q', 'executable']);
 
+    let tailProcess = new tail("outfile");
+
+    tailProcess.on("line", data => {
+        logger.info('tail process stdout: ' + data);
+        output = data;
+
+        var outputs = output.split(PROGRAM_OUTPUT_STRING);
+
+        for (var i=0; i<outputs.length; i++)
+        {
+            //split on start of string
+            outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING).pop();
+            
+            //split on end of string
+            outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING_END, 1)[0];
+
+            obj.value = outputs[i];
+            obj.event = EVENT_ON_STDOUT;
+            ws.send(JSON.stringify(obj));
+        }
+    });
+
+    tailProcess.on("error", err => {
+        logger.info("tail proc err" + err);
+    })
+
     progProcess.stdout.on('data', function (data) {
         logger.info('stdout: ' + data.toString());
 
@@ -412,20 +440,7 @@ function launchGDB(obj, ws)
             //check if this is output for the user
             else if (element.indexOf(PROGRAM_OUTPUT_STRING) != -1)
             {
-                var outputs = element.split(PROGRAM_OUTPUT_STRING);
-
-                for (var i=0; i<outputs.length; i++)
-                {
-                    //split on start of string
-                    outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING).pop();
-                    
-                    //split on end of string
-                    outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING_END, 1)[0];
-
-                    obj.value = outputs[i];
-                    obj.event = EVENT_ON_STDOUT;
-                    ws.send(JSON.stringify(obj));
-                }
+                
             }
             
         });
@@ -441,6 +456,7 @@ function launchGDB(obj, ws)
         logger.info(obj);
         ws.send(JSON.stringify(obj));
         progProcess = null;
+        tailProcess.unwatch();
     });
 }
 
