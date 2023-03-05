@@ -124,86 +124,72 @@
                         </div>
                     </div>
 
-                    <ul class="nav-tabs nav" role="tablist">
-                        <?php
-                            foreach ($exerciseFile["user_files"] as $fileName)
-                            {
-                                //get the contents of this file
-                                $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
-                                $pathInfo = pathinfo($fileName);
-
-                                ?>
-                                <li class="nav-item">
-                                    <button class="nav-link tab-header <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php  echo str_replace(".", "", $pathInfo["basename"]); ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
-                                </li>
+                    <div class="row">
+                        <div class="col-sm">
+                            <ul class="nav-tabs nav" role="tablist">
                                 <?php
-                            }
-                        ?>
-                    </ul>
-                    
+                                    foreach ($exerciseFile["user_files"] as $fileName)
+                                    {
+                                        //get the contents of this file
+                                        $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
+                                        $pathInfo = pathinfo($fileName);
 
-                    <div class="tab-content">
-
-                        <?php
-                            foreach ($exerciseFile["user_files"] as $fileName)
-                            {
-                                //get the contents of this file
-                                $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
-                                $pathInfo = pathinfo($fileName);
-
+                                        ?>
+                                        <li class="nav-item">
+                                            <button class="nav-link tab-header <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php  echo str_replace(".", "", $pathInfo["basename"]); ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
+                                        </li>
+                                        <?php
+                                    }
                                 ?>
-
-                                <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
-                                    <textarea id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
-<?php echo $file; ?>
-                                    </textarea>
-                                </div>
-
-                                <?php
-                            }
-
-                        ?>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-dark theme me-1" id="increase-code-size-btn">+ Increase Font Size</button>
-                        <button type="button" class="btn btn-dark theme me-1" id="decrease-code-size-btn">- Decrease Font Size</button>
-                    </div>
+                            </ul>
                             
 
-                    <div class="row">
-
-                        <div class="col-sm mt-2 me-3">
-
-                            <ul class="nav-tabs nav" role="tablist">
-                                <li class="nav-item">
-                                    <button class="nav-link tab-header active" id="nav-output-tab" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#output-tab" aria-controls="output-tab" aria-selected="true">Output</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link tab-header" id="nav-locals-tab" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#locals-tab" aria-controls="locals-tab" aria-selected="false">Variables</button>
-                                </li>
-                            </ul>
-                                    
                             <div class="tab-content">
-                                <div class="tab-pane fade show active" id="output-tab" role="tabpanel" aria-labelledby="nav-output-tab">
-                                    <!-- compilation message output -->
-                                    <div class="col-sm mt-2 border pb-5 ps-1">
-                                        <h2 class="h4 ps-2 pt-3">Output</h2>
-                                        <hr>
-                                        <p class="ps-2">See debugger output messages here</p>
-                                        <div class="overflow-auto resize" id="compilation-messages-box">
-                                            <ul class="list-unstyled list-group">
-                                                
-                                            </ul>
+
+                                <?php
+                                    foreach ($exerciseFile["user_files"] as $fileName)
+                                    {
+                                        //get the contents of this file
+                                        $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
+                                        $pathInfo = pathinfo($fileName);
+
+                                        ?>
+
+                                        <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
+                                            <textarea id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
+<?php echo $file; ?>
+                                            </textarea>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="locals-tab" role="tabpanel" aria-labelledby="nav-locals-tab">
-                                    <!-- debug output window -->
-                                    <div id="debug-output-window">
-                                        <h2 class="h4 ps-2 pt-3">Variable states</h2>
-                                        <hr>
-                                    </div>
-                                </div>
+
+                                        <?php
+                                    }
+
+                                ?>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="button" class="btn btn-dark theme me-1" id="increase-code-size-btn">+ Increase Font Size</button>
+                                <button type="button" class="btn btn-dark theme me-1" id="decrease-code-size-btn">- Decrease Font Size</button>
+                            </div>
+                            
+                            
+                        </div>
+                        <!-- debug output window -->
+                        <div class="col-sm d-none" id="debug-output-window">
+                            <h2 class="h4 ps-2 pt-3">Variable states</h2>
+                            <hr>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- compilation message output -->
+                        <div class="col-sm mt-2 border pb-5 ps-1 me-3">
+                            <h2 class="h4 ps-2 pt-3">Output</h2>
+                            <hr>
+                            <p class="ps-2">See debugger output messages here</p>
+                            <div class="overflow-auto resize" id="compilation-messages-box">
+                                <ul class="list-unstyled list-group">
+                                    
+                                </ul>
                             </div>
                         </div>
 
