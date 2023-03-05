@@ -189,9 +189,9 @@
 
                     <!-- compilation message output -->
                     <div class="mt-2 border pb-5 ps-1 resize">
-                        <h2 class="h4 ps-2 pt-3">Compilation Output</h2>
+                        <h2 class="h4 ps-2 pt-3">Output</h2>
                         <hr>
-                        <p class="ps-2">See compilation messages here</p>
+                        <p class="ps-2">See debugger output messages here</p>
                         <div class="overflow-auto" id="compilation-messages-box">
                             <ul class="list-unstyled list-group">
                                 

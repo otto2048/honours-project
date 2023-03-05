@@ -19,8 +19,8 @@ const OP_TEST = "TEST";
 const EVENT_ON_BREAK = "EVENT_ON_BREAK";
 const EVENT_ON_BREAK_END = "EVENT_ON_BREAK_END";
 const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
-const EVENT_ON_PROG_EXIT = "EVENT_ON_PROG_EXIT";
-const EVENT_ON_PROG_EXIT_END = "EVENT_ON_PROG_EXIT_END";
+const EVENT_ON_INFERIOR_EXIT = "EVENT_ON_PROG_EXIT";
+const EVENT_ON_INFERIOR_EXIT_END = "EVENT_ON_PROG_EXIT_END";
 const EVENT_ON_CONTINUE_END = "EVENT_ON_CONTINUE_END";
 const EVENT_ON_STEP = "EVENT_ON_STEP";
 const EVENT_ON_STEP_END = "EVENT_ON_STEP_END";
@@ -423,16 +423,16 @@ function launchGDB(obj, ws)
                 ws.send(JSON.stringify(obj));
             }
             //check if this is output for the user
-            else if (element.indexOf(EVENT_ON_PROG_EXIT) != -1)
+            else if (element.indexOf(EVENT_ON_INFERIOR_EXIT) != -1)
             {
                 //split on start of string
-                element = element.substring(element.indexOf(EVENT_ON_PROG_EXIT) + EVENT_ON_PROG_EXIT.length);
+                element = element.substring(element.indexOf(EVENT_ON_INFERIOR_EXIT) + EVENT_ON_INFERIOR_EXIT.length);
                 
                 //split on end of string
-                element = element.split(EVENT_ON_PROG_EXIT_END, 1)[0];
+                element = element.split(EVENT_ON_INFERIOR_EXIT_END, 1)[0];
 
                 obj.value = element;
-                obj.event = EVENT_ON_STDOUT;
+                obj.event = EVENT_ON_INFERIOR_EXIT;
                 ws.send(JSON.stringify(obj));
             }
             

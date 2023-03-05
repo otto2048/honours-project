@@ -244,6 +244,11 @@ export function on_message(messageEvent)
             $("#spinner-exercise").hide();
             $("#submitting-exercise-status")[0].innerHTML = "Failed";
             break;
+        case constants.EVENT_ON_INFERIOR_EXIT:
+            //add exit code to the output box
+            addCompilationBoxMessage(message.value.trim(), "alert-info");
+
+            break;
         default:
             alert(message.event + "Client operation failed. Try again?");
     }
