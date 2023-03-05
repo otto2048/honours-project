@@ -80,7 +80,7 @@ export function on_message(messageEvent)
             break;
         case constants.EVENT_ON_COMPILE_SUCCESS:
             //display compilation output
-            addCompilationBoxMessage(message.value, "alert-info");
+            addCompilationBoxMessage(message.value, "alert-success");
 
             //show debugger live controls
             $(".debugger-live-control").removeClass("d-none");
@@ -98,7 +98,7 @@ export function on_message(messageEvent)
             break;
         case constants.EVENT_ON_COMPILE_FAILURE:
             //display compilation output
-            addCompilationBoxMessage(message.value, "alert-info");
+            addCompilationBoxMessage(message.value, "alert-danger");
             $("#compilation-messages-box ul")[0].scrollIntoView();
 
             //show and enable play button

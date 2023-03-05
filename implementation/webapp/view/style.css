@@ -80,6 +80,22 @@
     border-color: #000;
 }
 
+[data-bs-theme=light] .alert-success p {
+    color: #000;
+}
+
+[data-bs-theme=dark] .alert-success p {
+    color: #FFF;
+}
+
+[data-bs-theme=light] .alert-danger p {
+    color: #000;
+}
+
+[data-bs-theme=dark] .alert-danger p {
+    color: #FFF;
+}
+
 .likert li {
     float: left;
     list-style-type: none;
