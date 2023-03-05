@@ -2,6 +2,14 @@ import gdb
 
 # define handlers
 def exit_handler (event):
+    
+    print("FOR_SERVER")
+    print("EVENT_ON_PROG_EXIT")
+    exit_code_str = gdb.execute("print $_exitcode", to_string=True)
+    exit_code = exit_code_str.split()
+    print("Program exited with code: " + exit_code[-1])
+    print("EVENT_ON_PROG_EXIT_END")
+
     gdb.execute("quit")
 
 def stop_handler(event):
