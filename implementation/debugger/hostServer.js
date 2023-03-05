@@ -238,7 +238,7 @@ function launchContainer(userMessage, responseObj, ws)
     }
 
     //run the container
-    command = "docker run -d --name " + userMessage.value + " -p " + port + ":8080 debugger_app:1.1";
+    command = "docker run -d --name " + userMessage.value + " -p " + port + ":8080 otto2048/debugger_app:latest";
 
     //launch a debugger container for this user
     exec(command, (error, stdout, stderr) => {
