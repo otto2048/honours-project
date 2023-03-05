@@ -175,13 +175,14 @@
                         </div>
                         <!-- debug output window -->
                         <div class="col-sm d-none" id="debug-output-window">
-                            
+                            <h2 class="h4 ps-2 pt-3">Variable states</h2>
+                            <hr>
                         </div>
                     </div>
 
                     <div class="row">
                         <!-- compilation message output -->
-                        <div class="col-sm mt-2 border pb-5 ps-1 resize">
+                        <div class="col-sm mt-2 border pb-5 ps-1 resize me-3">
                             <h2 class="h4 ps-2 pt-3">Output</h2>
                             <hr>
                             <p class="ps-2">See debugger output messages here</p>
@@ -192,10 +193,12 @@
                             </div>
                         </div>
 
-                        <div class="col-sm">
+                        <div class="col-sm mt-2 border ms-3">
+                            <h2 class="h4 ps-2 pt-3">Program Output</h2>
+                            <hr>
                             <!-- container for terminal -->
                             <div id="code-output"></div>
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-center mt-3 mb-3">
                                 <button type="button" class="btn btn-dark theme me-1" id="increase-terminal-size-btn">+ Increase Font Size</button>
                                 <button type="button" class="btn btn-dark theme me-1" id="clear-terminal-btn">Clear Terminal</button>
                                 <button type="button" class="btn btn-dark theme me-1" id="decrease-terminal-size-btn">- Decrease Font Size</button>
