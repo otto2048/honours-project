@@ -85,6 +85,9 @@ export function on_message(messageEvent)
             //show debugger live controls
             $(".debugger-live-control").removeClass("d-none");
 
+            //show debug output window
+            $("#debug-output-window").removeClass("d-none");
+
             //enable stop debugger live control
             $("#stop-btn")[0].disabled = false;
             $("#stop-btn")[0].ariaDisabled = false;
@@ -110,6 +113,9 @@ export function on_message(messageEvent)
         case constants.EVENT_ON_PROGRAM_EXIT:
             //hide and disable debugger live controls
             $(".debugger-live-control").addClass("d-none");
+
+            //hide debug output window
+            $("#debug-output-window").addClass("d-none");
 
             var debuggerLiveControls = $(".debugger-live-control");
 

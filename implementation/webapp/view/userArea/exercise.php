@@ -109,6 +109,21 @@
 
                     <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
 
+                    <div class="row pt-1 pb-1 ">
+                        <div class="col-8">
+                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control on-connected ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
+                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
+                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop" title="stop"></span></button>
+                        </div>
+                        <div class="col-4">
+                            <div class="float-end">
+                                <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-into-btn" aria-label="Step into"><span class="mdi mdi-arrow-down" title="step into"></span></button>
+                                <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-over-btn" aria-label="Step over"><span class="mdi mdi-arrow-down-right" title="step over"></span></button>
+                                <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-out-btn" aria-label="Step out"><span class="mdi mdi-arrow-up" title="step out"></span></button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-sm">
                             <ul class="nav-tabs nav" role="tablist">
@@ -158,24 +173,26 @@
                             
                             
                         </div>
-                        <div class="col-sm">
+                        <!-- debug output window -->
+                        <div class="col-sm d-none" id="debug-output-window">
+                            
+                        </div>
+                    </div>
 
-                            <div class="row  pt-1 pb-1 ">
-                                <div class="col-8">
-                                    <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control on-connected ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
-                                    <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
-                                    <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop" title="stop"></span></button>
-                                </div>
-                                <div class="col-4">
-                                    <div class="float-end">
-                                        <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-into-btn" aria-label="Step into"><span class="mdi mdi-arrow-down" title="step into"></span></button>
-                                        <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-over-btn" aria-label="Step over"><span class="mdi mdi-arrow-down-right" title="step over"></span></button>
-                                        <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control debugger-step-control d-none ms-1" id="step-out-btn" aria-label="Step out"><span class="mdi mdi-arrow-up" title="step out"></span></button>
-                                    </div>
-                                </div>
+                    <div class="row">
+                        <!-- compilation message output -->
+                        <div class="col-sm mt-2 border pb-5 ps-1 resize">
+                            <h2 class="h4 ps-2 pt-3">Output</h2>
+                            <hr>
+                            <p class="ps-2">See debugger output messages here</p>
+                            <div class="overflow-auto" id="compilation-messages-box">
+                                <ul class="list-unstyled list-group">
+                                    
+                                </ul>
                             </div>
-                            
-                            
+                        </div>
+
+                        <div class="col-sm">
                             <!-- container for terminal -->
                             <div id="code-output"></div>
                             <div class="d-flex justify-content-center">
@@ -183,21 +200,10 @@
                                 <button type="button" class="btn btn-dark theme me-1" id="clear-terminal-btn">Clear Terminal</button>
                                 <button type="button" class="btn btn-dark theme me-1" id="decrease-terminal-size-btn">- Decrease Font Size</button>
                             </div>
-                            
                         </div>
                     </div>
 
-                    <!-- compilation message output -->
-                    <div class="mt-2 border pb-5 ps-1 resize">
-                        <h2 class="h4 ps-2 pt-3">Output</h2>
-                        <hr>
-                        <p class="ps-2">See debugger output messages here</p>
-                        <div class="overflow-auto" id="compilation-messages-box">
-                            <ul class="list-unstyled list-group">
-                                
-                            </ul>
-                        </div>
-                    </div>
+                    
 
                     <!-- load debugger connection modal -->
                     <div class="modal fade" id="load-debugger-modal" tabindex="-1" aria-labelledby="load-debugger-modal" aria-hidden="false">
