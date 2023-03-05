@@ -182,11 +182,11 @@
 
                     <div class="row">
                         <!-- compilation message output -->
-                        <div class="col-sm mt-2 border pb-5 ps-1 resize me-3">
+                        <div class="col-sm mt-2 border pb-5 ps-1 me-3">
                             <h2 class="h4 ps-2 pt-3">Output</h2>
                             <hr>
                             <p class="ps-2">See debugger output messages here</p>
-                            <div class="overflow-auto" id="compilation-messages-box">
+                            <div class="overflow-auto resize" id="compilation-messages-box">
                                 <ul class="list-unstyled list-group">
                                     
                                 </ul>

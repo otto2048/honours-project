@@ -63,7 +63,7 @@
 }
 
 #compilation-messages-box {
-    max-height: var(--default-height);
+    height: var(--default-height);
 }
 
 [data-bs-theme=light] .alert-dark p {
