@@ -35,8 +35,6 @@ const EVENT_ON_BREAKPOINT_CHANGED_END = "EVENT_ON_BP_CHANGED_END";
 
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
-const PROGRAM_OUTPUT_STRING = "PROGRAM_OUTPUT ";
-const PROGRAM_OUTPUT_STRING_END = " PROGRAM_OUTPUT_END";
 const GDB_OUTPUT_STRING = "FOR_SERVER"
 
 //write to files
@@ -106,7 +104,7 @@ function onConnect(ws) {
                 var fname = file[0];
                 var content = file[1];
 
-                content = content.replace(/cout/g, 'cout << "' + PROGRAM_OUTPUT_STRING +'"');
+                //content = content.replace(/cout/g, 'cout << "' + PROGRAM_OUTPUT_STRING +'"');
                 
                 // var contentArray = content.split('\n');
 
@@ -162,8 +160,8 @@ function onConnect(ws) {
                         if (stderr)
                         {
                             //give compilation errors
-                            stderr = stderr.replace(' << "'+ GDB_OUTPUT_STRING + " " + PROGRAM_OUTPUT_STRING + '"', "");
-                            stderr = stderr.replace(' << " ' + PROGRAM_OUTPUT_STRING_END + '"', "");
+                            // stderr = stderr.replace(' << "'+ GDB_OUTPUT_STRING + " " + PROGRAM_OUTPUT_STRING + '"', "");
+                            // stderr = stderr.replace(' << " ' + PROGRAM_OUTPUT_STRING_END + '"', "");
                             obj.value = "Failed to compile\nErrors:\n" + stderr;
                             obj.event = EVENT_ON_COMPILE_FAILURE;
                             ws.send(JSON.stringify(obj));
@@ -355,22 +353,9 @@ function launchGDB(obj, ws)
 
     tailProcess.on("line", data => {
         logger.info('tail process stdout: ' + data);
-        output = data;
-
-        var outputs = output.split(PROGRAM_OUTPUT_STRING);
-
-        for (var i=0; i<outputs.length; i++)
-        {
-            //split on start of string
-            outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING).pop();
-            
-            //split on end of string
-            outputs[i] = outputs[i].split(PROGRAM_OUTPUT_STRING_END, 1)[0];
-
-            obj.value = outputs[i];
-            obj.event = EVENT_ON_STDOUT;
-            ws.send(JSON.stringify(obj));
-        }
+        obj.value = data;
+        obj.event = EVENT_ON_STDOUT;
+        ws.send(JSON.stringify(obj));
     });
 
     tailProcess.on("error", err => {
