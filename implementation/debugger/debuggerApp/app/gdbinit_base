@@ -1,2 +1,3 @@
 source gdbWebFlow.py
 source gdbCustomCommands.py
+source gdbPrettyPrinter.py
