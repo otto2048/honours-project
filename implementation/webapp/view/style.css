@@ -1,10 +1,12 @@
-/*Colours*/
+/* variables */
 :root {
     --green: #00663F;
     --dark-green: #013320;
     --white: #fff;
 
     --bs-info-text: #000;
+
+    --default-height: 15em;
 }
 
 [data-bs-theme=dark] {
@@ -61,7 +63,7 @@
 }
 
 #compilation-messages-box {
-    max-height: 500px;
+    height: var(--default-height);
 }
 
 [data-bs-theme=light] .alert-dark p {
@@ -80,6 +82,22 @@
     border-color: #000;
 }
 
+[data-bs-theme=light] .alert-success p {
+    color: #000;
+}
+
+[data-bs-theme=dark] .alert-success p {
+    color: #FFF;
+}
+
+[data-bs-theme=light] .alert-danger p {
+    color: #000;
+}
+
+[data-bs-theme=dark] .alert-danger p {
+    color: #FFF;
+}
+
 .likert li {
     float: left;
     list-style-type: none;
@@ -93,7 +111,7 @@
 /* editor */
 .CodeMirror { 
     overflow: auto; 
-    min-height: 30em;
+    min-height: var(--default-height);
     border: solid 2px black;
     font-size: 15px;
 }

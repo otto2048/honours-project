@@ -80,10 +80,22 @@ export function on_message(messageEvent)
             break;
         case constants.EVENT_ON_COMPILE_SUCCESS:
             //display compilation output
-            addCompilationBoxMessage(message.value, "alert-info");
+            addCompilationBoxMessage(message.value, "alert-success");
 
             //show debugger live controls
             $(".debugger-live-control").removeClass("d-none");
+
+            //show debug output window
+            //if editor has changed size, save the size and reset size
+            editors.forEach(element => {
+                if (element.fileElement.getAttribute("style"))
+                {
+                    element.editedWidth = element.fileElement.style.width;
+                    element.fileElement.style.removeProperty("width");
+                }
+            });
+
+            $("#debug-output-window").removeClass("d-none");
 
             //enable stop debugger live control
             $("#stop-btn")[0].disabled = false;
@@ -98,7 +110,7 @@ export function on_message(messageEvent)
             break;
         case constants.EVENT_ON_COMPILE_FAILURE:
             //display compilation output
-            addCompilationBoxMessage(message.value, "alert-info");
+            addCompilationBoxMessage(message.value, "alert-danger");
             $("#compilation-messages-box ul")[0].scrollIntoView();
 
             //show and enable play button
@@ -110,6 +122,18 @@ export function on_message(messageEvent)
         case constants.EVENT_ON_PROGRAM_EXIT:
             //hide and disable debugger live controls
             $(".debugger-live-control").addClass("d-none");
+
+            //hide debug output window
+            $("#debug-output-window").addClass("d-none");
+
+            //if editor has changed size, change size to how it was before program was run
+            editors.forEach(element => {
+                if (element.editedWidth)
+                {
+                    element.fileElement.style.width = element.editedWidth;
+                    element.editedWidth = null;
+                }
+            });
 
             var debuggerLiveControls = $(".debugger-live-control");
 
@@ -329,12 +353,16 @@ export function setUpEditors(breakpointFunc)
     //create editors
     for (var i=0; i<files.length; i++)
     {
+        var e = CodeMirror.fromTextArea(files[i], 
+            {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
+            gutters: ["breakpoints", "CodeMirror-linenumbers", "tracking", "CodeMirror-foldgutter"]});
+
         editors.push({
-            fileName: files[i].getAttribute("id"), 
-            editor: CodeMirror.fromTextArea(files[i], 
-                {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
-                gutters: ["breakpoints", "CodeMirror-linenumbers", "tracking", "CodeMirror-foldgutter"]}), 
-            breakpoints: new Set()
+            fileName: files[i].getAttribute("id"),
+            fileElement: files[i].parentElement.querySelector(".CodeMirror"), 
+            editor: e, 
+            breakpoints: new Set(),
+            editedWidth: null
         });
     }
 

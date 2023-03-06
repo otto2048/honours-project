@@ -229,7 +229,7 @@ function preparePage()
             socketHost.send(JSON.stringify(pingHostObj));
         }
     }, {
-        height: 500
+        height: 250
     });
 
     $("#complete-btn")[0].addEventListener("click", function()
