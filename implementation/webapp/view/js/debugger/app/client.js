@@ -277,6 +277,31 @@ export function on_message(messageEvent)
         case constants.EVENT_ON_LOCALS_DUMP:
             var data = JSON.parse(message.value);
 
+            var links = data.data.links;
+
+            var tableBody = $("#debug-table")[0];
+
+            for (var i=0; i<links.length; i++)
+            {
+                //get the top level variables
+                if (links[i].source == "top_level")
+                {
+                    var tr = document.createElement("tr");
+                    var name = document.createElement("td");
+                    var value = document.createElement("td");
+                    var type = document.createElement("td");
+
+                    name.innerHTML = links[i].target[0];
+                    value.innerHTML = links[i].target[1];
+                    type.innerHTML = links[i].target[2];
+
+                    tr.append(name);
+                    tr.append(value);
+                    tr.append(type);
+                    tableBody.append(tr);
+                }
+            }
+
             console.log(data);
             break;
         default:
