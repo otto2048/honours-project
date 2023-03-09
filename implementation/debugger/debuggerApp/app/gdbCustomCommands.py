@@ -144,6 +144,13 @@ class GetLocals(gdb.Command):
                     name = symbol.name
                     if not name in names:
                         print('"{}" = "{}"'.format(name, symbol.value(frame)))
+
+                        type = symbol.value(frame).type
+                        typeCode = symbol.value(frame).type.code
+
+                        if typeCode is gdb.TYPE_CODE_STRUCT or typeCode is gdb.TYPE_CODE_UNION or typeCode is gdb.TYPE_CODE_ENUM or typeCode is gdb.TYPE_CODE_FUNC:
+                            print(type.fields())
+                        
                         names.add(name)
             block = block.superblock
 
