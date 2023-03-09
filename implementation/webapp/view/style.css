@@ -62,7 +62,7 @@
     white-space: pre-wrap;
 }
 
-#compilation-messages-box {
+.max-height-box {
     height: var(--default-height);
 }
 
