@@ -185,9 +185,6 @@ class GetLocals(gdb.Command):
 
         #https://stackoverflow.com/questions/30013252/get-all-global-variables-local-variables-in-gdbs-python-interface/31231722#31231722
         while block:
-            if(block.is_global):
-                print()
-                print('global vars')
             for symbol in block:
                 if (symbol.is_argument or symbol.is_variable):
                     name = symbol.name
@@ -211,16 +208,10 @@ class GetLocals(gdb.Command):
         for item in variables:
             self.loadVariables(item, frame, graph)
 
-        #dictionary = nx.to_edgelist(graph)
-
-        
-        # plt.rcParams["figure.figsize"] = (50,50)
-
-        # plt.tight_layout()
-        # nx.draw_networkx(dictionary, arrows=True)
-        # plt.savefig("g1.png", format="PNG")
-        # # tell matplotlib you're done with the plot: https://stackoverflow.com/questions/741877/how-do-i-tell-matplotlib-that-i-am-done-with-a-plot
-        # plt.clf()
+        print("FOR_SERVER")
+        print("EVENT_ON_LOCALS_DUMP")
+        print(json.dumps({"data" : nx.node_link_data(graph)}))
+        print("EVENT_ON_LOCALS_DUMP_END")
 
 
 StepOver()

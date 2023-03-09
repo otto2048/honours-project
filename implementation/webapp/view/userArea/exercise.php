@@ -41,6 +41,9 @@
 
         <!-- interact js -->
         <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
+        <!-- Load d3.js -->
+        <script src="https://d3js.org/d3.v4.js"></script>
     </head>
     <body>
         <?php 

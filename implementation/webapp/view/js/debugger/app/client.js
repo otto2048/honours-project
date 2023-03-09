@@ -273,6 +273,12 @@ export function on_message(messageEvent)
             addCompilationBoxMessage(message.value.trim(), "alert-info");
 
             break;
+
+        case constants.EVENT_ON_LOCALS_DUMP:
+            var data = JSON.parse(message.value);
+
+            console.log(data);
+            break;
         default:
             alert(message.event + "Client operation failed. Try again?");
     }

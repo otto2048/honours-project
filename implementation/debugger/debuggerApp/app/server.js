@@ -32,6 +32,8 @@ const EVENT_ON_TEST_SUCCESS = 5;
 const EVENT_ON_TEST_FAILURE = 6;
 const EVENT_ON_BREAKPOINT_CHANGED = "EVENT_ON_BP_CHANGED";
 const EVENT_ON_BREAKPOINT_CHANGED_END = "EVENT_ON_BP_CHANGED_END";
+const EVENT_ON_LOCALS_DUMP = "EVENT_ON_LOCALS_DUMP";
+const EVENT_ON_LOCALS_DUMP_END = "EVENT_ON_LOCALS_DUMP_END";
 
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
@@ -433,6 +435,18 @@ function launchGDB(obj, ws)
 
                 obj.value = element;
                 obj.event = EVENT_ON_INFERIOR_EXIT;
+                ws.send(JSON.stringify(obj));
+            }
+            else if (element.indexOf(EVENT_ON_LOCALS_DUMP) != -1)
+            {
+                //split on start of string
+                element = element.substring(element.indexOf(EVENT_ON_LOCALS_DUMP) + EVENT_ON_LOCALS_DUMP.length);
+                
+                //split on end of string
+                element = element.split(EVENT_ON_LOCALS_DUMP_END, 1)[0];
+
+                obj.value = element;
+                obj.event = EVENT_ON_LOCALS_DUMP;
                 ws.send(JSON.stringify(obj));
             }
             
