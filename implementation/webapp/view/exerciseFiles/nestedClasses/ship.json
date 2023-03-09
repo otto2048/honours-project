@@ -1,0 +1,11 @@
+{
+    "user_files" : [
+        "nestedClasses/main.cpp",
+        "nestedClasses/ship.h",
+        "nestedClasses/ship.cpp",
+        "nestedClasses/coord.cpp",
+        "nestedClasses/coord.h"
+    ]
+}
+
+
