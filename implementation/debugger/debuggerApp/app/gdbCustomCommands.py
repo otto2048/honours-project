@@ -139,13 +139,13 @@ class GetLocals(gdb.Command):
             #dict[item[0]] = {}
 
             # connect this item to the graph
-            dict.add_edges_from([(parent, (item[0], item[2].name))])
+            dict.add_edges_from([(parent, (item[0], None, item[2].name))])
 
             fields = item[2].fields()
 
             # do this function for all the fields
             for field in fields:
-                self.loadVariables((field.name, item[1][field], (item[1][field].type)), frame, dict, parent = (item[0], item[2].name))
+                self.loadVariables((field.name, item[1][field], (item[1][field].type)), frame, dict, parent = (item[0], None, item[2].name))
         
         # check if this item is an array
         # if typeCode is gdb.TYPE_CODE_ARRAY:
