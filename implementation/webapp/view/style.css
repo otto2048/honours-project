@@ -115,3 +115,8 @@
     border: solid 2px black;
     font-size: 15px;
 }
+
+/* variables */
+.variable-table-triangles {
+    font-size: 12px;
+}

@@ -9,6 +9,8 @@ var files = $(".editor");
 var currentFile = "main.cpp";
 var trackingFile = null;
 
+var currentVariableData;
+
 export let socketObj = {
     socket: null
 };
@@ -261,7 +263,6 @@ export function on_message(messageEvent)
                 }
             });
             break;
-
         case constants.EVENT_ON_TEST_FAILURE:
             console.log("server failed");
             $("#submitting-exercise-message")[0].innerHTML = "Failed to submit exercise. Try again?";
@@ -279,6 +280,8 @@ export function on_message(messageEvent)
 
             var links = data.data.links;
 
+            currentVariableData = links;
+
             var tableBody = $("#debug-table")[0];
 
             for (var i=0; i<links.length; i++)
@@ -291,9 +294,31 @@ export function on_message(messageEvent)
                     var value = document.createElement("td");
                     var type = document.createElement("td");
 
-                    name.innerHTML = links[i].target[0];
-                    value.innerHTML = links[i].target[1];
-                    type.innerHTML = links[i].target[2];
+                    name.textContent = links[i].target[0];
+                    value.textContent = links[i].target[1];
+                    type.textContent = links[i].target[2];
+                    tr.setAttribute("id", links[i].target[0]);
+
+                    if (links[i].target[1] === null)
+                    {
+                        var dropdown = document.createElement("span");
+                        dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
+                        name.prepend(dropdown);
+                        name.dataset.displayed = false;
+
+                        name.addEventListener("click", function()
+                        {
+                            if (this.dataset.displayed == "false")
+                            {
+                                //display variables
+                                displayVariableDropdown(this.innerText);
+                            }
+                            else
+                            {
+                                //hide variables
+                            }
+                        });
+                    }
 
                     tr.append(name);
                     tr.append(value);
@@ -306,6 +331,53 @@ export function on_message(messageEvent)
             break;
         default:
             alert(message.event + "Client operation failed. Try again?");
+    }
+}
+
+function displayVariableDropdown(source) {
+    var tableBody = $("#debug-table")[0];
+
+    for (var i=0; i<currentVariableData.length; i++)
+    {
+        //get the top level variables
+        if (currentVariableData[i].source[0] == source)
+        {
+            var tr = document.createElement("tr");
+            var name = document.createElement("td");
+            var value = document.createElement("td");
+            var type = document.createElement("td");
+
+            name.textContent = currentVariableData[i].target[0];
+            value.textContent = currentVariableData[i].target[1];
+            type.textContent = currentVariableData[i].target[2];
+            tr.setAttribute("id", currentVariableData[i].target[0]);
+
+            if (currentVariableData[i].target[1] === null)
+            {
+                var dropdown = document.createElement("span");
+                dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
+                name.prepend(dropdown);
+                name.dataset.displayed = false;
+
+                name.addEventListener("click", function()
+                {
+                    if (this.dataset.displayed == "false")
+                    {
+                        //display variables
+                        displayVariableDropdown(this.innerText);
+                    }
+                    else
+                    {
+                        //hide variables
+                    }
+                });
+            }
+
+            tr.append(name);
+            tr.append(value);
+            tr.append(type);
+            document.getElementById(source).parentNode.insertBefore(tr, document.getElementById(source).nextSibling);
+        }
     }
 }
 
