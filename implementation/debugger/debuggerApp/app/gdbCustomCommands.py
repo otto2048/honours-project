@@ -1,5 +1,7 @@
 import gdb
 import json
+import networkx as nx
+from matplotlib import pyplot as plt
 
 #TODO: handle nested functions (multiple frames), also test on recursion
 
@@ -134,7 +136,10 @@ class GetLocals(gdb.Command):
         if typeCode is gdb.TYPE_CODE_STRUCT or typeCode is gdb.TYPE_CODE_UNION or typeCode is gdb.TYPE_CODE_ENUM or typeCode is gdb.TYPE_CODE_FUNC:
 
             # start a new nested dictionary
-            dict[item[0]] = {}
+            #dict[item[0]] = {}
+
+            # connect this item to the graph
+            dict.add_edges_from([(parent, item[0])])
 
             fields = item[2].fields()
 
@@ -143,31 +148,31 @@ class GetLocals(gdb.Command):
                 self.loadVariables((field.name, item[1][field], (item[1][field].type)), frame, dict, parent = item[0])
         
         # check if this item is an array
-        if typeCode is gdb.TYPE_CODE_ARRAY:
-            firstItem = item[1][0]
+        # if typeCode is gdb.TYPE_CODE_ARRAY:
+        #     firstItem = item[1][0]
 
-            firstItemTC = firstItem.type.code
+        #     firstItemTC = firstItem.type.code
 
-            # check if this item has fields
-            if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
+        #     # check if this item has fields
+        #     if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
 
-                # start a new nested dictionary
-                dict[item[0]] = {}
+        #         # connect this item to the graph
+        #         dict.add_edges_from([(parent, item[0])])
+ 
+        #         upper_limit = item[2].range()[1]
 
-                upper_limit = item[2].range()[1]
+        #         x = range(upper_limit)
 
-                x = range(upper_limit)
-
-                # do this function for all the elements
-                for i in x:
-                    self.loadVariables((i, item[1][i], (item[1][i].type)), frame, dict, parent = item[0])
+        #         # do this function for all the elements
+        #         for i in x:
+        #             self.loadVariables((i, item[1][i], (item[1][i].type)), frame, dict, parent = item[0])
 
         else:
             # add the variable to dictionary
             if typeCode is gdb.TYPE_CODE_ARRAY:
-                dict[parent][item[0]] = (item[1].format_string(array_indexes = True), "array")
+                dict.add_edges_from([(parent, (item[0], item[1].format_string(array_indexes = True), "array"))])
             else:
-                dict[parent][item[0]] = (item[1].format_string(array_indexes = True), item[2].name)
+                dict.add_edges_from([(parent, (item[0], item[1].format_string(array_indexes = True), item[2].name))])
             return
         
     def getVariables(self):
@@ -201,14 +206,22 @@ class GetLocals(gdb.Command):
 
         variables = self.getVariables()
 
-        dictionary = {}
-        dictionary["top_level"] = {}
+        graph = nx.DiGraph()
 
         for item in variables:
-            self.loadVariables(item, frame, dictionary)
+            self.loadVariables(item, frame, graph)
 
-        print(dictionary)
-        #print(json.dumps(dictionary))
+        #dictionary = nx.to_edgelist(graph)
+
+        
+        # plt.rcParams["figure.figsize"] = (50,50)
+
+        # plt.tight_layout()
+        # nx.draw_networkx(dictionary, arrows=True)
+        # plt.savefig("g1.png", format="PNG")
+        # # tell matplotlib you're done with the plot: https://stackoverflow.com/questions/741877/how-do-i-tell-matplotlib-that-i-am-done-with-a-plot
+        # plt.clf()
+
 
 StepOver()
 StepInto()
