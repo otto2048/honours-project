@@ -1,9 +1,14 @@
 
 class coord {
-
     public:
-        coord();
+        struct point
+        {
+            int value;
 
-        int x;
-        int y;
+            point();
+        };
+
+        point points[2];
+
+        coord();
 };

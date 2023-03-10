@@ -1,6 +1,10 @@
 #include "coord.h"
 
+coord::point::point() {
+    value = 0;
+}
+
 coord::coord() {
-    x = 0;
-    y = 0;
+    points[0] = point();
+    points[1]= point();
 }
