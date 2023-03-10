@@ -128,7 +128,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm me-3">
+                        <div class="col-sm">
                             <ul class="nav-tabs nav" role="tablist">
                                 <?php
                                     foreach ($exerciseFile["user_files"] as $fileName)
@@ -177,7 +177,7 @@
                             
                         </div>
                         <!-- debug output window -->
-                        <div class="col-sm d-none mt-2 border ms-2" id="debug-output-window">
+                        <div class="col-sm d-none mt-2 border ms-4" id="debug-output-window">
                             <h2 class="h4 ps-2 pt-3">Variable states</h2>
                             <hr>
                             <div class="overflow-auto resize max-height-box">
