@@ -120,3 +120,7 @@
 .variable-table-triangles {
     font-size: 12px;
 }
+
+.variable-pointer {
+    cursor: pointer;
+}

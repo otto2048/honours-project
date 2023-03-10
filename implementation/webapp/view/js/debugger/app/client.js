@@ -305,17 +305,31 @@ export function on_message(messageEvent)
                         dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
                         name.prepend(dropdown);
                         name.dataset.displayed = false;
+                        name.classList.add("variable-pointer");
 
                         name.addEventListener("click", function()
                         {
                             if (this.dataset.displayed == "false")
                             {
+                                //change arrow orientation
+                                this.firstChild.classList.remove("mdi-rotate-90");
+                                this.firstChild.classList.add("mdi-rotate-135");
+
                                 //display variables
                                 displayVariableDropdown(this.innerText);
+
+                                this.dataset.displayed = "true";
                             }
                             else
                             {
+                                //change arrow orientation
+                                this.firstChild.classList.remove("mdi-rotate-135");
+                                this.firstChild.classList.add("mdi-rotate-90");
+
                                 //hide variables
+                                hideVariableDropdown(this.innerText);
+
+                                this.dataset.displayed = "false";
                             }
                         });
                     }
@@ -334,8 +348,48 @@ export function on_message(messageEvent)
     }
 }
 
+function hideVariableDropdown(source, topLevel = true) {
+    var sourceRow = document.getElementById(source);
+
+    for (var i=0; i<currentVariableData.length; i++)
+    {
+        //find the children of this row
+        if (currentVariableData[i].source[0] == source)
+        {
+            var childRow = document.getElementById(currentVariableData[i].target[0]);
+
+            //if this row has children of its own
+            if (currentVariableData[i].target[1] === null)
+            {
+                if (childRow.firstChild.dataset.displayed == "true")
+                {
+                    //hide children
+                    hideVariableDropdown(currentVariableData[i].target[0], false);
+                }
+            }
+
+            //remove this row
+            childRow.remove();
+        }
+    }
+
+    if (!topLevel)
+    {
+        sourceRow.remove();
+    }
+}
+
 function displayVariableDropdown(source) {
-    var tableBody = $("#debug-table")[0];
+    var sourceRow = document.getElementById(source);
+
+    var sourceRowPadding = sourceRow.firstChild.style.paddingLeft;
+    var newPadding = null;
+
+    if (sourceRowPadding)
+    {
+        var sourceRowPaddingInt = parseInt(sourceRowPadding, 10);
+        newPadding = sourceRowPaddingInt + 1;
+    }
 
     for (var i=0; i<currentVariableData.length; i++)
     {
@@ -347,10 +401,23 @@ function displayVariableDropdown(source) {
             var value = document.createElement("td");
             var type = document.createElement("td");
 
+            //set text
             name.textContent = currentVariableData[i].target[0];
             value.textContent = currentVariableData[i].target[1];
             type.textContent = currentVariableData[i].target[2];
+
+            //set id on row
             tr.setAttribute("id", currentVariableData[i].target[0]);
+
+            //set padding
+            if (newPadding)
+            {
+                name.style.paddingLeft = newPadding + "rem";
+            }
+            else
+            {
+                name.style.paddingLeft = "1.6rem";
+            }
 
             if (currentVariableData[i].target[1] === null)
             {
@@ -358,17 +425,31 @@ function displayVariableDropdown(source) {
                 dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
                 name.prepend(dropdown);
                 name.dataset.displayed = false;
+                name.classList.add("variable-pointer");
 
                 name.addEventListener("click", function()
                 {
                     if (this.dataset.displayed == "false")
                     {
+                        //change arrow orientation
+                        this.firstChild.classList.remove("mdi-rotate-90");
+                        this.firstChild.classList.add("mdi-rotate-135");
+
                         //display variables
                         displayVariableDropdown(this.innerText);
+
+                        this.dataset.displayed = "true";
                     }
                     else
                     {
+                        //change arrow orientation
+                        this.firstChild.classList.remove("mdi-rotate-135");
+                        this.firstChild.classList.add("mdi-rotate-90");
+
                         //hide variables
+                        hideVariableDropdown(this.innerText);
+
+                        this.dataset.displayed = "false";
                     }
                 });
             }
@@ -376,7 +457,7 @@ function displayVariableDropdown(source) {
             tr.append(name);
             tr.append(value);
             tr.append(type);
-            document.getElementById(source).parentNode.insertBefore(tr, document.getElementById(source).nextSibling);
+            sourceRow.parentNode.insertBefore(tr, sourceRow.nextSibling);
         }
     }
 }
