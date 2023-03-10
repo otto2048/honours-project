@@ -124,3 +124,10 @@
 .variable-pointer {
     cursor: pointer;
 }
+
+/* resizing */
+.resize {
+    padding: 0.25rem;
+
+    border: 3px var(--bs-border-style) var(--bs-border-color);
+}

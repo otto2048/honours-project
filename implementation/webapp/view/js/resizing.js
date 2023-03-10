@@ -4,8 +4,8 @@ function preparePage()
 {
     //https://interactjs.io/
     interact('.resize').resizable({
-        // resize from all edges and corners
-        edges: { left: true, right: true, bottom: true, top: true },
+        // resize from right and bottom
+        edges: { right: true, bottom: true },
     
         listeners: {
           move (event) {
