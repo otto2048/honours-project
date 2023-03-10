@@ -2,6 +2,8 @@ import gdb
 import json
 import networkx as nx
 from matplotlib import pyplot as plt
+import random
+import string
 
 #TODO: handle nested functions (multiple frames), also test on recursion
 
@@ -128,24 +130,25 @@ class GetLocals(gdb.Command):
     def complete(self, text, word):
         return gdb.COMPLETE_SYMBOL
     
-    def loadVariables(self, item, frame, dict, parent = "top_level"):
+    def loadVariables(self, item, frame, graph, parent = "top_level"):
 
         typeCode = item[2].code
 
         # check if this item has fields
         if typeCode is gdb.TYPE_CODE_STRUCT or typeCode is gdb.TYPE_CODE_UNION or typeCode is gdb.TYPE_CODE_ENUM or typeCode is gdb.TYPE_CODE_FUNC:
 
-            # start a new nested dictionary
-            #dict[item[0]] = {}
-
             # connect this item to the graph
-            dict.add_edges_from([(parent, (item[0], None, item[2].name))])
+            child = (item[0], None, item[2].name, item[3])
+
+            graph.add_edges_from([(parent, child)])
 
             fields = item[2].fields()
 
             # do this function for all the fields
             for field in fields:
-                self.loadVariables((field.name, item[1][field], (item[1][field].type)), frame, dict, parent = (item[0], None, item[2].name))
+                the_item = (field.name, item[1][field], item[1][field].type, generate_random_string(8))
+
+                self.loadVariables(the_item, frame, graph, parent = child)
         
         # check if this item is an array
         elif typeCode is gdb.TYPE_CODE_ARRAY:
@@ -154,7 +157,8 @@ class GetLocals(gdb.Command):
             firstItemTC = firstItem.type.code
 
             # connect parent item to the graph
-            dict.add_edges_from([(parent, (item[0], None, "array"))])
+            child = (item[0], None, "array", item[3])
+            graph.add_edges_from([(parent, child)])
 
             # get array size
             upper_limit = item[2].range()[1]
@@ -162,20 +166,32 @@ class GetLocals(gdb.Command):
 
             # check if this item has fields
             if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
+                the_parent = (item[0], None, "array", item[3])
+
                 # do this function for all the elements
                 for i in x:
-                    self.loadVariables((i, item[1][i], (item[1][i].type)), frame, dict, parent = (item[0], None, "array"))
+                    the_item = (i, item[1][i], item[1][i].type, generate_random_string(8))
+
+                    self.loadVariables(the_item, frame, graph, parent = the_parent)
             else:
+                the_parent = (item[0], item[1].format_string(pretty_arrays = False), item[2].name, item[3])
+
                 # add each element to the graph
-                for i in x:
-                    dict.add_edges_from([((item[0], item[1].format_string(), item[2].name), (i, item[1][i].format_string(), item[1][i].type.name))])
+                for i in x:    
+                    child = (i, item[1][i].format_string(), item[1][i].type.name, generate_random_string(8))
+
+                    graph.add_edges_from([(the_parent, child)])
 
         else:
-            # add the variable to dictionary
+            # add the variable to graph
             if typeCode is gdb.TYPE_CODE_ARRAY:
-                dict.add_edges_from([(parent, (item[0], item[1].format_string(array_indexes = True), "array"))])
+                child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), "array", generate_random_string(8))
+
+                graph.add_edges_from([(parent, child)])
             else:
-                dict.add_edges_from([(parent, (item[0], item[1].format_string(array_indexes = True), item[2].name))])
+                child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), item[2].name, generate_random_string(8))
+
+                graph.add_edges_from([(parent, child)])
             return
         
     def getVariables(self):
@@ -196,7 +212,7 @@ class GetLocals(gdb.Command):
                         type = symbol.value(frame).type
                         
                         names.add(name)
-                        variables.append((name, value, type))
+                        variables.append((name, value, type, generate_random_string(8)))
             block = block.superblock
 
         return variables
@@ -224,6 +240,8 @@ class GetLocals(gdb.Command):
         # tell matplotlib you're done with the plot: https://stackoverflow.com/questions/741877/how-do-i-tell-matplotlib-that-i-am-done-with-a-plot
         plt.clf()
 
+def generate_random_string(len):
+    return ''.join(random.choice(string.ascii_letters + string.digits) for i in range(len))
 
 StepOver()
 StepInto()

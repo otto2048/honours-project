@@ -297,7 +297,7 @@ export function on_message(messageEvent)
                     name.textContent = links[i].target[0];
                     value.textContent = links[i].target[1];
                     type.textContent = links[i].target[2];
-                    tr.setAttribute("id", links[i].target[0]);
+                    tr.setAttribute("id", links[i].target[3]);
 
                     if (links[i].target[1] === null)
                     {
@@ -316,7 +316,7 @@ export function on_message(messageEvent)
                                 this.firstChild.classList.add("mdi-rotate-135");
 
                                 //display variables
-                                displayVariableDropdown(this.innerText);
+                                displayVariableDropdown(this.parentElement.getAttribute("id"));
 
                                 this.dataset.displayed = "true";
                             }
@@ -327,7 +327,7 @@ export function on_message(messageEvent)
                                 this.firstChild.classList.add("mdi-rotate-90");
 
                                 //hide variables
-                                hideVariableDropdown(this.innerText);
+                                hideVariableDropdown(this.parentElement.getAttribute("id"));
 
                                 this.dataset.displayed = "false";
                             }
@@ -354,9 +354,9 @@ function hideVariableDropdown(source, topLevel = true) {
     for (var i=0; i<currentVariableData.length; i++)
     {
         //find the children of this row
-        if (currentVariableData[i].source[0] == source)
+        if (currentVariableData[i].source[3] == source)
         {
-            var childRow = document.getElementById(currentVariableData[i].target[0]);
+            var childRow = document.getElementById(currentVariableData[i].target[3]);
 
             //if this row has children of its own
             if (currentVariableData[i].target[1] === null)
@@ -364,7 +364,7 @@ function hideVariableDropdown(source, topLevel = true) {
                 if (childRow.firstChild.dataset.displayed == "true")
                 {
                     //hide children
-                    hideVariableDropdown(currentVariableData[i].target[0], false);
+                    hideVariableDropdown(currentVariableData[i].target[3], false);
                 }
             }
 
@@ -394,7 +394,7 @@ function displayVariableDropdown(source) {
     for (var i=0; i<currentVariableData.length; i++)
     {
         //get the top level variables
-        if (currentVariableData[i].source[0] == source)
+        if (currentVariableData[i].source[3] == source)
         {
             var tr = document.createElement("tr");
             var name = document.createElement("td");
@@ -407,7 +407,7 @@ function displayVariableDropdown(source) {
             type.textContent = currentVariableData[i].target[2];
 
             //set id on row
-            tr.setAttribute("id", currentVariableData[i].target[0]);
+            tr.setAttribute("id", currentVariableData[i].target[3]);
 
             //set padding
             if (newPadding)
@@ -436,7 +436,7 @@ function displayVariableDropdown(source) {
                         this.firstChild.classList.add("mdi-rotate-135");
 
                         //display variables
-                        displayVariableDropdown(this.innerText);
+                        displayVariableDropdown(this.parentElement.getAttribute("id"));
 
                         this.dataset.displayed = "true";
                     }
@@ -447,7 +447,7 @@ function displayVariableDropdown(source) {
                         this.firstChild.classList.add("mdi-rotate-90");
 
                         //hide variables
-                        hideVariableDropdown(this.innerText);
+                        hideVariableDropdown(this.parentElement.getAttribute("id"));
 
                         this.dataset.displayed = "false";
                     }
