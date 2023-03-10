@@ -148,24 +148,27 @@ class GetLocals(gdb.Command):
                 self.loadVariables((field.name, item[1][field], (item[1][field].type)), frame, dict, parent = (item[0], None, item[2].name))
         
         # check if this item is an array
-        # if typeCode is gdb.TYPE_CODE_ARRAY:
-        #     firstItem = item[1][0]
+        elif typeCode is gdb.TYPE_CODE_ARRAY:
+            firstItem = item[1][0]
 
-        #     firstItemTC = firstItem.type.code
+            firstItemTC = firstItem.type.code
 
-        #     # check if this item has fields
-        #     if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
+            # connect parent item to the graph
+            dict.add_edges_from([(parent, (item[0], None, "array"))])
 
-        #         # connect this item to the graph
-        #         dict.add_edges_from([(parent, item[0])])
- 
-        #         upper_limit = item[2].range()[1]
+            # get array size
+            upper_limit = item[2].range()[1]
+            x = range(upper_limit + 1)
 
-        #         x = range(upper_limit)
-
-        #         # do this function for all the elements
-        #         for i in x:
-        #             self.loadVariables((i, item[1][i], (item[1][i].type)), frame, dict, parent = item[0])
+            # check if this item has fields
+            if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
+                # do this function for all the elements
+                for i in x:
+                    self.loadVariables((i, item[1][i], (item[1][i].type)), frame, dict, parent = (item[0], None, "array"))
+            else:
+                # add each element to the graph
+                for i in x:
+                    dict.add_edges_from([((item[0], item[1].format_string(), item[2].name), (i, item[1][i].format_string(), item[1][i].type.name))])
 
         else:
             # add the variable to dictionary
