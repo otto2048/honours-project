@@ -106,21 +106,6 @@ function onConnect(ws) {
                 var fname = file[0];
                 var content = file[1];
 
-                //content = content.replace(/cout/g, 'cout << "' + PROGRAM_OUTPUT_STRING +'"');
-                
-                // var contentArray = content.split('\n');
-
-                // for (var i=0; i<contentArray.length; i++)
-                // {
-                //     if (contentArray[i].indexOf("cout") != -1)
-                //     {
-                //         contentArray[i] = contentArray[i].slice(0, -1);
-                //         contentArray[i] = contentArray[i] + ' << "' + PROGRAM_OUTPUT_STRING_END + '";';
-                //     }
-                // }
-
-                // content = contentArray.join("\n");
-
                 fs.writeFile(fname, content, function (err)
                 {
                     if (err)
