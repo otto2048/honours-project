@@ -376,6 +376,16 @@ export function on_message(messageEvent, pingHostFunc)
 
             console.log(data);
             break;
+        case constants.EVENT_ON_DUMP_LOCAL:
+            //remove all references to this variable
+
+            //put this variable data into current links
+
+            //append this variable
+            var data = JSON.parse(message.value);
+            console.log(data);
+
+            break;
         default:
             alert(message.event + "Client operation failed. Try again?");
     }
@@ -447,6 +457,24 @@ function displayVariableDropdown(source) {
         newPadding = sourceRowPaddingInt + 1;
     }
 
+    //find parent id
+    var parentId = source;
+    var steps = 1;
+    while (!visibleVariableData.has(parentId))
+    {
+        for (var i=0; i<currentVariableData.length; i++)
+        {
+            if (currentVariableData[i].target[3] == parentId)
+            {
+                if (currentVariableData[i].source != "top_level")
+                {
+                    parentId = currentVariableData[i].source[3];
+                    steps = steps + 1;
+                }
+            }
+        }
+    }
+
     var elements = [];
 
     for (var i=0; i<currentVariableData.length; i++)
@@ -456,6 +484,29 @@ function displayVariableDropdown(source) {
         {
             elements.push(currentVariableData[i]);
         }
+    }
+
+    if (elements.length == 0)
+    {
+        var parentName;
+
+        for (var i=0; i<currentVariableData.length; i++)
+        {
+            if (currentVariableData[i].target[3] == parentId)
+            {
+                if (currentVariableData[i].source == "top_level")
+                {
+                    parentName = currentVariableData[i].target[0];
+                }
+            }
+        }
+
+        //load the next level of variables
+        var level = visibleVariableData.get(parentId) + 1;
+        console.log(parentId);
+        sendInput("get_local " + parentName + " " + level + " " + parentId);
+
+        return;
     }
 
     //sort elements
@@ -474,23 +525,6 @@ function displayVariableDropdown(source) {
     });
 
     //increase level count on top parent
-    var parentId = source;
-    var steps = 1;
-    while (!visibleVariableData.has(parentId))
-    {
-        for (var i=0; i<currentVariableData.length; i++)
-        {
-            if (currentVariableData[i].target[3] == parentId)
-            {
-                if (currentVariableData[i].source != "top_level")
-                {
-                    parentId = currentVariableData[i].source[3];
-                    steps = steps + 1;
-                }
-            }
-        }
-    }
-
     visibleVariableData.set(parentId, steps);
 
     console.log(visibleVariableData);

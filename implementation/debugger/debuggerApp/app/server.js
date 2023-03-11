@@ -29,6 +29,7 @@ const EVENT_ON_TEST_SUCCESS = 5;
 const EVENT_ON_TEST_FAILURE = 6;
 const EVENT_ON_BREAKPOINT_CHANGED = "EVENT_ON_BP_CHANGED";
 const EVENT_ON_LOCALS_DUMP = "EVENT_ON_LOCALS_DUMP";
+const EVENT_ON_DUMP_LOCAL = "EVENT_ON_DUMP_LOCAL";
 
 const DONE_FLAG = "DONE";
 
@@ -472,6 +473,17 @@ function processOutputs(output, obj, ws)
                 obj.event = EVENT_ON_LOCALS_DUMP;
                 ws.send(JSON.stringify(obj));
             }  
+        }
+        else if (element.indexOf(EVENT_ON_DUMP_LOCAL) != -1)
+        {
+            var message = getMessageContents(EVENT_ON_DUMP_LOCAL, element);
+
+            if (message)
+            {
+                obj.value = message;
+                obj.event = EVENT_ON_DUMP_LOCAL;
+                ws.send(JSON.stringify(obj));
+            } 
         }
     });
     

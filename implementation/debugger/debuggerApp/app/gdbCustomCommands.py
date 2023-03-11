@@ -284,10 +284,10 @@ class GetLocal(gdb.Command):
         frame = gdb.selected_frame()
         graph = nx.DiGraph()
 
-        loadVariables((arguments[0], var, var.type, generate_random_string(8)), frame, graph, int(arguments[1]))
+        loadVariables((arguments[0], var, var.type, arguments[2]), frame, graph, int(arguments[1]))
 
         print("FOR_SERVER")
-        print("EVENT_ON_LOCALS_DUMP")
+        print("EVENT_ON_DUMP_LOCAL")
         print(json.dumps({"data" : nx.node_link_data(graph)}))
         print("DONE")
 
