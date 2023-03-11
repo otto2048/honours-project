@@ -296,7 +296,7 @@ export function on_message(messageEvent, pingHostFunc)
             for (var i=0; i<currentVariableData.length; i++)
             {
                 //get the top level variables
-                if (currentVariableData[i].source[3] == "top_level")
+                if (currentVariableData[i].source == "top_level")
                 {
                     elements.push(currentVariableData[i]);
                 }
