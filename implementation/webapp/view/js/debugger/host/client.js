@@ -100,7 +100,9 @@ socketHost.onmessage = function(event) {
             debug.socketObj.socket.onmessage = function(messageEvent) {
 
                 //client on message function
-                debug.on_message(messageEvent);
+                debug.on_message(messageEvent, function() {
+                    socketHost.send(JSON.stringify(pingHostObj));
+                });
                 
             };
 

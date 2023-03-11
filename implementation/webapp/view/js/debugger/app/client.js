@@ -182,6 +182,8 @@ export function on_message(messageEvent, pingHostFunc)
             moveTracker(file, lineNum);
 
             //load locals
+            sendInput("get_top_level_locals");
+            pingHostFunc();
 
             break;
         case constants.EVENT_ON_CONTINUE:
@@ -287,64 +289,88 @@ export function on_message(messageEvent, pingHostFunc)
 
             var tableBody = $("#debug-table")[0];
 
-            for (var i=0; i<links.length; i++)
+            tableBody.innerHTML = "";
+
+            var elements = [];
+
+            for (var i=0; i<currentVariableData.length; i++)
             {
                 //get the top level variables
-                if (links[i].source == "top_level")
+                if (currentVariableData[i].source[3] == "top_level")
                 {
-                    var tr = document.createElement("tr");
-                    var name = document.createElement("td");
-                    var value = document.createElement("td");
-                    var type = document.createElement("td");
-
-                    name.textContent = links[i].target[0];
-                    value.textContent = links[i].target[1];
-                    type.textContent = links[i].target[2];
-                    tr.setAttribute("id", links[i].target[3]);
-
-                    if (links[i].target[1] === null)
-                    {
-                        var dropdown = document.createElement("span");
-                        dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
-                        name.prepend(dropdown);
-                        name.dataset.displayed = false;
-                        name.classList.add("variable-pointer");
-
-                        name.addEventListener("click", function(i)
-                        {
-                            if (this.dataset.displayed == "false")
-                            {
-                                //change arrow orientation
-                                this.firstChild.classList.remove("mdi-rotate-90");
-                                this.firstChild.classList.add("mdi-rotate-135");
-
-                                //display variables
-                                displayVariableDropdown(this.parentElement.getAttribute("id"));
-
-                                this.dataset.displayed = "true";
-                            }
-                            else
-                            {
-                                //change arrow orientation
-                                this.firstChild.classList.remove("mdi-rotate-135");
-                                this.firstChild.classList.add("mdi-rotate-90");
-
-                                //hide variables
-                                hideVariableDropdown(this.parentElement.getAttribute("id"));
-
-                                this.dataset.displayed = "false";
-                            }
-                        });
-                    }
-
-                    tr.append(name);
-                    tr.append(value);
-                    tr.append(type);
-                    tableBody.append(tr);
-
-                    //add to visible variables
-                    visibleVariableData.set(links[i].target[3], 1);
+                    elements.push(currentVariableData[i]);
                 }
+            }
+
+            //sort elements
+            elements.sort(function(a, b) {
+                if (a.target[0] < b.target[0])
+                {
+                    return 1;
+                }
+
+                if (a.target[0] > b.target[0])
+                {
+                    return -1;
+                }
+
+                return 0;
+            });
+
+            for (var i=0; i<elements.length; i++)
+            {
+                var tr = document.createElement("tr");
+                var name = document.createElement("td");
+                var value = document.createElement("td");
+                var type = document.createElement("td");
+
+                name.textContent = elements[i].target[0];
+                value.textContent = elements[i].target[1];
+                type.textContent = elements[i].target[2];
+                tr.setAttribute("id", elements[i].target[3]);
+
+                if (elements[i].target[1] === null)
+                {
+                    var dropdown = document.createElement("span");
+                    dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
+                    name.prepend(dropdown);
+                    name.dataset.displayed = false;
+                    name.classList.add("variable-pointer");
+
+                    name.addEventListener("click", function(i)
+                    {
+                        if (this.dataset.displayed == "false")
+                        {
+                            //change arrow orientation
+                            this.firstChild.classList.remove("mdi-rotate-90");
+                            this.firstChild.classList.add("mdi-rotate-135");
+
+                            //display variables
+                            displayVariableDropdown(this.parentElement.getAttribute("id"));
+
+                            this.dataset.displayed = "true";
+                        }
+                        else
+                        {
+                            //change arrow orientation
+                            this.firstChild.classList.remove("mdi-rotate-135");
+                            this.firstChild.classList.add("mdi-rotate-90");
+
+                            //hide variables
+                            hideVariableDropdown(this.parentElement.getAttribute("id"));
+
+                            this.dataset.displayed = "false";
+                        }
+                    });
+                }
+
+                tr.append(name);
+                tr.append(value);
+                tr.append(type);
+                tableBody.append(tr);
+
+                //add to visible variables
+                visibleVariableData.set(elements[i].target[3], 1);
             }
 
             console.log(data);
