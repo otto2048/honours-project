@@ -265,6 +265,32 @@ class GetTopLevelLocals(gdb.Command):
         print(json.dumps({"data" : nx.node_link_data(graph)}))
         print("DONE")
 
+class GetLocal(gdb.Command):
+
+    def __init__(self):
+        super(GetLocal, self).__init__(
+            "get_local", gdb.COMMAND_USER
+        )
+
+    def complete(self, text, word):
+        return gdb.COMPLETE_SYMBOL
+    
+    def invoke(self, args, from_tty):
+
+        arguments = args.split()
+
+        var = gdb.parse_and_eval(arguments[0])
+
+        frame = gdb.selected_frame()
+        graph = nx.DiGraph()
+
+        loadVariables((arguments[0], var, var.type, generate_random_string(8)), frame, graph, int(arguments[1]))
+
+        print("FOR_SERVER")
+        print("EVENT_ON_LOCALS_DUMP")
+        print(json.dumps({"data" : nx.node_link_data(graph)}))
+        print("DONE")
+
 def generate_random_string(len):
     return ''.join(random.choice(string.ascii_letters + string.digits) for i in range(len))
 
@@ -369,3 +395,4 @@ BreakSilent()
 ClearSilent()
 GetLocals()
 GetTopLevelLocals()
+GetLocal()
