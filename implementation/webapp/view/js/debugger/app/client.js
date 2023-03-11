@@ -290,6 +290,7 @@ export function on_message(messageEvent, pingHostFunc)
             var tableBody = $("#debug-table")[0];
 
             tableBody.innerHTML = "";
+            visibleVariableData.clear();
 
             var elements = [];
 
