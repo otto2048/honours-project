@@ -107,7 +107,7 @@ class BreakSilent(gdb.Command):
             print(args)
             #print the new location
             print(file_line)
-            print("DONE")
+            print("DONE\n")
 
 class ClearSilent(gdb.Command):
     def __init__(self):
