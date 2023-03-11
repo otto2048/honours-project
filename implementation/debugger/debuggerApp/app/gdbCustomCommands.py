@@ -28,7 +28,7 @@ class StepOver(gdb.Command):
         result_arr = result.split("\n")
         print(result_arr[0].split()[-1])
 
-        print("EVENT_ON_STEP_END\n")
+        print("DONE\n")
 
 
 class StepInto(gdb.Command):
@@ -52,7 +52,7 @@ class StepInto(gdb.Command):
 
         print(result_arr[0].split()[-1])
 
-        print("EVENT_ON_STEP_END\n")
+        print("DONE\n")
 
    
 class StepOut(gdb.Command):
@@ -75,7 +75,7 @@ class StepOut(gdb.Command):
         result_arr = result.split()
         print(result_arr[-1])
 
-        print("EVENT_ON_STEP_END\n")
+        print("DONE\n")
 
 class BreakSilent(gdb.Command):
     def __init__(self):
@@ -107,7 +107,7 @@ class BreakSilent(gdb.Command):
             print(args)
             #print the new location
             print(file_line)
-            print("EVENT_ON_BP_CHANGED_END")
+            print("DONE")
 
 class ClearSilent(gdb.Command):
     def __init__(self):
@@ -230,7 +230,7 @@ class GetLocals(gdb.Command):
         print("FOR_SERVER")
         print("EVENT_ON_LOCALS_DUMP")
         print(json.dumps({"data" : nx.node_link_data(graph)}))
-        print("EVENT_ON_LOCALS_DUMP_END")
+        print("DONE")
 
         plt.rcParams["figure.figsize"] = (50,50)
 

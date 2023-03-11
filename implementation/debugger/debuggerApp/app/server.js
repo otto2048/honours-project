@@ -17,13 +17,10 @@ const OP_COMPILE = "COMPILE";
 const OP_TEST = "TEST";
 
 const EVENT_ON_BREAK = "EVENT_ON_BREAK";
-const EVENT_ON_BREAK_END = "EVENT_ON_BREAK_END";
 const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
 const EVENT_ON_INFERIOR_EXIT = "EVENT_ON_PROG_EXIT";
 const EVENT_ON_INFERIOR_EXIT_END = "EVENT_ON_PROG_EXIT_END";
-const EVENT_ON_CONTINUE_END = "EVENT_ON_CONTINUE_END";
 const EVENT_ON_STEP = "EVENT_ON_STEP";
-const EVENT_ON_STEP_END = "EVENT_ON_STEP_END";
 const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
 const EVENT_ON_COMPILE_FAILURE = 3;
@@ -31,9 +28,12 @@ const EVENT_ON_PROGRAM_EXIT = 4;
 const EVENT_ON_TEST_SUCCESS = 5;
 const EVENT_ON_TEST_FAILURE = 6;
 const EVENT_ON_BREAKPOINT_CHANGED = "EVENT_ON_BP_CHANGED";
-const EVENT_ON_BREAKPOINT_CHANGED_END = "EVENT_ON_BP_CHANGED_END";
 const EVENT_ON_LOCALS_DUMP = "EVENT_ON_LOCALS_DUMP";
-const EVENT_ON_LOCALS_DUMP_END = "EVENT_ON_LOCALS_DUMP_END";
+
+const DONE_FLAG = "DONE";
+
+var CURRENT_EVENT = null;
+var currentOutputString = "";
 
 const SENDER_DEBUGGER = "DEBUGGER_SENDER";
 
@@ -350,93 +350,29 @@ function launchGDB(obj, ws)
     })
 
     progProcess.stdout.on('data', function (data) {
-        logger.info('stdout: ' + data.toString());
-        logger.info("stdout length: " + data.toString().length)
-
         output = data.toString();
 
-        output = output.split(GDB_OUTPUT_STRING);
+        logger.info(output);
 
-        output.forEach(element => {
-            element = element.split(GDB_OUTPUT_STRING).pop();
+        if (CURRENT_EVENT != null)
+        {
+            currentOutputString = currentOutputString + output;
 
-            //check what kind of gdb event this is
-            if (element.indexOf(EVENT_ON_BREAK) != -1)
+            var currentOutputArr = currentOutputString.split(GDB_OUTPUT_STRING);
+
+            if (currentOutputArr[currentOutputArr.length - 1].indexOf(DONE_FLAG) != -1)
             {
-                //split on start string
-                element = element.substring(element.indexOf(EVENT_ON_BREAK) + EVENT_ON_BREAK.length);
+                CURRENT_EVENT = null;
+                output = currentOutputString;
+                currentOutputString = "";
 
-                //split on end string
-                element = element.split(EVENT_ON_BREAK_END, 1)[0];
-
-                //get rid of whitespace
-                element = element.replace(/\s/g, "");
-
-                //return breakpoint location
-                obj.value = element;
-                obj.event = EVENT_ON_BREAK;
-                ws.send(JSON.stringify(obj));
+                processOutputs(output, obj, ws);
             }
-            else if (element.indexOf(EVENT_ON_CONTINUE) != -1)
-            {
-                obj.event = EVENT_ON_CONTINUE;
-                ws.send(JSON.stringify(obj));
-            }
-            else if (element.indexOf(EVENT_ON_STEP) != -1)
-            {
-                //split on start string
-                element = element.substring(element.indexOf(EVENT_ON_STEP) + EVENT_ON_STEP.length);
-
-                //split on end string
-                element = element.split(EVENT_ON_STEP_END, 1)[0];
-
-                //get rid of whitespace
-                element = element.replace(/\s/g, "");
-
-                //return current location
-                obj.value = element;
-                obj.event = EVENT_ON_STEP;
-                ws.send(JSON.stringify(obj));
-            }
-            else if (element.indexOf(EVENT_ON_BREAKPOINT_CHANGED) != -1)
-            {
-                //split on start string
-                element = element.substring(element.indexOf(EVENT_ON_BREAKPOINT_CHANGED) + EVENT_ON_BREAKPOINT_CHANGED.length);
-
-                //split on end string
-                element = element.split(EVENT_ON_BREAKPOINT_CHANGED_END, 1)[0];
-
-                obj.value = element;
-                obj.event = EVENT_ON_BREAKPOINT_CHANGED;
-                ws.send(JSON.stringify(obj));
-            }
-            //check if this is output for the user
-            else if (element.indexOf(EVENT_ON_INFERIOR_EXIT) != -1)
-            {
-                //split on start of string
-                element = element.substring(element.indexOf(EVENT_ON_INFERIOR_EXIT) + EVENT_ON_INFERIOR_EXIT.length);
-                
-                //split on end of string
-                element = element.split(EVENT_ON_INFERIOR_EXIT_END, 1)[0];
-
-                obj.value = element;
-                obj.event = EVENT_ON_INFERIOR_EXIT;
-                ws.send(JSON.stringify(obj));
-            }
-            else if (element.indexOf(EVENT_ON_LOCALS_DUMP) != -1)
-            {
-                //split on start of string
-                element = element.substring(element.indexOf(EVENT_ON_LOCALS_DUMP) + EVENT_ON_LOCALS_DUMP.length);
-                
-                //split on end of string
-                element = element.split(EVENT_ON_LOCALS_DUMP_END, 1)[0];
-
-                obj.value = element;
-                obj.event = EVENT_ON_LOCALS_DUMP;
-                ws.send(JSON.stringify(obj));
-            }
-            
-        });
+        }
+        else
+        {
+            processOutputs(output, obj, ws);
+        }
     });
 
     progProcess.stderr.on('data', function (data) {
@@ -451,6 +387,115 @@ function launchGDB(obj, ws)
         progProcess = null;
         tailProcess.unwatch();
     });
+}
+
+function processOutputs(output, obj, ws)
+{
+    output = output.split(GDB_OUTPUT_STRING);
+
+    output.forEach(element => {
+        
+        element = element.split(GDB_OUTPUT_STRING).pop();
+
+        logger.info(element);
+
+        //check what kind of gdb event this is
+        if (element.indexOf(EVENT_ON_BREAK) != -1)
+        {
+            var message = getMessageContents(EVENT_ON_BREAK, element);
+
+            if (message)
+            {
+                //get rid of whitespace
+                message = message.replace(/\s/g, "");
+
+                obj.value = message;
+                obj.event = EVENT_ON_BREAK;
+                ws.send(JSON.stringify(obj));
+            }
+        }
+        else if (element.indexOf(EVENT_ON_CONTINUE) != -1)
+        {
+            var message = getMessageContents(EVENT_ON_CONTINUE, element);
+
+            if (message)
+            {
+                obj.value = message;
+                obj.event = EVENT_ON_CONTINUE;
+                ws.send(JSON.stringify(obj));
+            }
+        }
+        else if (element.indexOf(EVENT_ON_STEP) != -1)
+        {
+            var message = getMessageContents(EVENT_ON_STEP, element);
+
+            if (message)
+            {
+                //get rid of whitespace
+                message = message.replace(/\s/g, "");
+
+                obj.value = message;
+                obj.event = EVENT_ON_STEP;
+                ws.send(JSON.stringify(obj));
+            }
+        }
+        else if (element.indexOf(EVENT_ON_BREAKPOINT_CHANGED) != -1)
+        {
+            var message = getMessageContents(EVENT_ON_BREAKPOINT_CHANGED, element);
+
+            if (message)
+            {
+                obj.value = message;
+                obj.event = EVENT_ON_BREAKPOINT_CHANGED;
+                ws.send(JSON.stringify(obj));
+            } 
+        }
+        //check if this is output for the user
+        else if (element.indexOf(EVENT_ON_INFERIOR_EXIT) != -1)
+        {
+            var message = getMessageContents(EVENT_ON_INFERIOR_EXIT, element);
+
+            if (message)
+            {
+                obj.value = message;
+                obj.event = EVENT_ON_INFERIOR_EXIT;
+                ws.send(JSON.stringify(obj));
+            } 
+        }
+        else if (element.indexOf(EVENT_ON_LOCALS_DUMP) != -1)
+        {
+            var message = getMessageContents(EVENT_ON_LOCALS_DUMP, element);
+
+            if (message)
+            {
+                obj.value = message;
+                obj.event = EVENT_ON_LOCALS_DUMP;
+                ws.send(JSON.stringify(obj));
+            }  
+        }
+    });
+    
+}
+
+function getMessageContents(flag, element)
+{
+    //split on start of string
+    elementContents = element.substring(element.indexOf(flag) + flag.length);
+            
+    if (elementContents.indexOf(DONE_FLAG) != -1)
+    {
+        //split on end of string
+        elementContents = elementContents.split(DONE_FLAG, 1)[0];
+
+        return elementContents;
+    }
+    else
+    {
+        CURRENT_EVENT = flag;
+        currentOutputString = currentOutputString + GDB_OUTPUT_STRING + "\n" + element;
+
+        return null;
+    }
 }
 
 //TODO: output program exit code
