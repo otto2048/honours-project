@@ -62,7 +62,7 @@ export function on_close()
     }
 }
 
-export function on_message(messageEvent)
+export function on_message(messageEvent, pingHostFunc)
 {
     //handle message
     var message = JSON.parse(messageEvent.data);

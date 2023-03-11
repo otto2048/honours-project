@@ -366,6 +366,7 @@ function launchGDB(obj, ws)
 
     progProcess.stdout.on('data', function (data) {
         logger.info('stdout: ' + data.toString());
+        logger.info("stdout length: " + data.toString().length)
 
         output = data.toString();
 
