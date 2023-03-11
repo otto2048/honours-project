@@ -240,8 +240,127 @@ class GetLocals(gdb.Command):
         # tell matplotlib you're done with the plot: https://stackoverflow.com/questions/741877/how-do-i-tell-matplotlib-that-i-am-done-with-a-plot
         plt.clf()
 
+class GetTopLevelLocals(gdb.Command):
+
+    def __init__(self):
+        super(GetTopLevelLocals, self).__init__(
+            "get_top_level_locals", gdb.COMMAND_USER
+        )
+
+    def complete(self, text, word):
+        return gdb.COMPLETE_SYMBOL
+    
+    def invoke(self, args, from_tty):
+        frame = gdb.selected_frame()
+
+        variables = getVariables()
+
+        graph = nx.DiGraph()
+
+        for item in variables:
+            loadVariables(item, frame, graph, 1)
+
+        print("FOR_SERVER")
+        print("EVENT_ON_LOCALS_DUMP")
+        print(json.dumps({"data" : nx.node_link_data(graph)}))
+        print("DONE")
+
 def generate_random_string(len):
     return ''.join(random.choice(string.ascii_letters + string.digits) for i in range(len))
+
+def getVariables():
+    frame = gdb.selected_frame()
+
+    block = frame.block()
+
+    names = set()
+    variables = []
+
+    #https://stackoverflow.com/questions/30013252/get-all-global-variables-local-variables-in-gdbs-python-interface/31231722#31231722
+    while block:
+        for symbol in block:
+            if (symbol.is_argument or symbol.is_variable):
+                name = symbol.name
+                if not name in names:
+                    value = symbol.value(frame)
+                    type = symbol.value(frame).type
+                    
+                    names.add(name)
+                    variables.append((name, value, type, generate_random_string(8)))
+        block = block.superblock
+
+    return variables
+
+def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level = 0):
+
+    typeCode = item[2].code
+
+    # check if this item has fields
+    if typeCode is gdb.TYPE_CODE_STRUCT or typeCode is gdb.TYPE_CODE_UNION or typeCode is gdb.TYPE_CODE_ENUM or typeCode is gdb.TYPE_CODE_FUNC:
+
+        # connect this item to the graph
+        child = (item[0], None, item[2].name, item[3])
+
+        graph.add_edges_from([(parent, child)])
+
+        new_level = level + 1
+
+        if new_level <= recurse_limit:
+            fields = item[2].fields()
+
+            # do this function for all the fields
+            for field in fields:
+                the_item = (field.name, item[1][field], item[1][field].type, generate_random_string(8))
+
+                loadVariables(the_item, frame, graph, recurse_limit, parent = child, level = new_level)
+    
+    # check if this item is an array
+    elif typeCode is gdb.TYPE_CODE_ARRAY:
+        firstItem = item[1][0]
+
+        firstItemTC = firstItem.type.code
+
+        # connect parent item to the graph
+        child = (item[0], None, "array", item[3])
+        graph.add_edges_from([(parent, child)])
+
+        # get array size
+        upper_limit = item[2].range()[1]
+        x = range(upper_limit + 1)
+
+        new_level = level + 1
+
+        if new_level <= recurse_limit:
+
+            # check if this item has fields
+            if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
+                the_parent = (item[0], None, "array", item[3])
+
+                # do this function for all the elements
+                for i in x:
+                    the_item = (i, item[1][i], item[1][i].type, generate_random_string(8))
+
+                    loadVariables(the_item, frame, graph, recurse_limit, parent = the_parent, level = new_level)
+            else:
+                the_parent = (item[0], item[1].format_string(pretty_arrays = False), item[2].name, item[3])
+
+                # add each element to the graph
+                for i in x:    
+                    child = (i, item[1][i].format_string(), item[1][i].type.name, generate_random_string(8))
+
+                    graph.add_edges_from([(the_parent, child)])
+
+    else:
+        # add the variable to graph
+        if typeCode is gdb.TYPE_CODE_ARRAY:
+            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), "array", generate_random_string(8))
+
+            graph.add_edges_from([(parent, child)])
+        else:
+            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), item[2].name, generate_random_string(8))
+
+            graph.add_edges_from([(parent, child)])
+        return
 
 StepOver()
 StepInto()
@@ -249,3 +368,4 @@ StepOut()
 BreakSilent()
 ClearSilent()
 GetLocals()
+GetTopLevelLocals()
