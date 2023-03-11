@@ -11,6 +11,8 @@ var trackingFile = null;
 
 var currentVariableData;
 
+var visibleVariableData = new Map();
+
 export let socketObj = {
     socket: null
 };
@@ -179,6 +181,8 @@ export function on_message(messageEvent, pingHostFunc)
 
             moveTracker(file, lineNum);
 
+            //load locals
+
             break;
         case constants.EVENT_ON_CONTINUE:
             //enable stop debugger live control
@@ -274,7 +278,6 @@ export function on_message(messageEvent, pingHostFunc)
             addCompilationBoxMessage(message.value.trim(), "alert-info");
 
             break;
-
         case constants.EVENT_ON_LOCALS_DUMP:
             var data = JSON.parse(message.value);
 
@@ -307,7 +310,7 @@ export function on_message(messageEvent, pingHostFunc)
                         name.dataset.displayed = false;
                         name.classList.add("variable-pointer");
 
-                        name.addEventListener("click", function()
+                        name.addEventListener("click", function(i)
                         {
                             if (this.dataset.displayed == "false")
                             {
@@ -338,6 +341,9 @@ export function on_message(messageEvent, pingHostFunc)
                     tr.append(value);
                     tr.append(type);
                     tableBody.append(tr);
+
+                    //add to visible variables
+                    visibleVariableData.set(links[i].target[3], 1);
                 }
             }
 
@@ -377,6 +383,29 @@ function hideVariableDropdown(source, topLevel = true) {
     {
         sourceRow.remove();
     }
+
+    //decrease level count on top parent
+    var parentId = source;
+    var steps = 1;
+
+    while (!visibleVariableData.has(parentId))
+    {
+        for (var i=0; i<currentVariableData.length; i++)
+        {
+            if (currentVariableData[i].target[3] == parentId)
+            {
+                if (currentVariableData[i].source != "top_level")
+                {
+                    parentId = currentVariableData[i].source[3];
+                    steps = steps + 1;
+                }
+            }
+        }
+    }
+
+    visibleVariableData.set(parentId, visibleVariableData.get(parentId) - (visibleVariableData.get(parentId) - steps));
+
+    console.log(visibleVariableData);
 }
 
 function displayVariableDropdown(source) {
@@ -417,6 +446,29 @@ function displayVariableDropdown(source) {
         return 0;
     });
 
+    //increase level count on top parent
+    var parentId = source;
+    var steps = 1;
+    while (!visibleVariableData.has(parentId))
+    {
+        for (var i=0; i<currentVariableData.length; i++)
+        {
+            if (currentVariableData[i].target[3] == parentId)
+            {
+                if (currentVariableData[i].source != "top_level")
+                {
+                    parentId = currentVariableData[i].source[3];
+                    steps = steps + 1;
+                }
+            }
+        }
+    }
+
+    visibleVariableData.set(parentId, steps);
+
+    console.log(visibleVariableData);
+
+    //display elements
     for (var i=0; i<elements.length; i++)
     {
         var tr = document.createElement("tr");
