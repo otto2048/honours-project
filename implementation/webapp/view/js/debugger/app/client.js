@@ -379,7 +379,7 @@ export function on_message(messageEvent, pingHostFunc)
                 tableBody.append(tr);
 
                 //add to visible variables
-                visibleVariableData.set(elements[i].target[3], 1);
+                visibleVariableData.set(elements[i].target[3], 0);
 
                 
             }
@@ -390,9 +390,13 @@ export function on_message(messageEvent, pingHostFunc)
                 if (previousVisVariables.has(elements[i].target[3]))
                 {
                     //local dump
-                    var level = previousVisVariables.get(elements[i].target[3]) + 1;
+                    var level = previousVisVariables.get(elements[i].target[3]);
+
+                    if (level > 0)
+                    {
+                        sendInput("get_local " + elements[i].target[3] + " " + level + " " + elements[i].target[3]);
+                    }
                     
-                    sendInput("get_local " + elements[i].target[3] + " " + level + " " + elements[i].target[3]);
                 }
             }
 
@@ -450,6 +454,16 @@ export function on_message(messageEvent, pingHostFunc)
             else
             {
                 //we are displaying the whole variable
+                var sourceRow = document.getElementById(id);
+
+                //change arrow orientation
+                sourceRow.firstChild.firstChild.classList.remove("mdi-rotate-90");
+                sourceRow.firstChild.firstChild.classList.add("mdi-rotate-135");
+
+                //display variables
+                displayVariableDropdown(id);
+
+                sourceRow.firstChild.dataset.displayed = "true";
             }
             
 
@@ -522,7 +536,7 @@ function hideVariableDropdown(source, topLevel = true) {
 
     //decrease level count on top parent
     var parentId = source;
-    var steps = 1;
+    var steps = 0;
 
     while (!visibleVariableData.has(parentId))
     {
@@ -602,7 +616,7 @@ function displayVariableDropdown(source) {
 
         //load the next level of variables
         var level = visibleVariableData.get(parentId) + 1;
-        console.log(parentId);
+        
         sendInput("get_local " + parentName + " " + level + " " + parentId);
 
         return;

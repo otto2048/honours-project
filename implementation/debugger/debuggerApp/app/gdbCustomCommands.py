@@ -258,7 +258,7 @@ class GetTopLevelLocals(gdb.Command):
         graph = nx.DiGraph()
 
         for item in variables:
-            loadVariables(item, frame, graph, 1)
+            loadVariables(item, frame, graph, 0)
 
         print("FOR_SERVER")
         print("EVENT_ON_LOCALS_DUMP")
