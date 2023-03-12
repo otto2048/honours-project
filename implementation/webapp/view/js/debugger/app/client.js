@@ -182,7 +182,7 @@ export function on_message(messageEvent, pingHostFunc)
             moveTracker(file, lineNum);
 
             //load locals
-            sendInput("get_top_level_locals");
+            sendInput("get_top_level_locals_names");
             pingHostFunc();
 
             break;
@@ -214,6 +214,12 @@ export function on_message(messageEvent, pingHostFunc)
             var lineNum = message.value.split(':').pop();
 
             moveTracker(file, lineNum);
+
+            //get top level variables
+
+            //load visible variables
+            sendInput("get_top_level_locals_names");
+            pingHostFunc();
 
             break;
         case constants.EVENT_ON_BREAKPOINT_CHANGED:
@@ -421,37 +427,39 @@ export function on_message(messageEvent, pingHostFunc)
             }
 
             break;
-        default:
-            alert(message.event + "Client operation failed. Try again?");
-    }
-}
+        case constants.EVENT_ON_TOP_LEVEL_VARIABLES:
+            //if any of the variables are currently visible, load them to their visibility level
+            var data = JSON.parse(message.value);
+            console.log(data);
 
-function removeVariableReference(variable)
-{
-    var toRemove = [];
-    
-    findVariablesToRemove(variable, toRemove);
+            var variables = data.data;
 
-    currentVariableData = currentVariableData.filter(item => !toRemove.includes(item));
-}
+            var previousVisVariables = visibleVariableData;
 
-function findVariablesToRemove(variable, toRemove)
-{
-    for (var i=0; i<currentVariableData.length; i++)
-    {
-        //find the children of this row
-        if (currentVariableData[i].source[3] == variable)
-        {
-            //if this row has children of its own
-            if (currentVariableData[i].target[1] === null)
+            //var dump all variables
+            sendInput("get_top_level_locals");
+            pingHostFunc();
+
+            //NEED TO DO THIS AFTER GET TOP LEVEL LOCALS
+            //find the elements that are not currently visible
+            for (var i = 0; i < variables.length; i++)
             {
-                //remove children
-                removeVariableReference(currentVariableData[i].target[3], toRemove);
+                if (previousVisVariables.has(variables[i]))
+                {
+                    //local dump
+                    var level = previousVisVariables.get(variables[i]) + 1;
+                    
+                    sendInput("get_local " + variables[i] + " " + level + " " + variables[i]);
+                }
+                else
+                {
+                    //local dump, add to visible variables
+                }
             }
 
-            //remove this item
-            toRemove.push(currentVariableData[i]);
-        }
+            break;
+        default:
+            alert(message.event + "Client operation failed. Try again?");
     }
 }
 

@@ -265,6 +265,28 @@ class GetTopLevelLocals(gdb.Command):
         print(json.dumps({"data" : nx.node_link_data(graph)}))
         print("DONE")
 
+class GetTopLevelLocalsNames(gdb.Command):
+    def __init__(self):
+        super(GetTopLevelLocalsNames, self).__init__(
+            "get_top_level_locals_names", gdb.COMMAND_USER
+        )
+
+    def complete(self, text, word):
+        return gdb.COMPLETE_SYMBOL
+    
+    def invoke(self, args, from_tty):
+        variables = getVariables()
+
+        ret = []
+
+        for i in variables:
+            ret.append(i[3])
+
+        print("FOR_SERVER")
+        print("EVENT_ON_TOP_LEVEL_VARIABLES")
+        print(json.dumps({"data" : ret}))
+        print("DONE")
+
 class GetLocal(gdb.Command):
 
     def __init__(self):
@@ -346,41 +368,46 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
     
     # check if this item is an array
     elif typeCode is gdb.TYPE_CODE_ARRAY:
-        firstItem = item[1][0]
-
-        firstItemTC = firstItem.type.code
-
-        # connect parent item to the graph
-        child = (item[0], None, "array", item[3])
-        graph.add_edges_from([(parent, child)])
-
         # get array size
         upper_limit = item[2].range()[1]
         x = range(upper_limit + 1)
 
-        new_level = level + 1
+        if upper_limit > 0:
+            firstItem = item[1][0]
 
-        if new_level <= recurse_limit:
+            firstItemTC = firstItem.type.code
 
-            # check if this item has fields
-            if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
-                the_parent = (item[0], None, "array", item[3])
+            # connect parent item to the graph
+            child = (item[0], None, "array", item[3])
+            graph.add_edges_from([(parent, child)])
 
-                # do this function for all the elements
-                for i in x:
-                    item_id = item[3] + "_" + str(i)
-                    the_item = (i, item[1][i], item[1][i].type, item_id)
+            new_level = level + 1
 
-                    loadVariables(the_item, frame, graph, recurse_limit, parent = the_parent, level = new_level)
-            else:
-                the_parent = (item[0], item[1].format_string(pretty_arrays = False), item[2].name, item[3])
+            if new_level <= recurse_limit:
 
-                # add each element to the graph
-                for i in x:
-                    item_id = item[3] + "_" + str(i)
-                    child = (i, item[1][i].format_string(), item[1][i].type.name, item_id)
+                # check if this item has fields
+                if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
+                    the_parent = (item[0], None, "array", item[3])
 
-                    graph.add_edges_from([(the_parent, child)])
+                    # do this function for all the elements
+                    for i in x:
+                        item_id = item[3] + "_" + str(i)
+                        the_item = (i, item[1][i], item[1][i].type, item_id)
+
+                        loadVariables(the_item, frame, graph, recurse_limit, parent = the_parent, level = new_level)
+                else:
+                    the_parent = (item[0], item[1].format_string(pretty_arrays = False), item[2].name, item[3])
+
+                    # add each element to the graph
+                    for i in x:
+                        item_id = item[3] + "_" + str(i)
+                        child = (i, item[1][i].format_string(), item[1][i].type.name, item_id)
+
+                        graph.add_edges_from([(the_parent, child)])
+        else:
+            # connect parent item to the graph
+            child = (item[0], "Empty", "array", item[3])
+            graph.add_edges_from([(parent, child)])
 
     else:
         # add the variable to graph
@@ -402,4 +429,5 @@ BreakSilent()
 ClearSilent()
 GetLocals()
 GetTopLevelLocals()
+GetTopLevelLocalsNames()
 GetLocal()
