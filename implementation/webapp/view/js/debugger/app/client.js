@@ -393,17 +393,32 @@ export function on_message(messageEvent, pingHostFunc)
                 }
             }
 
-            //remove variable elements
-            hideVariableDropdown(id);
-
-            //remove all references to this variable
-            removeVariableReference(id);
+            //https://stackoverflow.com/questions/21987909/how-to-get-the-difference-between-two-arrays-of-objects-in-javascript
+            //find the elements that are not in current variables
+            var newVariables = links.filter(function(objOne) {
+                return !currentVariableData.some(function(objTwo) {
+                    return objOne.source[3] == objTwo.source[3] && objOne.target[3] == objTwo.target[3];
+                });
+            });
 
             //add links to this variable into the current links
-            currentVariableData = currentVariableData.concat(links);
+            currentVariableData = currentVariableData.concat(newVariables);
 
-            //show variable elements
-            displayVariableDropdown(id);
+            var displayedVariables = [];
+
+            for (let index = 0; index < newVariables.length; index++) {
+                if (!displayedVariables.includes(newVariables[index].source[3]))
+                {
+                    var sourceRow = document.getElementById(newVariables[index].source[3]);
+
+                    //if this has actually been clicked
+                    if (sourceRow.firstChild.dataset.displayed == "true")
+                    {
+                        displayVariableDropdown(newVariables[index].source[3]);
+                        displayedVariables.push(newVariables[index].source[3]);
+                    }
+                }
+            }
 
             break;
         default:
