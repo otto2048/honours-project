@@ -312,7 +312,7 @@ def getVariables():
                     type = symbol.value(frame).type
                     
                     names.add(name)
-                    variables.append((name, value, type, generate_random_string(8)))
+                    variables.append((name, value, type, name))
         block = block.superblock
 
     return variables
@@ -339,7 +339,8 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
         if new_level <= recurse_limit:
             # do this function for all the fields
             for field in fields:
-                the_item = (field.name, item[1][field], item[1][field].type, generate_random_string(8))
+                item_id = item[3] + "_" + field.name
+                the_item = (field.name, item[1][field], item[1][field].type, item_id)
 
                 loadVariables(the_item, frame, graph, recurse_limit, parent = child, level = new_level)
     
@@ -367,26 +368,29 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
 
                 # do this function for all the elements
                 for i in x:
-                    the_item = (i, item[1][i], item[1][i].type, generate_random_string(8))
+                    item_id = item[3] + "_" + str(i)
+                    the_item = (i, item[1][i], item[1][i].type, item_id)
 
                     loadVariables(the_item, frame, graph, recurse_limit, parent = the_parent, level = new_level)
             else:
                 the_parent = (item[0], item[1].format_string(pretty_arrays = False), item[2].name, item[3])
 
                 # add each element to the graph
-                for i in x:    
-                    child = (i, item[1][i].format_string(), item[1][i].type.name, generate_random_string(8))
+                for i in x:
+                    item_id = item[3] + "_" + str(i)
+                    child = (i, item[1][i].format_string(), item[1][i].type.name, item_id)
 
                     graph.add_edges_from([(the_parent, child)])
 
     else:
         # add the variable to graph
+        item_id = item[3] + "_" + item[0]
         if typeCode is gdb.TYPE_CODE_ARRAY:
-            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), "array", generate_random_string(8))
+            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), "array", item_id)
 
             graph.add_edges_from([(parent, child)])
         else:
-            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), item[2].name, generate_random_string(8))
+            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), item[2].name, item_id)
 
             graph.add_edges_from([(parent, child)])
         return
