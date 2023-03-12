@@ -182,7 +182,7 @@ export function on_message(messageEvent, pingHostFunc)
             moveTracker(file, lineNum);
 
             //load locals
-            sendInput("get_top_level_locals_names");
+            sendInput("get_top_level_locals");
             pingHostFunc();
 
             break;
@@ -218,7 +218,7 @@ export function on_message(messageEvent, pingHostFunc)
             //get top level variables
 
             //load visible variables
-            sendInput("get_top_level_locals_names");
+            sendInput("get_top_level_locals");
             pingHostFunc();
 
             break;
@@ -292,6 +292,8 @@ export function on_message(messageEvent, pingHostFunc)
             var links = data.data.links;
 
             currentVariableData = links;
+
+            var previousVisVariables = new Map (visibleVariableData);
 
             var tableBody = $("#debug-table")[0];
 
@@ -378,6 +380,20 @@ export function on_message(messageEvent, pingHostFunc)
 
                 //add to visible variables
                 visibleVariableData.set(elements[i].target[3], 1);
+
+                
+            }
+
+            //find the elements that are still visible
+            for (var i = 0; i < elements.length; i++)
+            {
+                if (previousVisVariables.has(elements[i].target[3]))
+                {
+                    //local dump
+                    var level = previousVisVariables.get(elements[i].target[3]) + 1;
+                    
+                    sendInput("get_local " + elements[i].target[3] + " " + level + " " + elements[i].target[3]);
+                }
             }
 
             console.log(data);
@@ -410,21 +426,32 @@ export function on_message(messageEvent, pingHostFunc)
             //add links to this variable into the current links
             currentVariableData = currentVariableData.concat(newVariables);
 
-            var displayedVariables = [];
+            //check if this is refreshing variable in a new frame
+            var sourceRow = document.getElementById(id);
 
-            for (let index = 0; index < newVariables.length; index++) {
-                if (!displayedVariables.includes(newVariables[index].source[3]))
-                {
-                    var sourceRow = document.getElementById(newVariables[index].source[3]);
+            if (sourceRow.firstChild.dataset.displayed == "true")
+            {
+                var displayedVariables = [];
 
-                    //if this has actually been clicked
-                    if (sourceRow.firstChild.dataset.displayed == "true")
+                for (let index = 0; index < newVariables.length; index++) {
+                    if (!displayedVariables.includes(newVariables[index].source[3]))
                     {
-                        displayVariableDropdown(newVariables[index].source[3]);
-                        displayedVariables.push(newVariables[index].source[3]);
+                        var sourceRow = document.getElementById(newVariables[index].source[3]);
+    
+                        //if this has actually been clicked
+                        if (sourceRow.firstChild.dataset.displayed == "true")
+                        {
+                            displayVariableDropdown(newVariables[index].source[3]);
+                            displayedVariables.push(newVariables[index].source[3]);
+                        }
                     }
                 }
             }
+            else
+            {
+                //we are displaying the whole variable
+            }
+            
 
             break;
         case constants.EVENT_ON_TOP_LEVEL_VARIABLES:
