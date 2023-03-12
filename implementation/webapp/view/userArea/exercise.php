@@ -177,7 +177,7 @@
                             
                         </div>
                         <!-- debug output window -->
-                        <div class="col-sm d-none mt-2 border ms-4" id="debug-output-window">
+                        <div class="col-sm d-none mt-2 border ms-4 pb-3" id="debug-output-window">
                             <h2 class="h4 ps-2 pt-3">Variable states</h2>
                             <hr>
                             <div class="overflow-auto resize max-height-box">
@@ -195,7 +195,7 @@
 
                     <div class="row">
                         <!-- compilation message output -->
-                        <div class="col-sm mt-2 border pb-5 ps-1 me-3">
+                        <div class="col-sm mt-2 border pb-3 ps-1 me-3">
                             <h2 class="h4 ps-2 pt-3">Output</h2>
                             <hr>
                             <p class="ps-2">See debugger output messages here</p>
