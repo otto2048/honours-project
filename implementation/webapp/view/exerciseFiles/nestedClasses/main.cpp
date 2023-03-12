@@ -10,6 +10,13 @@ int main()
     
     ship ship("Titanic");
 
+    
+  	ship.shipName = "test";
+  ship.shipName = "test2";
+  ship.shipName = "test3";
+  ship.shipName = "test4";
+
+
     cout << "ship name: " << ship.shipName << endl;
 
     return 0;

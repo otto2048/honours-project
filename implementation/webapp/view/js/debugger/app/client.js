@@ -13,6 +13,8 @@ var currentVariableData;
 
 var visibleVariableData = new Map();
 
+var visibleVariableIds = new Set();
+
 export let socketObj = {
     socket: null
 };
@@ -68,7 +70,7 @@ export function on_message(messageEvent, pingHostFunc)
 {
     //handle message
     var message = JSON.parse(messageEvent.data);
-    console.log(message);
+    
 
     switch(message.event)
     {
@@ -243,8 +245,6 @@ export function on_message(messageEvent, pingHostFunc)
 
             value = value.split("DEBUGGING_TOOL_RESULT:").pop();
 
-            console.log(value);
-
             const urlParams = new URLSearchParams(window.location.search);
 
             //mark this in the database
@@ -301,6 +301,8 @@ export function on_message(messageEvent, pingHostFunc)
             visibleVariableData.clear();
 
             var elements = [];
+
+            console.log(visibleVariableIds);
 
             for (var i=0; i<currentVariableData.length; i++)
             {
@@ -381,7 +383,7 @@ export function on_message(messageEvent, pingHostFunc)
                 //add to visible variables
                 visibleVariableData.set(elements[i].target[3], 0);
 
-                
+                visibleVariableIds.add(elements[i].target[3]);
             }
 
             //find the elements that are still visible
@@ -400,11 +402,11 @@ export function on_message(messageEvent, pingHostFunc)
                 }
             }
 
-            console.log(data);
+            
             break;
         case constants.EVENT_ON_DUMP_LOCAL:
             var data = JSON.parse(message.value);
-            console.log(data);
+            
 
             //get id of variable to be removed
             var links = data.data.links;
@@ -454,16 +456,8 @@ export function on_message(messageEvent, pingHostFunc)
             else
             {
                 //we are displaying the whole variable
-                var sourceRow = document.getElementById(id);
+                displayWholeVariable(id);
 
-                //change arrow orientation
-                sourceRow.firstChild.firstChild.classList.remove("mdi-rotate-90");
-                sourceRow.firstChild.firstChild.classList.add("mdi-rotate-135");
-
-                //display variables
-                displayVariableDropdown(id);
-
-                sourceRow.firstChild.dataset.displayed = "true";
             }
             
 
@@ -471,7 +465,7 @@ export function on_message(messageEvent, pingHostFunc)
         case constants.EVENT_ON_TOP_LEVEL_VARIABLES:
             //if any of the variables are currently visible, load them to their visibility level
             var data = JSON.parse(message.value);
-            console.log(data);
+            
 
             var variables = data.data;
 
@@ -504,6 +498,49 @@ export function on_message(messageEvent, pingHostFunc)
     }
 }
 
+function displayWholeVariable(source)
+{
+    var sourceRow = document.getElementById(source);
+
+    var load = false;
+
+    //find the first child of this
+    for (var i=0; i<currentVariableData.length; i++)
+    {
+        if (currentVariableData[i].source[3] == source)
+        {
+            //if the child is visible
+            if (visibleVariableIds.has(currentVariableData[i].target[3]))
+            {
+                load = true;
+            }
+        }
+    }
+
+    //if we should load the next layer of children
+    if (load)
+    {
+        sourceRow.firstChild.firstChild.classList.remove("mdi-rotate-90");
+        sourceRow.firstChild.firstChild.classList.add("mdi-rotate-135");
+        sourceRow.firstChild.dataset.displayed = "true";
+
+        displayVariableDropdown(source);
+
+        for (var i=0; i<currentVariableData.length; i++)
+        {
+            //find the children of this row
+            if (currentVariableData[i].source[3] == source)
+            {
+                if (visibleVariableIds.has(currentVariableData[i].target[3]))
+                {
+                    displayWholeVariable(currentVariableData[i].target[3])
+                }
+            }
+        }
+    }
+    
+}
+
 function hideVariableDropdown(source, topLevel = true) {
     var sourceRow = document.getElementById(source);
 
@@ -526,12 +563,15 @@ function hideVariableDropdown(source, topLevel = true) {
 
             //remove this row
             childRow.remove();
+
+            visibleVariableIds.delete(currentVariableData[i].target[3]);
         }
     }
 
     if (!topLevel)
     {
         sourceRow.remove();
+        visibleVariableIds.delete(source);
     }
 
     //decrease level count on top parent
@@ -707,6 +747,8 @@ function displayVariableDropdown(source) {
         tr.append(value);
         tr.append(type);
         sourceRow.parentNode.insertBefore(tr, sourceRow.nextSibling);
+
+        visibleVariableIds.add(elements[i].target[3]);
     }
 }
 
@@ -1023,8 +1065,6 @@ export function testProgram()
     }
 
     obj.value = filesData;
-
-    console.log(obj);
 
     socketObj.socket.send(JSON.stringify(obj));
 }
