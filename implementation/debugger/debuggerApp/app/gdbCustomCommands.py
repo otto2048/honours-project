@@ -324,16 +324,19 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
     # check if this item has fields
     if typeCode is gdb.TYPE_CODE_STRUCT or typeCode is gdb.TYPE_CODE_UNION or typeCode is gdb.TYPE_CODE_ENUM or typeCode is gdb.TYPE_CODE_FUNC:
 
+        fields = item[2].fields()
+
         # connect this item to the graph
-        child = (item[0], None, item[2].name, item[3])
+        if len(fields) > 0:
+            child = (item[0], None, item[2].name, item[3])
+        else:
+            child = (item[0], "Object", item[2].name, item[3])
 
         graph.add_edges_from([(parent, child)])
 
         new_level = level + 1
 
         if new_level <= recurse_limit:
-            fields = item[2].fields()
-
             # do this function for all the fields
             for field in fields:
                 the_item = (field.name, item[1][field], item[1][field].type, generate_random_string(8))
