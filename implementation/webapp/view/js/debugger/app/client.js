@@ -377,17 +377,66 @@ export function on_message(messageEvent, pingHostFunc)
             console.log(data);
             break;
         case constants.EVENT_ON_DUMP_LOCAL:
-            //remove all references to this variable
-
-            //put this variable data into current links
-
-            //append this variable
             var data = JSON.parse(message.value);
             console.log(data);
+
+            //get id of variable to be removed
+            var links = data.data.links;
+            var id;
+
+            for (var i=0; i<links.length; i++)
+            {
+                //get the top level variables
+                if (links[i].source == "top_level")
+                {
+                    id = links[i].target[3];
+                }
+            }
+
+            //remove variable elements
+            hideVariableDropdown(id);
+
+            //remove all references to this variable
+            removeVariableReference(id);
+
+            //add links to this variable into the current links
+            currentVariableData = currentVariableData.concat(links);
+
+            //show variable elements
+            displayVariableDropdown(id);
 
             break;
         default:
             alert(message.event + "Client operation failed. Try again?");
+    }
+}
+
+function removeVariableReference(variable)
+{
+    var toRemove = [];
+    
+    findVariablesToRemove(variable, toRemove);
+
+    currentVariableData = currentVariableData.filter(item => !toRemove.includes(item));
+}
+
+function findVariablesToRemove(variable, toRemove)
+{
+    for (var i=0; i<currentVariableData.length; i++)
+    {
+        //find the children of this row
+        if (currentVariableData[i].source[3] == variable)
+        {
+            //if this row has children of its own
+            if (currentVariableData[i].target[1] === null)
+            {
+                //remove children
+                removeVariableReference(currentVariableData[i].target[3], toRemove);
+            }
+
+            //remove this item
+            toRemove.push(currentVariableData[i]);
+        }
     }
 }
 
