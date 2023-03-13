@@ -335,7 +335,7 @@ export function on_message(messageEvent, pingHostFunc)
                 var value = document.createElement("td");
                 var type = document.createElement("td");
 
-                name.textContent = elements[i].target[0];
+                name.textContent = elements[i].target[4];
                 value.textContent = elements[i].target[1];
                 type.textContent = elements[i].target[2];
                 tr.setAttribute("id", elements[i].target[3]);
@@ -396,7 +396,8 @@ export function on_message(messageEvent, pingHostFunc)
 
                     if (level > 0)
                     {
-                        sendInput("get_local " + elements[i].target[3] + " " + level + " " + elements[i].target[3]);
+                        sendInput("get_local " + elements[i].target[3] + " " + level);
+
                         pingHostFunc();
                     }
                     
@@ -657,7 +658,7 @@ function displayVariableDropdown(source) {
         //load the next level of variables
         var level = visibleVariableData.get(parentId) + 1;
         
-        sendInput("get_local " + parentName + " " + level + " " + parentId);
+        sendInput("get_local " + parentName + " " + level);
 
         return;
     }
@@ -689,7 +690,7 @@ function displayVariableDropdown(source) {
         var type = document.createElement("td");
 
         //set text
-        name.textContent = elements[i].target[0];
+        name.textContent = elements[i].target[4];
         value.textContent = elements[i].target[1];
         type.textContent = elements[i].target[2];
 

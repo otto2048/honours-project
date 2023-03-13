@@ -306,7 +306,7 @@ class GetLocal(gdb.Command):
         frame = gdb.selected_frame()
         graph = nx.DiGraph()
 
-        loadVariables((arguments[0], var, var.type, arguments[2]), frame, graph, int(arguments[1]))
+        loadVariables((arguments[0], var, var.type, arguments[0], arguments[0]), frame, graph, int(arguments[1]))
 
         print("FOR_SERVER")
         print("EVENT_ON_DUMP_LOCAL")
@@ -334,7 +334,8 @@ def getVariables():
                     type = symbol.value(frame).type
                     
                     names.add(name)
-                    variables.append((name, value, type, name))
+                    # item: name, value, type, id, display name
+                    variables.append((name, value, type, name, name))
         block = block.superblock
 
     return variables
@@ -350,9 +351,9 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
 
         # connect this item to the graph
         if len(fields) > 0:
-            child = (item[0], None, item[2].name, item[3])
+            child = (item[0], None, item[2].name, item[3], item[4])
         else:
-            child = (item[0], "Object", item[2].name, item[3])
+            child = (item[0], "Object", item[2].name, item[3], item[4])
 
         graph.add_edges_from([(parent, child)])
 
@@ -362,7 +363,7 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
             # do this function for all the fields
             for field in fields:
                 item_id = item[3] + "_" + field.name
-                the_item = (field.name, item[1][field], item[1][field].type, item_id)
+                the_item = (field.name, item[1][field], item[1][field].type, item_id, field.name)
 
                 loadVariables(the_item, frame, graph, recurse_limit, parent = child, level = new_level)
     
@@ -378,7 +379,7 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
             firstItemTC = firstItem.type.code
 
             # connect parent item to the graph
-            child = (item[0], None, "array", item[3])
+            child = (item[0], None, "array", item[3], item[4])
             graph.add_edges_from([(parent, child)])
 
             new_level = level + 1
@@ -386,18 +387,15 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
             if new_level <= recurse_limit:
 
                 # check if this item has fields
-                if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC or firstItemTC is gdb.TYPE_CODE_ARRAY:
-                    
-                    item_name = item[0]
-                        
-                    the_parent = (item_name, None, "array", item[3])
+                if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC or firstItemTC is gdb.TYPE_CODE_ARRAY:    
+                    the_parent = (item[0], None, "array", item[3], item[4])
 
                     # do this function for all the elements
                     for i in x:
                         item_id = item[3] + "_" + str(i)
-                        item_name = "[" + str(i) + "]"
+                        display_name = "[" + str(i) + "]"
 
-                        the_item = (item_name, item[1][i], item[1][i].type, item_id)
+                        the_item = (i, item[1][i], item[1][i].type, item_id, display_name)
 
                         loadVariables(the_item, frame, graph, recurse_limit, parent = the_parent, level = new_level)
                 else:
@@ -406,24 +404,24 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
                     # add each element to the graph
                     for i in x:
                         item_id = item[3] + "_" + str(i)
-                        item_name = "[" + str(i) + "]"
-                        child = (item_name, item[1][i].format_string(), item[1][i].type.name, item_id)
+                        display_name = "[" + str(i) + "]"
+                        child = (i, item[1][i].format_string(), item[1][i].type.name, item_id, display_name)
 
                         graph.add_edges_from([(the_parent, child)])
         else:
             # connect parent item to the graph
-            child = (item[0], "Empty", "array", item[3])
+            child = (item[0], "Empty", "array", item[3], item[4])
             graph.add_edges_from([(parent, child)])
 
     else:
         # add the variable to graph
         item_id = item[3] + "_" + item[0]
         if typeCode is gdb.TYPE_CODE_ARRAY:
-            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), "array", item_id)
+            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), "array", item_id, item[4])
 
             graph.add_edges_from([(parent, child)])
         else:
-            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), item[2].name, item_id)
+            child = (item[0], item[1].format_string(array_indexes = True, pretty_arrays = False), item[2].name, item_id, item[4])
 
             graph.add_edges_from([(parent, child)])
         return
