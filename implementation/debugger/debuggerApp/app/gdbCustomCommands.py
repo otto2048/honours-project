@@ -401,7 +401,8 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
                     # add each element to the graph
                     for i in x:
                         item_id = item[3] + "_" + str(i)
-                        child = (i, item[1][i].format_string(), item[1][i].type.name, item_id)
+                        item_name = "[" + str(i) + "]"
+                        child = (item_name, item[1][i].format_string(), item[1][i].type.name, item_id)
 
                         graph.add_edges_from([(the_parent, child)])
         else:

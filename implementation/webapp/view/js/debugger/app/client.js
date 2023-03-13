@@ -397,6 +397,7 @@ export function on_message(messageEvent, pingHostFunc)
                     if (level > 0)
                     {
                         sendInput("get_local " + elements[i].target[3] + " " + level + " " + elements[i].target[3]);
+                        pingHostFunc();
                     }
                     
                 }
