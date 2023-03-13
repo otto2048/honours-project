@@ -2,7 +2,6 @@ FROM otto2048/environment_base:latest
 
 RUN apt-get install python3-pip -y
 RUN pip3 install networkx
-RUN pip3 install matplotlib
 
 # set up gdbinit
 WORKDIR /root/.config/gdb
