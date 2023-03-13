@@ -3,44 +3,17 @@
 import * as constants from "/honours/webapp/view/js/debugger/app/debuggerConstants.js";
 import Request from "/honours/webapp/view/js/debugger/request.js";
 
-var editors = [];
-var files = $(".editor");
+import * as editor from "/honours/webapp/view/js/debugger/app/editors.js";
 
-var currentFile = "main.cpp";
-var trackingFile = null;
-
-var currentVariableData;
-
-var visibleVariableLevels = new Map();
-
-var visibleVariableIds = new Set();
+import * as locals from "/honours/webapp/view/js/debugger/app/locals.js";
 
 export let socketObj = {
     socket: null
 };
 
-export function prepareDebuggerClient()
+export function initialiseEditors(breakpointFunc)
 {
-    //keep track of the current file being displayed
-    var tabs = $(".tab-header");
-
-    for (var i=0; i<tabs.length; i++)
-    (function(i) {
-        tabs[i].addEventListener("click", function() {
-            
-            var content = tabs[i].innerText;
-
-            currentFile = content;
-
-            console.log("refresh editors");
-
-            for (var j=0; j<editors.length; j++)
-            {
-                editors[j]["editor"].refresh();
-            }
-
-        });
-    }(i));
+    editor.prepareDebuggerClient(breakpointFunc);
 }
 
 export function on_open() 
@@ -71,7 +44,6 @@ export function on_message(messageEvent, pingHostFunc)
     //handle message
     var message = JSON.parse(messageEvent.data);
     
-
     switch(message.event)
     {
         case constants.EVENT_ON_STDOUT:
@@ -93,7 +65,7 @@ export function on_message(messageEvent, pingHostFunc)
 
             //show debug output window
             //if editor has changed size, save the size and reset size
-            editors.forEach(element => {
+            editor.editors.forEach(element => {
                 if (element.fileElement.getAttribute("style"))
                 {
                     element.editedWidth = element.fileElement.style.width;
@@ -108,9 +80,9 @@ export function on_message(messageEvent, pingHostFunc)
             $("#stop-btn")[0].ariaDisabled = false;
 
             //editor is readonly
-            for (var i=0; i<editors.length; i++)
+            for (var i=0; i<editor.editors.length; i++)
             {
-                editors[i]["editor"].setOption("readOnly", true);
+                editor.editors[i]["editor"].setOption("readOnly", true);
             }
 
             break;
@@ -133,7 +105,7 @@ export function on_message(messageEvent, pingHostFunc)
             $("#debug-output-window").addClass("d-none");
 
             //if editor has changed size, change size to how it was before program was run
-            editors.forEach(element => {
+            editor.editors.forEach(element => {
                 if (element.editedWidth)
                 {
                     element.fileElement.style.width = element.editedWidth;
@@ -155,12 +127,12 @@ export function on_message(messageEvent, pingHostFunc)
             $("#play-btn").show();
 
             //hide arrow
-            clearTracker();
+            editor.clearTracker();
 
             //editor is editable
-            for (var i=0; i<editors.length; i++)
+            for (var i=0; i<editor.editors.length; i++)
             {
-                editors[i]["editor"].setOption("readOnly", false);
+                editor.editors[i]["editor"].setOption("readOnly", false);
             }
 
             break;
@@ -181,7 +153,7 @@ export function on_message(messageEvent, pingHostFunc)
             var file = message.value.split(':', 1)[0];
             var lineNum = message.value.split(':').pop();
 
-            moveTracker(file, lineNum);
+            editor.moveTracker(file, lineNum);
 
             //load locals
             sendInput("get_top_level_locals");
@@ -206,7 +178,7 @@ export function on_message(messageEvent, pingHostFunc)
             }
 
             //hide arrow
-            clearTracker();
+            editor.clearTracker();
 
 
             break;
@@ -215,7 +187,7 @@ export function on_message(messageEvent, pingHostFunc)
             var file = message.value.split(':', 1)[0];
             var lineNum = message.value.split(':').pop();
 
-            moveTracker(file, lineNum);
+            editor.moveTracker(file, lineNum);
 
             //get top level variables
 
@@ -231,12 +203,12 @@ export function on_message(messageEvent, pingHostFunc)
             var file = breaks[0].split(':', 1)[0];
             var lineNum = breaks[0].split(':').pop();
 
-            toggleBreakpoint(file, parseInt(lineNum));
+            editor.toggleBreakpoint(file, parseInt(lineNum));
 
             var file = breaks[1].split(':', 1)[0];
             var lineNum = breaks[1].split(':').pop();
 
-            toggleBreakpoint(file, parseInt(lineNum));
+            editor.toggleBreakpoint(file, parseInt(lineNum));
 
             break;
         case constants.EVENT_ON_TEST_SUCCESS:
@@ -291,25 +263,25 @@ export function on_message(messageEvent, pingHostFunc)
 
             var links = data.data.links;
 
-            currentVariableData = links;
+            locals.currentVariableDataObj.currentVariableData = links;
 
-            var previousVisVariables = new Map (visibleVariableLevels);
+            var previousVisVariables = new Map (locals.visibleVariableLevels);
 
             var tableBody = $("#debug-table")[0];
 
             tableBody.innerHTML = "";
-            visibleVariableLevels.clear();
+            locals.visibleVariableLevels.clear();
 
             var elements = [];
 
-            console.log(visibleVariableIds);
+            console.log(locals.visibleVariableIds);
 
-            for (var i=0; i<currentVariableData.length; i++)
+            for (var i=0; i<locals.currentVariableDataObj.currentVariableData.length; i++)
             {
                 //get the top level variables
-                if (currentVariableData[i].source == "top_level")
+                if (locals.currentVariableDataObj.currentVariableData[i].source == "top_level")
                 {
-                    elements.push(currentVariableData[i]);
+                    elements.push(locals.currentVariableDataObj.currentVariableData[i]);
                 }
             }
 
@@ -357,7 +329,7 @@ export function on_message(messageEvent, pingHostFunc)
                             this.firstChild.classList.add("mdi-rotate-135");
 
                             //display variables
-                            displayVariableDropdown(this.parentElement.getAttribute("id"));
+                            locals.displayVariableDropdown(this.parentElement.getAttribute("id"));
 
                             this.dataset.displayed = "true";
                         }
@@ -368,7 +340,7 @@ export function on_message(messageEvent, pingHostFunc)
                             this.firstChild.classList.add("mdi-rotate-90");
 
                             //hide variables
-                            hideVariableDropdown(this.parentElement.getAttribute("id"));
+                            locals.hideVariableDropdown(this.parentElement.getAttribute("id"));
 
                             this.dataset.displayed = "false";
                         }
@@ -381,9 +353,9 @@ export function on_message(messageEvent, pingHostFunc)
                 tableBody.append(tr);
 
                 //add to visible variables
-                visibleVariableLevels.set(elements[i].target[3], 0);
+                locals.visibleVariableLevels.set(elements[i].target[3], 0);
 
-                visibleVariableIds.add(elements[i].target[3]);
+                locals.visibleVariableIds.add(elements[i].target[3]);
             }
 
             //find the elements that are still visible
@@ -426,13 +398,13 @@ export function on_message(messageEvent, pingHostFunc)
             //https://stackoverflow.com/questions/21987909/how-to-get-the-difference-between-two-arrays-of-objects-in-javascript
             //find the elements that are not in current variables
             var newVariables = links.filter(function(objOne) {
-                return !currentVariableData.some(function(objTwo) {
+                return !locals.currentVariableDataObj.currentVariableData.some(function(objTwo) {
                     return objOne.source[3] == objTwo.source[3] && objOne.target[3] == objTwo.target[3];
                 });
             });
 
             //add links to this variable into the current links
-            currentVariableData = currentVariableData.concat(newVariables);
+            locals.currentVariableDataObj.currentVariableData = locals.currentVariableDataObj.currentVariableData.concat(newVariables);
 
             //check if this is refreshing variable in a new frame
             var sourceRow = document.getElementById(id);
@@ -451,7 +423,7 @@ export function on_message(messageEvent, pingHostFunc)
                             //if this has actually been clicked
                             if (sourceRow.firstChild.dataset.displayed == "true")
                             {
-                                displayVariableDropdown(newVariables[index].source[3]);
+                                locals.displayVariableDropdown(newVariables[index].source[3]);
                                 displayedVariables.push(newVariables[index].source[3]);
                             }
                         }
@@ -461,7 +433,7 @@ export function on_message(messageEvent, pingHostFunc)
             else
             {
                 //we are displaying the whole variable
-                displayWholeVariable(id);
+                locals.displayWholeVariable(id);
             }
             
 
@@ -469,288 +441,6 @@ export function on_message(messageEvent, pingHostFunc)
         default:
             alert(message.event + "Client operation failed. Try again?");
     }
-}
-
-//display the children of this variable (the source)
-function displayWholeVariable(source)
-{
-    //get the source row (the parent element)
-    var sourceRow = document.getElementById(source);
-
-    var load = false;
-
-    //find the first child of this
-    for (var i=0; i<currentVariableData.length; i++)
-    {
-        if (currentVariableData[i].source[3] == source)
-        {
-            //if the child is visible
-            if (visibleVariableIds.has(currentVariableData[i].target[3]))
-            {
-                load = true;
-            }
-        }
-    }
-
-    //if we should display the children of the source element
-    if (load)
-    {
-        sourceRow.firstChild.firstChild.classList.remove("mdi-rotate-90");
-        sourceRow.firstChild.firstChild.classList.add("mdi-rotate-135");
-        sourceRow.firstChild.dataset.displayed = "true";
-
-        displayVariableDropdown(source);
-
-        for (var i=0; i<currentVariableData.length; i++)
-        {
-            //check if this element has visible children, pass each child as the source element to this function
-            if (currentVariableData[i].source[3] == source)
-            {
-                if (visibleVariableIds.has(currentVariableData[i].target[3]))
-                {
-                    displayWholeVariable(currentVariableData[i].target[3])
-                }
-            }
-        }
-    }
-    
-}
-
-function hideVariableDropdown(source, topLevel = true) {
-    var sourceRow = document.getElementById(source);
-
-    for (var i=0; i<currentVariableData.length; i++)
-    {
-        //find the children of this row
-        if (currentVariableData[i].source[3] == source)
-        {
-            var childRow = document.getElementById(currentVariableData[i].target[3]);
-
-            //if this row has children of its own
-            if (currentVariableData[i].target[1] === null)
-            {
-                if (childRow.firstChild.dataset.displayed == "true")
-                {
-                    //hide children
-                    hideVariableDropdown(currentVariableData[i].target[3], false);
-                }
-            }
-
-            //remove this row
-            childRow.remove();
-
-            visibleVariableIds.delete(currentVariableData[i].target[3]);
-        }
-    }
-
-    if (!topLevel)
-    {
-        sourceRow.remove();
-        visibleVariableIds.delete(source);
-    }
-
-    //find parent id
-    var parentId = source;
-
-    while (!visibleVariableLevels.has(parentId))
-    {
-        for (var i=0; i<currentVariableData.length; i++)
-        {
-            if (currentVariableData[i].target[3] == parentId)
-            {
-                if (currentVariableData[i].source != "top_level")
-                {
-                    parentId = currentVariableData[i].source[3];
-                }
-            }
-        }
-    }
-
-    updateLevelCount(parentId);
-
-    console.log(visibleVariableLevels);
-}
-
-function updateLevelCount(parent)
-{
-    visibleVariableLevels.set(parent, maxDepth(parent));   
-}
-
-function maxDepth(parent)
-{
-    var childrenDepths = new Set();
-
-    for (var i=0; i<currentVariableData.length; i++)
-    {
-        //check if this element has visible children, pass each child as the source element to this function
-        if (currentVariableData[i].source[3] == parent)
-        {
-            if (visibleVariableIds.has(currentVariableData[i].target[3]))
-            {
-                childrenDepths.add(maxDepth(currentVariableData[i].target[3]));
-            }
-        }
-    }
-
-    if (childrenDepths.size == 0)
-    {
-        return 0;
-    }
-
-    return Math.max(...childrenDepths) + 1;
-}
-
-function displayVariableDropdown(source) {
-    var sourceRow = document.getElementById(source);
-
-    var sourceRowPadding = sourceRow.firstChild.style.paddingLeft;
-    var newPadding = null;
-
-    if (sourceRowPadding)
-    {
-        var sourceRowPaddingInt = parseInt(sourceRowPadding, 10);
-        newPadding = sourceRowPaddingInt + 1.5;
-    }
-
-    //find parent id
-    var parentId = source;
-
-    while (!visibleVariableLevels.has(parentId))
-    {
-        for (var i=0; i<currentVariableData.length; i++)
-        {
-            if (currentVariableData[i].target[3] == parentId)
-            {
-                if (currentVariableData[i].source != "top_level")
-                {
-                    parentId = currentVariableData[i].source[3];
-                }
-            }
-        }
-    }
-
-    var elements = [];
-
-    for (var i=0; i<currentVariableData.length; i++)
-    {
-        //get the top level variables
-        if (currentVariableData[i].source[3] == source)
-        {
-            elements.push(currentVariableData[i]);
-        }
-    }
-
-    if (elements.length == 0)
-    {
-        var parentName;
-
-        for (var i=0; i<currentVariableData.length; i++)
-        {
-            if (currentVariableData[i].target[3] == parentId)
-            {
-                if (currentVariableData[i].source == "top_level")
-                {
-                    parentName = currentVariableData[i].target[0];
-                }
-            }
-        }
-
-        //load the next level of variables
-        var level = visibleVariableLevels.get(parentId) + 1;
-        
-        sendInput("get_local " + parentName + " " + level);
-
-        return;
-    }
-
-    //sort elements
-    elements.sort(function(a, b) {
-        if (a.target[0] < b.target[0])
-        {
-            return 1;
-        }
-
-        if (a.target[0] > b.target[0])
-        {
-            return -1;
-        }
-
-        return 0;
-    });
-
-
-    console.log(visibleVariableLevels);
-
-    //display elements
-    for (var i=0; i<elements.length; i++)
-    {
-        var tr = document.createElement("tr");
-        var name = document.createElement("td");
-        var value = document.createElement("td");
-        var type = document.createElement("td");
-
-        //set text
-        name.textContent = elements[i].target[4];
-        value.textContent = elements[i].target[1];
-        type.textContent = elements[i].target[2];
-
-        //set id on row
-        tr.setAttribute("id", elements[i].target[3]);
-
-        //set padding
-        if (newPadding)
-        {
-            name.style.paddingLeft = newPadding + "rem";
-        }
-        else
-        {
-            name.style.paddingLeft = "1.6rem";
-        }
-
-        if (elements[i].target[1] === null)
-        {
-            var dropdown = document.createElement("span");
-            dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
-            name.prepend(dropdown);
-            name.dataset.displayed = false;
-            name.classList.add("variable-pointer");
-
-            name.addEventListener("click", function()
-            {
-                if (this.dataset.displayed == "false")
-                {
-                    //change arrow orientation
-                    this.firstChild.classList.remove("mdi-rotate-90");
-                    this.firstChild.classList.add("mdi-rotate-135");
-
-                    //display variables
-                    displayVariableDropdown(this.parentElement.getAttribute("id"));
-
-                    this.dataset.displayed = "true";
-                }
-                else
-                {
-                    //change arrow orientation
-                    this.firstChild.classList.remove("mdi-rotate-135");
-                    this.firstChild.classList.add("mdi-rotate-90");
-
-                    //hide variables
-                    hideVariableDropdown(this.parentElement.getAttribute("id"));
-
-                    this.dataset.displayed = "false";
-                }
-            });
-        }
-
-        tr.append(name);
-        tr.append(value);
-        tr.append(type);
-        sourceRow.parentNode.insertBefore(tr, sourceRow.nextSibling);
-
-        visibleVariableIds.add(elements[i].target[3]);
-    }
-
-    updateLevelCount(parentId);
 }
 
 //tell socket that we want to compile and start the program
@@ -765,16 +455,16 @@ export function startProgram()
 
     var breakpoints = [];
 
-    for (var i=0; i<editors.length; i++)
+    for (var i=0; i<editor.editors.length; i++)
     {
         //set breakpoints for this editor
-        var arr = Array.from(editors[i]["breakpoints"]);
+        var arr = Array.from(editor.editors[i]["breakpoints"]);
         for (var j=0; j<arr.length; j++)
         {
-            breakpoints.push([editors[i]["fileName"], arr[j]]);
+            breakpoints.push([editor.editors[i]["fileName"], arr[j]]);
         }
 
-        filesData.push([files[i].getAttribute("id"), editors[i]["editor"].getValue()]);
+        filesData.push([editor.files[i].getAttribute("id"), editor.editors[i]["editor"].getValue()]);
     }
 
     obj.value = {"filesData":filesData, "breakpoints" : breakpoints};
@@ -796,6 +486,7 @@ export function sendInput(input)
     socketObj.socket.send(JSON.stringify(obj));
 }
 
+//add message to output box
 export function addCompilationBoxMessage(message, colour)
 {
     var li = document.createElement("li");
@@ -818,75 +509,8 @@ export function addCompilationBoxMessage(message, colour)
     li.append(alertDiv);
 
     $("#compilation-messages-box ul")[0].prepend(li);
-
-
 }
 
-//set up the code editors for all the files
-export function setUpEditors(breakpointFunc)
-{
-    //create editors
-    for (var i=0; i<files.length; i++)
-    {
-        var e = CodeMirror.fromTextArea(files[i], 
-            {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
-            gutters: ["breakpoints", "CodeMirror-linenumbers", "tracking", "CodeMirror-foldgutter"]});
-
-        editors.push({
-            fileName: files[i].getAttribute("id"),
-            fileElement: files[i].parentElement.querySelector(".CodeMirror"), 
-            editor: e, 
-            breakpoints: new Set(),
-            editedWidth: null
-        });
-    }
-
-    //set up breakpoint events
-    //https://codemirror.net/5/demo/marker.html
-    for (var i=0; i<editors.length; i++)
-    (function(i) {
-        editors[i]["editor"].on("gutterClick", function(cm, n) {
-            
-            var sendRow = n + 1;
-
-            if (editors[i]["breakpoints"].has(n + 1))
-            {
-                editors[i]["breakpoints"].delete(n + 1);
-
-                breakpointFunc(editors[i]["fileName"], sendRow.toString(), false);
-
-                cm.setGutterMarker(n, "breakpoints", null);
-            }
-            else
-            {
-                editors[i]["breakpoints"].add(n + 1);
-
-                breakpointFunc(editors[i]["fileName"], sendRow.toString(), true);
-
-                cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
-            }
-
-        });
-    }(i));
-    
-    //allow user to resize editors
-    $(".CodeMirror").addClass("resize");
-
-    //check if editors should be in light mode
-    if (localStorage.getItem("theme"))
-    {
-        // set theme
-        if (localStorage.getItem("theme") == "light")
-        {
-            for (var i=0; i<editors.length; i++)
-            {
-                editors[i]["editor"].setOption("theme", "default");
-            }
-
-            return;
-        }
-    }
-}
 
 //clear terminal
 export function clearTerminal()
@@ -895,123 +519,6 @@ export function clearTerminal()
     term.clear();
 }
 
-//create dom element for gutter
-function makeGutterDecoration(html, lightThemeColour, darkThemeColour) {
-    var marker = document.createElement("div");
-    marker.style.color = darkThemeColour;
-
-    if (localStorage.getItem("theme"))
-    {
-        if (localStorage.getItem("theme") == "light")
-        {
-            marker.style.color = lightThemeColour;
-        }
-    }
-
-    marker.innerHTML = html;
-    return marker;
-}
-
-function clearTracker()
-{
-    if (trackingFile)
-    {
-        for (var i=0; i<editors.length; i++)
-        {
-            if (editors[i]["fileName"] == trackingFile)
-            {
-                editors[i]["editor"].clearGutter("tracking");
-                trackingFile = null;
-                break;
-            }
-        }
-    }
-    
-}
-
-function addTracker(file, lineNum)
-{
-    for (var i=0; i<editors.length; i++)
-    {
-        if (editors[i]["fileName"] == file)
-        {
-            console.log("scrolling into view");
-
-            //scroll to line
-            jumpToLine(lineNum, editors[i]["editor"]);
-
-            //add a marker to the new line
-            editors[i]["editor"].setGutterMarker(parseInt(lineNum) - 1, "tracking", makeGutterDecoration("<span class='mdi mdi-arrow-right-thick'></span>", "#0A12FF", "#fbff00"));
-
-            //keep track of the file tracker is in
-            trackingFile = file;
-        }
-    }
-}
-
-//https://stackoverflow.com/questions/10575343/codemirror-is-it-possible-to-scroll-to-a-line-so-that-it-is-in-the-middle-of-w
-function jumpToLine(i, editor) { 
-    var t = editor.charCoords({line: i, ch: 0}, "local").top; 
-    var middleHeight = editor.getScrollerElement().offsetHeight / 2; 
-    editor.scrollTo(null, t - middleHeight - 5); 
-} 
-
-function moveTracker(newFile, lineNum)
-{
-    //hide current arrow
-    clearTracker();
-
-    if (currentFile != newFile)
-    {
-        //switch active file
-        var start = newFile.split('.', 1)[0];
-        var end = newFile.split('.').pop();
-
-        $("#" + start + end + "File").on("shown.bs.tab", function(e)
-        {
-            console.log("shown");
-
-            console.log("refresh");
-
-            for (var j=0; j<editors.length; j++)
-            {
-                editors[j]["editor"].refresh();
-            }
-
-            addTracker(newFile, lineNum);
-            currentFile = newFile;
-
-            $("#" + start + end + "File").off("shown.bs.tab");
-        });
-
-        $("#" + start + end + "File").tab("show");
-    }
-    else
-    {
-        addTracker(newFile, lineNum);
-    }
-}
-
-//toggle a breakpoint marker in a file manually, without gutter click event
-function toggleBreakpoint(file, lineNum)
-{
-    for (var i=0; i<editors.length; i++)
-    {
-        if (editors[i]["fileName"] == file)
-        {
-            if (editors[i]["breakpoints"].has(lineNum))
-            {
-                editors[i]["breakpoints"].delete(lineNum);
-                editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", null);
-            }
-            else
-            {
-                editors[i]["breakpoints"].add(lineNum);
-                editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));    
-            }
-        }
-    }
-}
 
 //tell socket to run unit test on program code
 export function testProgram()
@@ -1048,9 +555,9 @@ export function testProgram()
     }
 
     //get the files in the editor
-    for (var i=0; i<editors.length; i++)
+    for (var i=0; i<editor.editors.length; i++)
     {
-        editorFiles.push([files[i].getAttribute("id"), editors[i]["editor"].getValue()]);
+        editorFiles.push([editor.files[i].getAttribute("id"), editor.editors[i]["editor"].getValue()]);
     }
 
     //update the files if they match anything in the editor

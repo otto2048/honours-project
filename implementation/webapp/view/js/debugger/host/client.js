@@ -164,9 +164,7 @@ socketHost.onmessage = function(event) {
 
 function preparePage()
 {
-    debug.setUpEditors(sendBreakpoint);
-
-    debug.prepareDebuggerClient();
+    debug.initialiseEditors(sendBreakpoint);
 
     //add event listener to play button
     $("#play-btn")[0].addEventListener("click", function()
