@@ -387,12 +387,17 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
 
                 # check if this item has fields
                 if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC or firstItemTC is gdb.TYPE_CODE_ARRAY:
-                    the_parent = (item[0], None, "array", item[3])
+                    
+                    item_name = item[0]
+                        
+                    the_parent = (item_name, None, "array", item[3])
 
                     # do this function for all the elements
                     for i in x:
                         item_id = item[3] + "_" + str(i)
-                        the_item = (i, item[1][i], item[1][i].type, item_id)
+                        item_name = "[" + str(i) + "]"
+
+                        the_item = (item_name, item[1][i], item[1][i].type, item_id)
 
                         loadVariables(the_item, frame, graph, recurse_limit, parent = the_parent, level = new_level)
                 else:

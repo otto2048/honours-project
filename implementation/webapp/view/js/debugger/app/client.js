@@ -581,7 +581,7 @@ function displayVariableDropdown(source) {
     if (sourceRowPadding)
     {
         var sourceRowPaddingInt = parseInt(sourceRowPadding, 10);
-        newPadding = sourceRowPaddingInt + 1;
+        newPadding = sourceRowPaddingInt + 1.5;
     }
 
     //find parent id
