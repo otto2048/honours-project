@@ -169,7 +169,7 @@
 
                                 ?>
                             </div>
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-center pb-2 pt-2">
                                 <button type="button" class="btn btn-dark theme me-1" id="increase-code-size-btn">+ Increase Font Size</button>
                                 <button type="button" class="btn btn-dark theme me-1" id="decrease-code-size-btn">- Decrease Font Size</button>
                             </div>
