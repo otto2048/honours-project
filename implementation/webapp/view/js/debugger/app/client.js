@@ -263,127 +263,12 @@ export function on_message(messageEvent)
         case constants.EVENT_ON_LOCALS_DUMP:
             var data = JSON.parse(message.value);
 
-            var links = data.data.links;
-
-            locals.currentVariableDataObj.currentVariableData = links;
-
-            var previousVisVariables = new Map (locals.visibleVariableLevels);
-
-            var tableBody = $("#debug-table")[0];
-
-            tableBody.innerHTML = "";
-            locals.visibleVariableLevels.clear();
-
-            var elements = [];
-
-            console.log(locals.visibleVariableIds);
-
-            for (var i=0; i<locals.currentVariableDataObj.currentVariableData.length; i++)
-            {
-                //get the top level variables
-                if (locals.currentVariableDataObj.currentVariableData[i].source == "top_level")
-                {
-                    elements.push(locals.currentVariableDataObj.currentVariableData[i]);
-                }
-            }
-
-            //sort elements
-            elements.sort(function(a, b) {
-                if (a.target[0] < b.target[0])
-                {
-                    return 1;
-                }
-
-                if (a.target[0] > b.target[0])
-                {
-                    return -1;
-                }
-
-                return 0;
-            });
-
-            for (var i=0; i<elements.length; i++)
-            {
-                var tr = document.createElement("tr");
-                var name = document.createElement("td");
-                var value = document.createElement("td");
-                var type = document.createElement("td");
-
-                name.textContent = elements[i].target[4];
-                value.textContent = elements[i].target[1];
-                type.textContent = elements[i].target[2];
-                tr.setAttribute("id", elements[i].target[3]);
-
-                if (elements[i].target[1] === null)
-                {
-                    var dropdown = document.createElement("span");
-                    dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
-                    name.prepend(dropdown);
-                    name.dataset.displayed = false;
-                    name.classList.add("variable-pointer");
-
-                    name.addEventListener("click", function(i)
-                    {
-                        if (this.dataset.displayed == "false")
-                        {
-                            //change arrow orientation
-                            this.firstChild.classList.remove("mdi-rotate-90");
-                            this.firstChild.classList.add("mdi-rotate-135");
-
-                            //display variables
-                            locals.displayVariableDropdown(this.parentElement.getAttribute("id"));
-
-                            this.dataset.displayed = "true";
-                        }
-                        else
-                        {
-                            //change arrow orientation
-                            this.firstChild.classList.remove("mdi-rotate-135");
-                            this.firstChild.classList.add("mdi-rotate-90");
-
-                            //hide variables
-                            locals.hideVariableDropdown(this.parentElement.getAttribute("id"));
-
-                            this.dataset.displayed = "false";
-                        }
-                    });
-                }
-
-                tr.append(name);
-                tr.append(value);
-                tr.append(type);
-                tableBody.append(tr);
-
-                //add to visible variables
-                locals.visibleVariableLevels.set(elements[i].target[3], 0);
-
-                locals.visibleVariableIds.add(elements[i].target[3]);
-            }
-
-            //find the elements that are still visible
-            for (var i = 0; i < elements.length; i++)
-            {
-                if (previousVisVariables.has(elements[i].target[3]))
-                {
-                    //local dump
-                    var level = previousVisVariables.get(elements[i].target[3]);
-
-                    if (level > 0)
-                    {
-                        sendInput("get_local " + elements[i].target[3] + " " + level);
-
-                        hostSocket.pingHostFunc();
-                    }
-                    
-                }
-            }
-
+            locals.displayInitialVariables(data);
             
             break;
         case constants.EVENT_ON_DUMP_LOCAL:
             var data = JSON.parse(message.value);
             
-
             //get id of variable to be removed
             var links = data.data.links;
             var id;
