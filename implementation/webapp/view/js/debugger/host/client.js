@@ -100,9 +100,7 @@ socketHost.onmessage = function(event) {
             debug.socketObj.socket.onmessage = function(messageEvent) {
 
                 //client on message function
-                debug.on_message(messageEvent, function() {
-                    socketHost.send(JSON.stringify(pingHostObj));
-                });
+                debug.on_message(messageEvent);
                 
             };
 
@@ -331,6 +329,10 @@ function sendBreakpoint(file, row, adding)
 
         socketHost.send(JSON.stringify(pingHostObj));
     }
+}
+
+export function pingHostFunc() {
+    socketHost.send(JSON.stringify(pingHostObj));
 }
 
 //change code size

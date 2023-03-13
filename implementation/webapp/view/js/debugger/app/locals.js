@@ -1,4 +1,5 @@
-import * as debug from "/honours/webapp/view/js/debugger/app/client.js"
+import * as debug from "/honours/webapp/view/js/debugger/app/client.js";
+import * as hostSocket from "/honours/webapp/view/js/debugger/host/client.js";
 
 export let currentVariableDataObj = {
     currentVariableData: null
@@ -191,6 +192,7 @@ export function displayVariableDropdown(source) {
         var level = visibleVariableLevels.get(parentId) + 1;
         
         debug.sendInput("get_local " + parentName + " " + level);
+        hostSocket.pingHostFunc();
 
         return;
     }

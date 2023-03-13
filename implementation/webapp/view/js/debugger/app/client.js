@@ -7,6 +7,8 @@ import * as editor from "/honours/webapp/view/js/debugger/app/editors.js";
 
 import * as locals from "/honours/webapp/view/js/debugger/app/locals.js";
 
+import * as hostSocket from "/honours/webapp/view/js/debugger/host/client.js";
+
 export let socketObj = {
     socket: null
 };
@@ -39,7 +41,7 @@ export function on_close()
     }
 }
 
-export function on_message(messageEvent, pingHostFunc)
+export function on_message(messageEvent)
 {
     //handle message
     var message = JSON.parse(messageEvent.data);
@@ -157,7 +159,7 @@ export function on_message(messageEvent, pingHostFunc)
 
             //load locals
             sendInput("get_top_level_locals");
-            pingHostFunc();
+            hostSocket.pingHostFunc();
 
             break;
         case constants.EVENT_ON_CONTINUE:
@@ -193,7 +195,7 @@ export function on_message(messageEvent, pingHostFunc)
 
             //load visible variables
             sendInput("get_top_level_locals");
-            pingHostFunc();
+            hostSocket.pingHostFunc();
 
             break;
         case constants.EVENT_ON_BREAKPOINT_CHANGED:
@@ -370,7 +372,7 @@ export function on_message(messageEvent, pingHostFunc)
                     {
                         sendInput("get_local " + elements[i].target[3] + " " + level);
 
-                        pingHostFunc();
+                        hostSocket.pingHostFunc();
                     }
                     
                 }
