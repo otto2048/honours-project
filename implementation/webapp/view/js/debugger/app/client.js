@@ -548,9 +548,8 @@ function hideVariableDropdown(source, topLevel = true) {
         visibleVariableIds.delete(source);
     }
 
-    //decrease level count on top parent
+    //find parent id
     var parentId = source;
-    var steps = 0;
 
     while (!visibleVariableData.has(parentId))
     {
@@ -561,15 +560,43 @@ function hideVariableDropdown(source, topLevel = true) {
                 if (currentVariableData[i].source != "top_level")
                 {
                     parentId = currentVariableData[i].source[3];
-                    steps = steps + 1;
                 }
             }
         }
     }
 
-    visibleVariableData.set(parentId, visibleVariableData.get(parentId) - (visibleVariableData.get(parentId) - steps));
+    updateLevelCount(parentId);
 
     console.log(visibleVariableData);
+}
+
+function updateLevelCount(parent)
+{
+    visibleVariableData.set(parent, maxDepth(parent));   
+}
+
+function maxDepth(parent)
+{
+    var childrenDepths = new Set();
+
+    for (var i=0; i<currentVariableData.length; i++)
+    {
+        //check if this element has visible children, pass each child as the source element to this function
+        if (currentVariableData[i].source[3] == parent)
+        {
+            if (visibleVariableIds.has(currentVariableData[i].target[3]))
+            {
+                childrenDepths.add(maxDepth(currentVariableData[i].target[3]));
+            }
+        }
+    }
+
+    if (childrenDepths.size == 0)
+    {
+        return 0;
+    }
+
+    return Math.max(...childrenDepths) + 1;
 }
 
 function displayVariableDropdown(source) {
@@ -586,7 +613,7 @@ function displayVariableDropdown(source) {
 
     //find parent id
     var parentId = source;
-    var steps = 1;
+
     while (!visibleVariableData.has(parentId))
     {
         for (var i=0; i<currentVariableData.length; i++)
@@ -596,7 +623,6 @@ function displayVariableDropdown(source) {
                 if (currentVariableData[i].source != "top_level")
                 {
                     parentId = currentVariableData[i].source[3];
-                    steps = steps + 1;
                 }
             }
         }
@@ -651,8 +677,6 @@ function displayVariableDropdown(source) {
         return 0;
     });
 
-    //increase level count on top parent
-    visibleVariableData.set(parentId, steps);
 
     console.log(visibleVariableData);
 
@@ -724,6 +748,8 @@ function displayVariableDropdown(source) {
 
         visibleVariableIds.add(elements[i].target[3]);
     }
+
+    updateLevelCount(parentId);
 }
 
 //tell socket that we want to compile and start the program
