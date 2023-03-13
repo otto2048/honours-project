@@ -269,60 +269,7 @@ export function on_message(messageEvent)
         case constants.EVENT_ON_DUMP_LOCAL:
             var data = JSON.parse(message.value);
             
-            //get id of variable to be removed
-            var links = data.data.links;
-            var id;
-
-            for (var i=0; i<links.length; i++)
-            {
-                //get the top level variables
-                if (links[i].source == "top_level")
-                {
-                    id = links[i].target[3];
-                }
-            }
-
-            //https://stackoverflow.com/questions/21987909/how-to-get-the-difference-between-two-arrays-of-objects-in-javascript
-            //find the elements that are not in current variables
-            var newVariables = links.filter(function(objOne) {
-                return !locals.currentVariableDataObj.currentVariableData.some(function(objTwo) {
-                    return objOne.source[3] == objTwo.source[3] && objOne.target[3] == objTwo.target[3];
-                });
-            });
-
-            //add links to this variable into the current links
-            locals.currentVariableDataObj.currentVariableData = locals.currentVariableDataObj.currentVariableData.concat(newVariables);
-
-            //check if this is refreshing variable in a new frame
-            var sourceRow = document.getElementById(id);
-
-            if (sourceRow.firstChild.dataset.displayed == "true")
-            {
-                var displayedVariables = [];
-
-                for (let index = 0; index < newVariables.length; index++) {
-                    if (!displayedVariables.includes(newVariables[index].source[3]))
-                    {
-                        var sourceRow = document.getElementById(newVariables[index].source[3]);
-    
-                        if (sourceRow)
-                        {
-                            //if this has actually been clicked
-                            if (sourceRow.firstChild.dataset.displayed == "true")
-                            {
-                                locals.displayVariableDropdown(newVariables[index].source[3]);
-                                displayedVariables.push(newVariables[index].source[3]);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //we are displaying the whole variable
-                locals.displayWholeVariable(id);
-            }
-            
+            locals.displayMoreVariableDetail(data);
 
             break;
         default:

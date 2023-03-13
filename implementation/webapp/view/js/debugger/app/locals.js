@@ -3,16 +3,14 @@
 import * as debug from "/honours/webapp/view/js/debugger/app/client.js";
 import * as hostSocket from "/honours/webapp/view/js/debugger/host/client.js";
 
-export let currentVariableDataObj = {
-    currentVariableData: null
-};
+var currentVariableData;
 
-export var visibleVariableLevels = new Map();
+var visibleVariableLevels = new Map();
 
-export var visibleVariableIds = new Set();
+var visibleVariableIds = new Set();
 
 //display the children of this variable (the source)
-export function displayWholeVariable(source)
+function displayWholeVariable(source)
 {
     //get the source row (the parent element)
     var sourceRow = document.getElementById(source);
@@ -20,12 +18,12 @@ export function displayWholeVariable(source)
     var load = false;
 
     //find the first child of this
-    for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+    for (var i=0; i<currentVariableData.length; i++)
     {
-        if (currentVariableDataObj.currentVariableData[i].source[3] == source)
+        if (currentVariableData[i].source[3] == source)
         {
             //if the child is visible
-            if (visibleVariableIds.has(currentVariableDataObj.currentVariableData[i].target[3]))
+            if (visibleVariableIds.has(currentVariableData[i].target[3]))
             {
                 load = true;
             }
@@ -41,14 +39,14 @@ export function displayWholeVariable(source)
 
         displayVariableDropdown(source);
 
-        for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+        for (var i=0; i<currentVariableData.length; i++)
         {
             //check if this element has visible children, pass each child as the source element to this function
-            if (currentVariableDataObj.currentVariableData[i].source[3] == source)
+            if (currentVariableData[i].source[3] == source)
             {
-                if (visibleVariableIds.has(currentVariableDataObj.currentVariableData[i].target[3]))
+                if (visibleVariableIds.has(currentVariableData[i].target[3]))
                 {
-                    displayWholeVariable(currentVariableDataObj.currentVariableData[i].target[3])
+                    displayWholeVariable(currentVariableData[i].target[3])
                 }
             }
         }
@@ -56,30 +54,30 @@ export function displayWholeVariable(source)
     
 }
 
-export function hideVariableDropdown(source, topLevel = true) {
+function hideVariableDropdown(source, topLevel = true) {
     var sourceRow = document.getElementById(source);
 
-    for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+    for (var i=0; i<currentVariableData.length; i++)
     {
         //find the children of this row
-        if (currentVariableDataObj.currentVariableData[i].source[3] == source)
+        if (currentVariableData[i].source[3] == source)
         {
-            var childRow = document.getElementById(currentVariableDataObj.currentVariableData[i].target[3]);
+            var childRow = document.getElementById(currentVariableData[i].target[3]);
 
             //if this row has children of its own
-            if (currentVariableDataObj.currentVariableData[i].target[1] === null)
+            if (currentVariableData[i].target[1] === null)
             {
                 if (childRow.firstChild.dataset.displayed == "true")
                 {
                     //hide children
-                    hideVariableDropdown(currentVariableDataObj.currentVariableData[i].target[3], false);
+                    hideVariableDropdown(currentVariableData[i].target[3], false);
                 }
             }
 
             //remove this row
             childRow.remove();
 
-            visibleVariableIds.delete(currentVariableDataObj.currentVariableData[i].target[3]);
+            visibleVariableIds.delete(currentVariableData[i].target[3]);
         }
     }
 
@@ -94,13 +92,13 @@ export function hideVariableDropdown(source, topLevel = true) {
 
     while (!visibleVariableLevels.has(parentId))
     {
-        for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+        for (var i=0; i<currentVariableData.length; i++)
         {
-            if (currentVariableDataObj.currentVariableData[i].target[3] == parentId)
+            if (currentVariableData[i].target[3] == parentId)
             {
-                if (currentVariableDataObj.currentVariableData[i].source != "top_level")
+                if (currentVariableData[i].source != "top_level")
                 {
-                    parentId = currentVariableDataObj.currentVariableData[i].source[3];
+                    parentId = currentVariableData[i].source[3];
                 }
             }
         }
@@ -115,14 +113,14 @@ function maxDepth(parent)
 {
     var childrenDepths = new Set();
 
-    for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+    for (var i=0; i<currentVariableData.length; i++)
     {
         //check if this element has visible children, pass each child as the source element to this function
-        if (currentVariableDataObj.currentVariableData[i].source[3] == parent)
+        if (currentVariableData[i].source[3] == parent)
         {
-            if (visibleVariableIds.has(currentVariableDataObj.currentVariableData[i].target[3]))
+            if (visibleVariableIds.has(currentVariableData[i].target[3]))
             {
-                childrenDepths.add(maxDepth(currentVariableDataObj.currentVariableData[i].target[3]));
+                childrenDepths.add(maxDepth(currentVariableData[i].target[3]));
             }
         }
     }
@@ -135,11 +133,68 @@ function maxDepth(parent)
     return Math.max(...childrenDepths) + 1;
 }
 
+export function displayMoreVariableDetail(data)
+{
+    //get id of variable to be removed
+    var links = data.data.links;
+    var id;
+
+    for (var i=0; i<links.length; i++)
+    {
+        //get the top level variables
+        if (links[i].source == "top_level")
+        {
+            id = links[i].target[3];
+        }
+    }
+
+    //https://stackoverflow.com/questions/21987909/how-to-get-the-difference-between-two-arrays-of-objects-in-javascript
+    //find the elements that are not in current variables
+    var newVariables = links.filter(function(objOne) {
+        return !currentVariableData.some(function(objTwo) {
+            return objOne.source[3] == objTwo.source[3] && objOne.target[3] == objTwo.target[3];
+        });
+    });
+
+    //add links to this variable into the current links
+    currentVariableData = currentVariableData.concat(newVariables);
+
+    //check if this is refreshing variable in a new frame
+    var sourceRow = document.getElementById(id);
+
+    if (sourceRow.firstChild.dataset.displayed == "true")
+    {
+        var displayedVariables = [];
+
+        for (let index = 0; index < newVariables.length; index++) {
+            if (!displayedVariables.includes(newVariables[index].source[3]))
+            {
+                var sourceRow = document.getElementById(newVariables[index].source[3]);
+
+                if (sourceRow)
+                {
+                    //if this has actually been clicked
+                    if (sourceRow.firstChild.dataset.displayed == "true")
+                    {
+                        displayVariableDropdown(newVariables[index].source[3]);
+                        displayedVariables.push(newVariables[index].source[3]);
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        //we are displaying the whole variable
+        displayWholeVariable(id);
+    }
+}
+
 export function displayInitialVariables(data)
 {
     var links = data.data.links;
 
-    currentVariableDataObj.currentVariableData = links;
+    currentVariableData = links;
 
     var previousVisVariables = new Map (visibleVariableLevels);
 
@@ -152,12 +207,12 @@ export function displayInitialVariables(data)
 
     console.log(visibleVariableIds);
 
-    for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+    for (var i=0; i<currentVariableData.length; i++)
     {
         //get the top level variables
-        if (currentVariableDataObj.currentVariableData[i].source == "top_level")
+        if (currentVariableData[i].source == "top_level")
         {
-            elements.push(currentVariableDataObj.currentVariableData[i]);
+            elements.push(currentVariableData[i]);
         }
     }
 
@@ -270,13 +325,13 @@ export function displayVariableDropdown(source) {
 
     while (!visibleVariableLevels.has(parentId))
     {
-        for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+        for (var i=0; i<currentVariableData.length; i++)
         {
-            if (currentVariableDataObj.currentVariableData[i].target[3] == parentId)
+            if (currentVariableData[i].target[3] == parentId)
             {
-                if (currentVariableDataObj.currentVariableData[i].source != "top_level")
+                if (currentVariableData[i].source != "top_level")
                 {
-                    parentId = currentVariableDataObj.currentVariableData[i].source[3];
+                    parentId = currentVariableData[i].source[3];
                 }
             }
         }
@@ -284,12 +339,12 @@ export function displayVariableDropdown(source) {
 
     var elements = [];
 
-    for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+    for (var i=0; i<currentVariableData.length; i++)
     {
         //get the top level variables
-        if (currentVariableDataObj.currentVariableData[i].source[3] == source)
+        if (currentVariableData[i].source[3] == source)
         {
-            elements.push(currentVariableDataObj.currentVariableData[i]);
+            elements.push(currentVariableData[i]);
         }
     }
 
@@ -297,13 +352,13 @@ export function displayVariableDropdown(source) {
     {
         var parentName;
 
-        for (var i=0; i<currentVariableDataObj.currentVariableData.length; i++)
+        for (var i=0; i<currentVariableData.length; i++)
         {
-            if (currentVariableDataObj.currentVariableData[i].target[3] == parentId)
+            if (currentVariableData[i].target[3] == parentId)
             {
-                if (currentVariableDataObj.currentVariableData[i].source == "top_level")
+                if (currentVariableData[i].source == "top_level")
                 {
-                    parentName = currentVariableDataObj.currentVariableData[i].target[0];
+                    parentName = currentVariableData[i].target[0];
                 }
             }
         }
