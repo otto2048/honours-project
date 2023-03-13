@@ -11,7 +11,7 @@ var trackingFile = null;
 
 var currentVariableData;
 
-var visibleVariableData = new Map();
+var visibleVariableLevels = new Map();
 
 var visibleVariableIds = new Set();
 
@@ -293,12 +293,12 @@ export function on_message(messageEvent, pingHostFunc)
 
             currentVariableData = links;
 
-            var previousVisVariables = new Map (visibleVariableData);
+            var previousVisVariables = new Map (visibleVariableLevels);
 
             var tableBody = $("#debug-table")[0];
 
             tableBody.innerHTML = "";
-            visibleVariableData.clear();
+            visibleVariableLevels.clear();
 
             var elements = [];
 
@@ -381,7 +381,7 @@ export function on_message(messageEvent, pingHostFunc)
                 tableBody.append(tr);
 
                 //add to visible variables
-                visibleVariableData.set(elements[i].target[3], 0);
+                visibleVariableLevels.set(elements[i].target[3], 0);
 
                 visibleVariableIds.add(elements[i].target[3]);
             }
@@ -552,7 +552,7 @@ function hideVariableDropdown(source, topLevel = true) {
     //find parent id
     var parentId = source;
 
-    while (!visibleVariableData.has(parentId))
+    while (!visibleVariableLevels.has(parentId))
     {
         for (var i=0; i<currentVariableData.length; i++)
         {
@@ -568,12 +568,12 @@ function hideVariableDropdown(source, topLevel = true) {
 
     updateLevelCount(parentId);
 
-    console.log(visibleVariableData);
+    console.log(visibleVariableLevels);
 }
 
 function updateLevelCount(parent)
 {
-    visibleVariableData.set(parent, maxDepth(parent));   
+    visibleVariableLevels.set(parent, maxDepth(parent));   
 }
 
 function maxDepth(parent)
@@ -615,7 +615,7 @@ function displayVariableDropdown(source) {
     //find parent id
     var parentId = source;
 
-    while (!visibleVariableData.has(parentId))
+    while (!visibleVariableLevels.has(parentId))
     {
         for (var i=0; i<currentVariableData.length; i++)
         {
@@ -656,7 +656,7 @@ function displayVariableDropdown(source) {
         }
 
         //load the next level of variables
-        var level = visibleVariableData.get(parentId) + 1;
+        var level = visibleVariableLevels.get(parentId) + 1;
         
         sendInput("get_local " + parentName + " " + level);
 
@@ -679,7 +679,7 @@ function displayVariableDropdown(source) {
     });
 
 
-    console.log(visibleVariableData);
+    console.log(visibleVariableLevels);
 
     //display elements
     for (var i=0; i<elements.length; i++)
