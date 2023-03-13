@@ -66,26 +66,14 @@ export function on_message(messageEvent)
             $(".debugger-live-control").removeClass("d-none");
 
             //show debug output window
-            //if editor has changed size, save the size and reset size
-            editor.editors.forEach(element => {
-                if (element.fileElement.getAttribute("style"))
-                {
-                    element.editedWidth = element.fileElement.style.width;
-                    element.fileElement.style.removeProperty("width");
-                }
-            });
-
             $("#debug-output-window").removeClass("d-none");
 
             //enable stop debugger live control
             $("#stop-btn")[0].disabled = false;
             $("#stop-btn")[0].ariaDisabled = false;
 
-            //editor is readonly
-            for (var i=0; i<editor.editors.length; i++)
-            {
-                editor.editors[i]["editor"].setOption("readOnly", true);
-            }
+            //set editor to readonly
+            editor.toggleReadOnlyMode(true);
 
             break;
         case constants.EVENT_ON_COMPILE_FAILURE:
@@ -106,14 +94,8 @@ export function on_message(messageEvent)
             //hide debug output window
             $("#debug-output-window").addClass("d-none");
 
-            //if editor has changed size, change size to how it was before program was run
-            editor.editors.forEach(element => {
-                if (element.editedWidth)
-                {
-                    element.fileElement.style.width = element.editedWidth;
-                    element.editedWidth = null;
-                }
-            });
+            //make editor editable
+            editor.toggleReadOnlyMode(false);
 
             var debuggerLiveControls = $(".debugger-live-control");
 
@@ -130,12 +112,6 @@ export function on_message(messageEvent)
 
             //hide arrow
             editor.clearTracker();
-
-            //editor is editable
-            for (var i=0; i<editor.editors.length; i++)
-            {
-                editor.editors[i]["editor"].setOption("readOnly", false);
-            }
 
             break;
         case constants.EVENT_ON_BREAK:
@@ -190,8 +166,6 @@ export function on_message(messageEvent)
             var lineNum = message.value.split(':').pop();
 
             editor.moveTracker(file, lineNum);
-
-            //get top level variables
 
             //load visible variables
             sendInput("get_top_level_locals");

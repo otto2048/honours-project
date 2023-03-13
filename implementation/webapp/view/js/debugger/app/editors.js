@@ -6,6 +6,44 @@ export var files = $(".editor");
 var currentFile = "main.cpp";
 var trackingFile = null;
 
+export function toggleReadOnlyMode(on)
+{
+    if (on)
+    {
+        //if editor has changed size, save the size and reset size
+        editors.forEach(element => {
+            if (element.fileElement.getAttribute("style"))
+            {
+                element.editedWidth = element.fileElement.style.width;
+                element.fileElement.style.removeProperty("width");
+            }
+        });
+
+        //editor is readonly
+        for (var i=0; i<editors.length; i++)
+        {
+            editors[i]["editor"].setOption("readOnly", true);
+        }
+    }
+    else
+    {
+        //if editor has changed size, change size to how it was before program was run
+        editors.forEach(element => {
+            if (element.editedWidth)
+            {
+                element.fileElement.style.width = element.editedWidth;
+                element.editedWidth = null;
+            }
+        });
+
+        //editor is editable
+        for (var i=0; i<editors.length; i++)
+        {
+            editors[i]["editor"].setOption("readOnly", false);
+        }
+    }
+}
+
 export function prepareDebuggerClient(breakpointFunc)
 {
     //keep track of the current file being displayed
