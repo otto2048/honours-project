@@ -386,7 +386,7 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
             if new_level <= recurse_limit:
 
                 # check if this item has fields
-                if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC:
+                if firstItemTC is gdb.TYPE_CODE_STRUCT or firstItemTC is gdb.TYPE_CODE_UNION or firstItemTC is gdb.TYPE_CODE_ENUM or firstItemTC is gdb.TYPE_CODE_FUNC or firstItemTC is gdb.TYPE_CODE_ARRAY:
                     the_parent = (item[0], None, "array", item[3])
 
                     # do this function for all the elements

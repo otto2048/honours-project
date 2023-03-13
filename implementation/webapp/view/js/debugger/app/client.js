@@ -444,11 +444,14 @@ export function on_message(messageEvent, pingHostFunc)
                     {
                         var sourceRow = document.getElementById(newVariables[index].source[3]);
     
-                        //if this has actually been clicked
-                        if (sourceRow.firstChild.dataset.displayed == "true")
+                        if (sourceRow)
                         {
-                            displayVariableDropdown(newVariables[index].source[3]);
-                            displayedVariables.push(newVariables[index].source[3]);
+                            //if this has actually been clicked
+                            if (sourceRow.firstChild.dataset.displayed == "true")
+                            {
+                                displayVariableDropdown(newVariables[index].source[3]);
+                                displayedVariables.push(newVariables[index].source[3]);
+                            }
                         }
                     }
                 }
@@ -457,40 +460,8 @@ export function on_message(messageEvent, pingHostFunc)
             {
                 //we are displaying the whole variable
                 displayWholeVariable(id);
-
             }
             
-
-            break;
-        case constants.EVENT_ON_TOP_LEVEL_VARIABLES:
-            //if any of the variables are currently visible, load them to their visibility level
-            var data = JSON.parse(message.value);
-            
-
-            var variables = data.data;
-
-            var previousVisVariables = visibleVariableData;
-
-            //var dump all variables
-            sendInput("get_top_level_locals");
-            pingHostFunc();
-
-            //NEED TO DO THIS AFTER GET TOP LEVEL LOCALS
-            //find the elements that are not currently visible
-            for (var i = 0; i < variables.length; i++)
-            {
-                if (previousVisVariables.has(variables[i]))
-                {
-                    //local dump
-                    var level = previousVisVariables.get(variables[i]) + 1;
-                    
-                    sendInput("get_local " + variables[i] + " " + level + " " + variables[i]);
-                }
-                else
-                {
-                    //local dump, add to visible variables
-                }
-            }
 
             break;
         default:
@@ -498,8 +469,10 @@ export function on_message(messageEvent, pingHostFunc)
     }
 }
 
+//display the children of this variable (the source)
 function displayWholeVariable(source)
 {
+    //get the source row (the parent element)
     var sourceRow = document.getElementById(source);
 
     var load = false;
@@ -517,7 +490,7 @@ function displayWholeVariable(source)
         }
     }
 
-    //if we should load the next layer of children
+    //if we should display the children of the source element
     if (load)
     {
         sourceRow.firstChild.firstChild.classList.remove("mdi-rotate-90");
@@ -528,7 +501,7 @@ function displayWholeVariable(source)
 
         for (var i=0; i<currentVariableData.length; i++)
         {
-            //find the children of this row
+            //check if this element has visible children, pass each child as the source element to this function
             if (currentVariableData[i].source[3] == source)
             {
                 if (visibleVariableIds.has(currentVariableData[i].target[3]))
