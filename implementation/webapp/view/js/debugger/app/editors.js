@@ -1,3 +1,5 @@
+//handles stuff to do with editors and breakpoints
+
 export var editors = [];
 export var files = $(".editor");
 

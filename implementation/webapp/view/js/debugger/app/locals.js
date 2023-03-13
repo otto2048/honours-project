@@ -1,3 +1,5 @@
+//handles stuff to do with locals
+
 import * as debug from "/honours/webapp/view/js/debugger/app/client.js";
 import * as hostSocket from "/honours/webapp/view/js/debugger/host/client.js";
 
