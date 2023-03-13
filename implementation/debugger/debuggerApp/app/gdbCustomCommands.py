@@ -4,6 +4,7 @@ import networkx as nx
 
 #TODO: handle nested functions (multiple frames), also test on recursion
 
+# custom next command
 class StepOver(gdb.Command):
 
     def __init__(self):
@@ -27,6 +28,7 @@ class StepOver(gdb.Command):
 
         print("DONE\n")
 
+# custom step command
 class StepInto(gdb.Command):
     def __init__(self):
         super(StepInto, self).__init__(
@@ -49,7 +51,8 @@ class StepInto(gdb.Command):
         print(result_arr[0].split()[-1])
 
         print("DONE\n")
-   
+
+# custom finish command
 class StepOut(gdb.Command):
     def __init__(self):
         super(StepOut, self).__init__(
@@ -72,6 +75,7 @@ class StepOut(gdb.Command):
 
         print("DONE\n")
 
+# custom break command
 class BreakSilent(gdb.Command):
     def __init__(self):
         super(BreakSilent, self).__init__(
@@ -104,6 +108,7 @@ class BreakSilent(gdb.Command):
             print(file_line)
             print("DONE\n")
 
+# custom clear command
 class ClearSilent(gdb.Command):
     def __init__(self):
         super(ClearSilent, self).__init__(
@@ -116,6 +121,7 @@ class ClearSilent(gdb.Command):
     def invoke(self, args, from_tty):
         result = gdb.execute("clear " + args, to_string = True)
 
+# custom GDB command that gets the locals in a frame
 class GetTopLevelLocals(gdb.Command):
 
     def __init__(self):
@@ -129,18 +135,23 @@ class GetTopLevelLocals(gdb.Command):
     def invoke(self, args, from_tty):
         frame = gdb.selected_frame()
 
+        # get variables
         variables = getVariables()
 
         graph = nx.DiGraph()
 
+        # load all variables into the graph
         for item in variables:
             loadVariables(item, frame, graph, 0)
 
+        # print graph json
         print("FOR_SERVER")
         print("EVENT_ON_LOCALS_DUMP")
         print(json.dumps({"data" : nx.node_link_data(graph)}))
         print("DONE")
 
+# custom GDB command that gets a local variable
+# args: variable name, recursion limit
 class GetLocal(gdb.Command):
 
     def __init__(self):
@@ -160,13 +171,16 @@ class GetLocal(gdb.Command):
         frame = gdb.selected_frame()
         graph = nx.DiGraph()
 
+        # load variable details into the graph
         loadVariables((arguments[0], var, var.type, arguments[0], arguments[0]), frame, graph, int(arguments[1]))
 
+        # print json version of the graph
         print("FOR_SERVER")
         print("EVENT_ON_DUMP_LOCAL")
         print(json.dumps({"data" : nx.node_link_data(graph)}))
         print("DONE")
 
+# function that gets all the variables in a frame
 def getVariables():
     frame = gdb.selected_frame()
 
@@ -185,17 +199,22 @@ def getVariables():
                     type = symbol.value(frame).type
                     
                     names.add(name)
-                    # item: name, value, type, id, display name
+
                     variables.append((name, value, type, name, name))
         block = block.superblock
 
     return variables
 
+# function that loads a local variable into a standard format, preserving links to parent variables
+# item and parent are variables in a standard format with the structure:
+#   name, value, type, id, display name
+# recurse_limit tells us far we should load variables within variables, level keeps track of this
 def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level = 0):
 
+    # get the variable type
     typeCode = item[2].code
 
-    # check if this item has fields
+    # check if this item has fields (has variables within this one)
     if typeCode is gdb.TYPE_CODE_STRUCT or typeCode is gdb.TYPE_CODE_UNION or typeCode is gdb.TYPE_CODE_ENUM or typeCode is gdb.TYPE_CODE_FUNC:
 
         fields = item[2].fields()
