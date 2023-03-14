@@ -1,0 +1,5 @@
+getting actual values of strings: string.c_str()
+
+to load the type of variable, have to use ptype on the variable
+
+pointers need to be dereferenced to be outputted

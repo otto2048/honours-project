@@ -62,7 +62,7 @@
     white-space: pre-wrap;
 }
 
-#compilation-messages-box {
+.max-height-box {
     height: var(--default-height);
 }
 
@@ -114,4 +114,20 @@
     min-height: var(--default-height);
     border: solid 2px black;
     font-size: 15px;
+}
+
+/* variables */
+.variable-table-triangles {
+    font-size: 12px;
+}
+
+.variable-pointer {
+    cursor: pointer;
+}
+
+/* resizing */
+.resize {
+    padding: 0.25rem;
+
+    border: 3px var(--bs-border-style) var(--bs-border-color);
 }

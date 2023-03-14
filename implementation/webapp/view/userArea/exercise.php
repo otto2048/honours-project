@@ -41,6 +41,9 @@
 
         <!-- interact js -->
         <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
+        <!-- Load d3.js -->
+        <script src="https://d3js.org/d3.v4.js"></script>
     </head>
     <body>
         <?php 
@@ -166,7 +169,7 @@
 
                                 ?>
                             </div>
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-center pb-2 pt-2">
                                 <button type="button" class="btn btn-dark theme me-1" id="increase-code-size-btn">+ Increase Font Size</button>
                                 <button type="button" class="btn btn-dark theme me-1" id="decrease-code-size-btn">- Decrease Font Size</button>
                             </div>
@@ -174,19 +177,29 @@
                             
                         </div>
                         <!-- debug output window -->
-                        <div class="col-sm d-none" id="debug-output-window">
+                        <div class="col-sm d-none mt-2 border ms-4 pb-3" id="debug-output-window">
                             <h2 class="h4 ps-2 pt-3">Variable states</h2>
                             <hr>
+                            <div class="overflow-auto resize max-height-box">
+                                <table class="table">
+                                    <thead>
+                                        <th scope="col" class="w-25">Name</th>
+                                        <th scope="col" class="w-25">Value</th>
+                                        <th scope="col" class="w-25">Type</th>
+                                    </thead>
+                                    <tbody id="debug-table"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <!-- compilation message output -->
-                        <div class="col-sm mt-2 border pb-5 ps-1 me-3">
+                        <div class="col-sm mt-2 border pb-3 ps-1 me-3">
                             <h2 class="h4 ps-2 pt-3">Output</h2>
                             <hr>
                             <p class="ps-2">See debugger output messages here</p>
-                            <div class="overflow-auto resize" id="compilation-messages-box">
+                            <div class="overflow-auto resize max-height-box" id="compilation-messages-box">
                                 <ul class="list-unstyled list-group">
                                     
                                 </ul>
