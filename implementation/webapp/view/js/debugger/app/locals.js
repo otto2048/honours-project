@@ -88,21 +88,7 @@ function hideVariableDropdown(source, topLevel = true) {
     }
 
     //find parent id
-    var parentId = source;
-
-    while (!visibleVariableLevels.has(parentId))
-    {
-        for (var i=0; i<currentVariableData.length; i++)
-        {
-            if (currentVariableData[i].target[3] == parentId)
-            {
-                if (currentVariableData[i].source != "top_level")
-                {
-                    parentId = currentVariableData[i].source[3];
-                }
-            }
-        }
-    }
+    var parentId = findInitialParent(source);
 
     visibleVariableLevels.set(parentId, maxDepth(parentId));   
 
@@ -131,6 +117,27 @@ function maxDepth(parent)
     }
 
     return Math.max(...childrenDepths) + 1;
+}
+
+function findInitialParent(source)
+{
+    var parentId = source;
+
+    while (!visibleVariableLevels.has(parentId))
+    {
+        for (var i=0; i<currentVariableData.length; i++)
+        {
+            if (currentVariableData[i].target[3] == parentId)
+            {
+                if (currentVariableData[i].source != "top_level")
+                {
+                    parentId = currentVariableData[i].source[3];
+                }
+            }
+        }
+    }
+
+    return parentId;
 }
 
 export function displayMoreVariableDetail(data)
@@ -321,21 +328,7 @@ export function displayVariableDropdown(source) {
     }
 
     //find parent id
-    var parentId = source;
-
-    while (!visibleVariableLevels.has(parentId))
-    {
-        for (var i=0; i<currentVariableData.length; i++)
-        {
-            if (currentVariableData[i].target[3] == parentId)
-            {
-                if (currentVariableData[i].source != "top_level")
-                {
-                    parentId = currentVariableData[i].source[3];
-                }
-            }
-        }
-    }
+    var parentId = findInitialParent(source);
 
     var elements = [];
 
@@ -354,12 +347,9 @@ export function displayVariableDropdown(source) {
 
         for (var i=0; i<currentVariableData.length; i++)
         {
-            if (currentVariableData[i].target[3] == parentId)
+            if (currentVariableData[i].target[3] == parentId && currentVariableData[i].source == "top_level")
             {
-                if (currentVariableData[i].source == "top_level")
-                {
-                    parentName = currentVariableData[i].target[0];
-                }
+                parentName = currentVariableData[i].target[0];
             }
         }
 
