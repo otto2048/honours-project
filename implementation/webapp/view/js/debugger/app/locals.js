@@ -197,6 +197,87 @@ export function displayMoreVariableDetail(data)
     }
 }
 
+function sortVariables(a, b) {
+    if (a.target[0] < b.target[0])
+    {
+        return 1;
+    }
+
+    if (a.target[0] > b.target[0])
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+function createVariableRow(element, padding)
+{
+    var tr = document.createElement("tr");
+    var name = document.createElement("td");
+    var value = document.createElement("td");
+    var type = document.createElement("td");
+
+    name.textContent = element.target[4];
+    value.textContent = element.target[1];
+    type.textContent = element.target[2];
+    tr.setAttribute("id", element.target[3]);
+
+    //set padding
+    if (padding.set)
+    {
+        if (padding.value)
+        {
+            name.style.paddingLeft = padding.value + "rem";
+        }
+        else
+        {
+            name.style.paddingLeft = "1.6rem";
+        }
+    }
+
+    if (element.target[1] === null)
+    {
+        var dropdown = document.createElement("span");
+        dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
+        name.prepend(dropdown);
+        name.dataset.displayed = false;
+        name.classList.add("variable-pointer");
+
+        name.addEventListener("click", function(i)
+        {
+            if (this.dataset.displayed == "false")
+            {
+                //change arrow orientation
+                this.firstChild.classList.remove("mdi-rotate-90");
+                this.firstChild.classList.add("mdi-rotate-135");
+
+                //display variables
+                displayVariableDropdown(this.parentElement.getAttribute("id"));
+
+                this.dataset.displayed = "true";
+            }
+            else
+            {
+                //change arrow orientation
+                this.firstChild.classList.remove("mdi-rotate-135");
+                this.firstChild.classList.add("mdi-rotate-90");
+
+                //hide variables
+                hideVariableDropdown(this.parentElement.getAttribute("id"));
+
+                this.dataset.displayed = "false";
+            }
+        });
+    }
+
+    tr.append(name);
+    tr.append(value);
+    tr.append(type);
+
+    return tr;
+}
+
 export function displayInitialVariables(data)
 {
     var links = data.data.links;
@@ -212,8 +293,6 @@ export function displayInitialVariables(data)
 
     var elements = [];
 
-    console.log(visibleVariableIds);
-
     for (var i=0; i<currentVariableData.length; i++)
     {
         //get the top level variables
@@ -224,71 +303,11 @@ export function displayInitialVariables(data)
     }
 
     //sort elements
-    elements.sort(function(a, b) {
-        if (a.target[0] < b.target[0])
-        {
-            return 1;
-        }
-
-        if (a.target[0] > b.target[0])
-        {
-            return -1;
-        }
-
-        return 0;
-    });
+    elements.sort(sortVariables);
 
     for (var i=0; i<elements.length; i++)
     {
-        var tr = document.createElement("tr");
-        var name = document.createElement("td");
-        var value = document.createElement("td");
-        var type = document.createElement("td");
-
-        name.textContent = elements[i].target[4];
-        value.textContent = elements[i].target[1];
-        type.textContent = elements[i].target[2];
-        tr.setAttribute("id", elements[i].target[3]);
-
-        if (elements[i].target[1] === null)
-        {
-            var dropdown = document.createElement("span");
-            dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
-            name.prepend(dropdown);
-            name.dataset.displayed = false;
-            name.classList.add("variable-pointer");
-
-            name.addEventListener("click", function(i)
-            {
-                if (this.dataset.displayed == "false")
-                {
-                    //change arrow orientation
-                    this.firstChild.classList.remove("mdi-rotate-90");
-                    this.firstChild.classList.add("mdi-rotate-135");
-
-                    //display variables
-                    displayVariableDropdown(this.parentElement.getAttribute("id"));
-
-                    this.dataset.displayed = "true";
-                }
-                else
-                {
-                    //change arrow orientation
-                    this.firstChild.classList.remove("mdi-rotate-135");
-                    this.firstChild.classList.add("mdi-rotate-90");
-
-                    //hide variables
-                    hideVariableDropdown(this.parentElement.getAttribute("id"));
-
-                    this.dataset.displayed = "false";
-                }
-            });
-        }
-
-        tr.append(name);
-        tr.append(value);
-        tr.append(type);
-        tableBody.append(tr);
+        tableBody.append(createVariableRow(elements[i], {value: null, set: false}));
 
         //add to visible variables
         visibleVariableLevels.set(elements[i].target[3], 0);
@@ -363,87 +382,13 @@ export function displayVariableDropdown(source) {
     }
 
     //sort elements
-    elements.sort(function(a, b) {
-        if (a.target[0] < b.target[0])
-        {
-            return 1;
-        }
-
-        if (a.target[0] > b.target[0])
-        {
-            return -1;
-        }
-
-        return 0;
-    });
-
-
-    console.log(visibleVariableLevels);
+    elements.sort(sortVariables);
 
     //display elements
     for (var i=0; i<elements.length; i++)
     {
-        var tr = document.createElement("tr");
-        var name = document.createElement("td");
-        var value = document.createElement("td");
-        var type = document.createElement("td");
-
-        //set text
-        name.textContent = elements[i].target[4];
-        value.textContent = elements[i].target[1];
-        type.textContent = elements[i].target[2];
-
-        //set id on row
-        tr.setAttribute("id", elements[i].target[3]);
-
-        //set padding
-        if (newPadding)
-        {
-            name.style.paddingLeft = newPadding + "rem";
-        }
-        else
-        {
-            name.style.paddingLeft = "1.6rem";
-        }
-
-        if (elements[i].target[1] === null)
-        {
-            var dropdown = document.createElement("span");
-            dropdown.classList = "mdi mdi-rotate-90 mdi-triangle me-2 variable-table-triangles";
-            name.prepend(dropdown);
-            name.dataset.displayed = false;
-            name.classList.add("variable-pointer");
-
-            name.addEventListener("click", function()
-            {
-                if (this.dataset.displayed == "false")
-                {
-                    //change arrow orientation
-                    this.firstChild.classList.remove("mdi-rotate-90");
-                    this.firstChild.classList.add("mdi-rotate-135");
-
-                    //display variables
-                    displayVariableDropdown(this.parentElement.getAttribute("id"));
-
-                    this.dataset.displayed = "true";
-                }
-                else
-                {
-                    //change arrow orientation
-                    this.firstChild.classList.remove("mdi-rotate-135");
-                    this.firstChild.classList.add("mdi-rotate-90");
-
-                    //hide variables
-                    hideVariableDropdown(this.parentElement.getAttribute("id"));
-
-                    this.dataset.displayed = "false";
-                }
-            });
-        }
-
-        tr.append(name);
-        tr.append(value);
-        tr.append(type);
+        var tr = createVariableRow(elements[i], {value: newPadding, set: true});
+        
         sourceRow.parentNode.insertBefore(tr, sourceRow.nextSibling);
 
         visibleVariableIds.add(elements[i].target[3]);
