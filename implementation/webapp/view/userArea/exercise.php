@@ -177,10 +177,10 @@
                             
                         </div>
                         <!-- debug output window -->
-                        <div class="col-sm d-none mt-2 border ms-4 pb-3" id="debug-output-window">
+                        <div class="col-sm d-none mt-2 border ms-sm-4 pb-3" id="debug-output-window">
                             <h2 class="h4 ps-2 pt-3">Variable states</h2>
                             <hr>
-                            <div class="overflow-auto resize max-height-box">
+                            <div class="overflow-auto resize max-height-box table-responsive">
                                 <table class="table">
                                     <thead>
                                         <th scope="col" class="w-25">Name</th>
@@ -195,7 +195,7 @@
 
                     <div class="row">
                         <!-- compilation message output -->
-                        <div class="col-sm mt-2 border pb-3 ps-1 me-3">
+                        <div class="col-sm mt-2 border pb-3 me-3">
                             <h2 class="h4 ps-2 pt-3">Output</h2>
                             <hr>
                             <p class="ps-2">See debugger output messages here</p>
@@ -206,7 +206,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm mt-2 border ms-3">
+                        <div class="col-sm mt-2 border ms-sm-3">
                             <h2 class="h4 ps-2 pt-3">Program Output</h2>
                             <hr>
                             <!-- container for terminal -->
