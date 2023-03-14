@@ -214,8 +214,25 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
     # get the variable type
     typeCode = item[2].code
 
+    # check if this is a pointer
+    if typeCode is gdb.TYPE_CODE_PTR:
+        dereferenced = item[1].referenced_value()
+
+        child_type = dereferenced.type.name + " *"
+        child = (item[0], None, child_type, item[3], item[4])
+
+        graph.add_edges_from([(parent, child)])
+
+        new_level = level + 1
+
+        if new_level <= recurse_limit:
+            item_id = item[3] + "_value"
+            the_item = (item[3], dereferenced, dereferenced.type, item_id, "[value]")
+
+            loadVariables(the_item, frame, graph, recurse_limit, parent = child, level = new_level)
+
     # check if this item has fields (has variables within this one)
-    if typeCode is gdb.TYPE_CODE_STRUCT or typeCode is gdb.TYPE_CODE_UNION or typeCode is gdb.TYPE_CODE_ENUM or typeCode is gdb.TYPE_CODE_FUNC:
+    elif typeCode is gdb.TYPE_CODE_STRUCT or typeCode is gdb.TYPE_CODE_UNION or typeCode is gdb.TYPE_CODE_ENUM or typeCode is gdb.TYPE_CODE_FUNC:
 
         fields = item[2].fields()
 
@@ -236,7 +253,7 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
                 the_item = (field.name, item[1][field], item[1][field].type, item_id, field.name)
 
                 loadVariables(the_item, frame, graph, recurse_limit, parent = child, level = new_level)
-    
+
     # check if this item is an array
     elif typeCode is gdb.TYPE_CODE_ARRAY:
         # get array size
