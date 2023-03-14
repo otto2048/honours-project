@@ -266,10 +266,20 @@ export function startProgram()
     for (var i=0; i<editor.editors.length; i++)
     {
         //set breakpoints for this editor
-        var arr = Array.from(editor.editors[i]["breakpoints"]);
-        for (var j=0; j<arr.length; j++)
+        var doc = editor.editors[i]["editor"].getDoc();
+        var lines = doc.lineCount();
+
+        for (var j=0; j<lines; j++)
         {
-            breakpoints.push([editor.editors[i]["fileName"], arr[j]]);
+            var line = doc.lineInfo(j);
+
+            if (line.gutterMarkers)
+            {
+                if (line.gutterMarkers.breakpoints)
+                {
+                    breakpoints.push([editor.editors[i]["fileName"], j + 1]);
+                }
+            }
         }
 
         filesData.push([editor.files[i].getAttribute("id"), editor.editors[i]["editor"].getValue()]);

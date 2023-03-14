@@ -130,16 +130,22 @@ export function toggleBreakpoint(file, lineNum)
     {
         if (editors[i]["fileName"] == file)
         {
-            if (editors[i]["breakpoints"].has(lineNum))
+
+            var info = editors[i]["editor"].getDoc().lineInfo(lineNum - 1);
+
+            //if some gutter markers exist for this line
+            if (info.gutterMarkers)
             {
-                editors[i]["breakpoints"].delete(lineNum);
-                editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", null);
+                if (info.gutterMarkers.breakpoints)
+                {
+                    editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", null);
+
+                    return;
+                }
             }
-            else
-            {
-                editors[i]["breakpoints"].add(lineNum);
-                editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));    
-            }
+            
+            editors[i]["editor"].setGutterMarker(lineNum - 1, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
+
         }
     }
 }
@@ -157,8 +163,7 @@ function setUpEditors(breakpointFunc)
         editors.push({
             fileName: files[i].getAttribute("id"),
             fileElement: files[i].parentElement.querySelector(".CodeMirror"), 
-            editor: e, 
-            breakpoints: new Set(),
+            editor: e,
             editedWidth: null
         });
     }
@@ -169,24 +174,25 @@ function setUpEditors(breakpointFunc)
     (function(i) {
         editors[i]["editor"].on("gutterClick", function(cm, n) {
             
+            var info = cm.getDoc().lineInfo(n);
             var sendRow = n + 1;
 
-            if (editors[i]["breakpoints"].has(n + 1))
+            //if some gutter markers exist for this line
+            if (info.gutterMarkers)
             {
-                editors[i]["breakpoints"].delete(n + 1);
+                if (info.gutterMarkers.breakpoints)
+                {
+                    breakpointFunc(editors[i]["fileName"], sendRow.toString(), false);
 
-                breakpointFunc(editors[i]["fileName"], sendRow.toString(), false);
+                    cm.setGutterMarker(n, "breakpoints", null);
 
-                cm.setGutterMarker(n, "breakpoints", null);
+                    return;
+                }
             }
-            else
-            {
-                editors[i]["breakpoints"].add(n + 1);
+            
+            breakpointFunc(editors[i]["fileName"], sendRow.toString(), true);
 
-                breakpointFunc(editors[i]["fileName"], sendRow.toString(), true);
-
-                cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
-            }
+            cm.setGutterMarker(n, "breakpoints", makeGutterDecoration("<span class='mdi mdi-circle' style='font-size:12px'></span>", "#822", "#e92929"));
 
         });
     }(i));
