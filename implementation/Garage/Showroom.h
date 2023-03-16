@@ -13,9 +13,11 @@ using std::endl;
 
 class Showroom
 {
-private:
+public:
 	const static int numCars = 5;
 	const static int numLorries = 5;
+
+protected:
 	Car cars[numCars]; 
 	Lorry lorries[numLorries];
 

@@ -1,5 +1,7 @@
 #pragma once
-class ExerciseOne
+#include "Showroom.h"
+
+class ExerciseOne : public Showroom
 {
 public:
 	int getCarPriceRange();

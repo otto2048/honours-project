@@ -2,23 +2,23 @@
 
 int ExerciseOne::getCarPriceRange()
 {
-    //int largest = arr[0];
-    int largest = 0;
-    //int smallest = arr[0];
-    int smallest = 0;
+    int largest = cars[0].getPrice();
+    //int largest = 0;
+    int smallest = cars[0].getPrice();
+    //int smallest = 0;
 
-    /*for (int i = 0; i < size; i++)
+    for (int i = 0; i < Showroom::numCars; i++)
     {
-        if (arr[i] > largest)
+        if (cars[i].getPrice() > largest)
         {
-            largest = arr[i];
+            largest = cars[i].getPrice();
         }
 
-        if (arr[i] < smallest)
+        if (cars[i].getPrice() < smallest)
         {
-            smallest = arr[i];
+            smallest = cars[i].getPrice();
         }
-    }*/
+    }
 
-    return smallest - largest;
+    return largest - smallest;
 }
