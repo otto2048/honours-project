@@ -131,7 +131,21 @@
                         <div class="col-sm">
                             <ul class="nav-tabs nav" role="tablist">
                                 <?php
-                                    foreach ($exerciseFile["user_files"] as $fileName)
+                                    foreach ($exerciseFile["compilation"]["writable"] as $fileName)
+                                    {
+                                        //get the contents of this file
+                                        $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
+                                        $pathInfo = pathinfo($fileName);
+
+                                        ?>
+                                        <li class="nav-item">
+                                            <button class="nav-link tab-header <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php  echo str_replace(".", "", $pathInfo["basename"]); ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
+                                        </li>
+                                        <?php
+                                    }
+                                ?>
+                                <?php
+                                    foreach ($exerciseFile["compilation"]["readonly"] as $fileName)
                                     {
                                         //get the contents of this file
                                         $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
@@ -150,7 +164,7 @@
                             <div class="tab-content">
 
                                 <?php
-                                    foreach ($exerciseFile["user_files"] as $fileName)
+                                    foreach ($exerciseFile["compilation"]["writable"] as $fileName)
                                     {
                                         //get the contents of this file
                                         $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
@@ -160,6 +174,23 @@
 
                                         <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
                                             <textarea id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
+<?php echo $file; ?>
+                                            </textarea>
+                                        </div>
+
+                                        <?php
+                                    }
+
+                                    foreach ($exerciseFile["compilation"]["readonly"] as $fileName)
+                                    {
+                                        //get the contents of this file
+                                        $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
+                                        $pathInfo = pathinfo($fileName);
+
+                                        ?>
+
+                                        <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
+                                            <textarea id="<?php echo $pathInfo["basename"]; ?>" class="editor resize" readonly>
 <?php echo $file; ?>
                                             </textarea>
                                         </div>

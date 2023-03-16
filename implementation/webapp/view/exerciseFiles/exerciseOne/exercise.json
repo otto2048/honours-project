@@ -1,19 +1,19 @@
 {
     "compilation" : {
         "writable" : [
-            "exerciseOne/ExerciseOne.cpp",
-            "exerciseOne/main.cpp"
+            "exerciseOne/main.cpp",
+            "exerciseOne/ExerciseOne.cpp"
         ],
         "readonly" : [
             "exerciseOne/ExerciseOne.h",
-            "exerciseOne/Car.cpp",
-            "exerciseOne/Car.h",
-            "exerciseOne/Lorry.cpp",
-            "exerciseOne/Lorry.h",
             "exerciseOne/Showroom.cpp",
             "exerciseOne/Showroom.h",
             "exerciseOne/Vehicle.cpp",
-            "exerciseOne/Vehicle.h"
+            "exerciseOne/Vehicle.h",
+            "exerciseOne/Car.cpp",
+            "exerciseOne/Car.h",
+            "exerciseOne/Lorry.cpp",
+            "exerciseOne/Lorry.h"
         ]
     },
     "test" : {

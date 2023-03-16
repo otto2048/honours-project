@@ -156,13 +156,21 @@ function setUpEditors(breakpointFunc)
     //create editors
     for (var i=0; i<files.length; i++)
     {
+
         var e = CodeMirror.fromTextArea(files[i], 
-            {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
+            {mode: "clike", readOnly: files[i].readOnly, theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
             gutters: ["breakpoints", "CodeMirror-linenumbers", "tracking", "CodeMirror-foldgutter"]});
+
+        var element = files[i].parentElement.querySelector(".CodeMirror");
+        
+        if (files[i].readOnly)
+        {
+            element.classList.add("readOnly");
+        }
 
         editors.push({
             fileName: files[i].getAttribute("id"),
-            fileElement: files[i].parentElement.querySelector(".CodeMirror"), 
+            fileElement: element, 
             editor: e,
             editedWidth: null
         });

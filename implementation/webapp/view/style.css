@@ -116,6 +116,14 @@
     font-size: 15px;
 }
 
+[data-bs-theme=dark] .CodeMirror.readOnly {
+    background-color: #383838 !important;
+}
+
+[data-bs-theme=light] .CodeMirror.readOnly {
+    background-color: #cccccc !important;
+}
+
 /* variables */
 .variable-table-triangles {
     font-size: 12px;
