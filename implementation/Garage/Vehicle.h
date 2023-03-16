@@ -9,7 +9,6 @@ private:
 	string colours[9] = { "Blue", "Red", "White", "Black", "Orange", "Yellow", "Pink", "Green", "Light Blue" };
 protected:
 	int id;
-	string regNum;
 	string manufacturer;
 	int colour;
 	float mpg;
@@ -20,7 +19,7 @@ protected:
 
 public:
 	Vehicle();
-	Vehicle(int, string, string, int, float, float, float);
+	Vehicle(int, string, int, float, float, float);
 
 	int getId();
 	string getRegNum();

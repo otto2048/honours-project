@@ -3,7 +3,6 @@
 Vehicle::Vehicle()
 {
 	id = -1;
-	regNum = "";
 	manufacturer = "";
 	colour = 0;
 	mpg = 0;
@@ -13,10 +12,9 @@ Vehicle::Vehicle()
 	range = getRange();
 }
 
-Vehicle::Vehicle(int id_, string regNum_, string manufacturer_, int colour_, float mpg_, float fuelCap_, float price_)
+Vehicle::Vehicle(int id_, string manufacturer_, int colour_, float mpg_, float fuelCap_, float price_)
 {
 	id = id_;
-	regNum = regNum_;
 	manufacturer = manufacturer_;
 	colour = colour_;
 	mpg = mpg_;

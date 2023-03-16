@@ -2,7 +2,6 @@
 
 Showroom::Showroom()
 {
-
 	//create random cars and lorries
 	for (int i = 0; i < numCars; i++)
 	{
