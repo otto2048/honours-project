@@ -260,6 +260,35 @@ export function startProgram()
     obj.operation = constants.OP_COMPILE;
 
     var filesData = [];
+    var writable = [];
+    var readonly = [];
+
+    //read exercise file to see what files to get
+    $.ajax({
+        type: "GET",
+        url: $("#exerciseFileLocation")[0].innerHTML,
+        dataType: "json",
+        async: false,
+        success: function(data) {
+            writable = data.compilation.writable;
+            readonly = data.compilation.readonly;
+        }
+    });
+
+    writable = writable.map(x => x.split('/').pop());
+
+    //read all the readonly files into filesData
+    for (var i=0; i<readonly.length; i++)
+    {
+        $.ajax({
+            type: "GET",
+            url: "/honours/webapp/view/exerciseFiles/" + readonly[i],
+            async: false,
+            success: function(data) {
+                filesData.push([readonly[i].split('/').pop(), data]);
+            }
+        });
+    }
 
     var breakpoints = [];
 
@@ -282,7 +311,10 @@ export function startProgram()
             }
         }
 
-        filesData.push([editor.files[i].getAttribute("id"), editor.editors[i]["editor"].getValue()]);
+        if (writable.includes(editor.files[i].getAttribute("id")))
+        {
+            filesData.push([editor.files[i].getAttribute("id"), editor.editors[i]["editor"].getValue()]);
+        }
     }
 
     obj.value = {"filesData":filesData, "breakpoints" : breakpoints};
@@ -345,8 +377,8 @@ export function testProgram()
     obj.operation = constants.OP_TEST;
 
     var filesData = [];
-    var editorFiles = [];
-    var sysFiles = [];
+    var writable = [];
+    var readonly = [];
 
     //read exercise file to see what files to get
     $.ajax({
@@ -355,38 +387,31 @@ export function testProgram()
         dataType: "json",
         async: false,
         success: function(data) {
-            sysFiles = data.sys_files;
+            writable = data.test.writable;
+            readonly = data.test.readonly;
         }
     });
 
     //read all the files into filesData
-    for (var i=0; i<sysFiles.length; i++)
+    for (var i=0; i<readonly.length; i++)
     {
         $.ajax({
             type: "GET",
-            url: "/honours/webapp/view/exerciseFiles/" + sysFiles[i],
+            url: "/honours/webapp/view/exerciseFiles/" + readonly[i],
             async: false,
             success: function(data) {
-                filesData.push([sysFiles[i].split('/').pop(), data]);
+                filesData.push([readonly[i].split('/').pop(), data]);
             }
         });
     }
 
-    //get the files in the editor
+    writable = writable.map(x => x.split('/').pop());
+
     for (var i=0; i<editor.editors.length; i++)
     {
-        editorFiles.push([editor.files[i].getAttribute("id"), editor.editors[i]["editor"].getValue()]);
-    }
-
-    //update the files if they match anything in the editor
-    for (var i=0; i<filesData.length; i++)
-    {
-        for (var j=0; j<editorFiles.length; j++)
+        if (writable.includes(editor.files[i].getAttribute("id")))
         {
-            if (filesData[i][0] == editorFiles[j][0])
-            {
-                filesData[i][1] = editorFiles[j][1];
-            }
+            filesData.push([editor.files[i].getAttribute("id"), editor.editors[i]["editor"].getValue()]);
         }
     }
 

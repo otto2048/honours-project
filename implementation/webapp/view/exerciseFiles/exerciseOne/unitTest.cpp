@@ -4,7 +4,7 @@
 namespace {
 	TEST(carPriceRangeTest, test1)
 	{
-        ExerciseOne ExerciseOne;
-		EXPECT_EQ(50, ExerciseOne.getCarPriceRange());
+        ExerciseOne exerciseOne;
+		EXPECT_EQ(0, exerciseOne.getCarPriceRange());
 	}
 }

@@ -22,7 +22,10 @@ export function toggleReadOnlyMode(on)
         //editor is readonly
         for (var i=0; i<editors.length; i++)
         {
-            editors[i]["editor"].setOption("readOnly", true);
+            if (!editors[i]["readOnly"])
+            {
+                editors[i]["editor"].setOption("readOnly", true);
+            }
         }
     }
     else
@@ -39,7 +42,10 @@ export function toggleReadOnlyMode(on)
         //editor is editable
         for (var i=0; i<editors.length; i++)
         {
-            editors[i]["editor"].setOption("readOnly", false);
+            if (!editors[i]["readOnly"])
+            {
+                editors[i]["editor"].setOption("readOnly", false);
+            }
         }
     }
 }
@@ -172,7 +178,8 @@ function setUpEditors(breakpointFunc)
             fileName: files[i].getAttribute("id"),
             fileElement: element, 
             editor: e,
-            editedWidth: null
+            editedWidth: null,
+            readOnly: files[i].readOnly
         });
     }
 

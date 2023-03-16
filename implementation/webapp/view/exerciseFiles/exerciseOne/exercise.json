@@ -30,7 +30,8 @@
             "exerciseOne/Showroom.h",
             "exerciseOne/Vehicle.cpp",
             "exerciseOne/Vehicle.h",
-            "exerciseOne/main_test.cpp"
+            "exerciseOne/main_test.cpp",
+            "exerciseOne/unitTest.cpp"
         ]
     }
     

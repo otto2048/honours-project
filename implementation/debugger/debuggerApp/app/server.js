@@ -288,6 +288,7 @@ function onConnect(ws) {
                     {
                         if (stderr)
                         {
+                            logger.info(stderr);
                             //if compilation failures, submission fails
                             obj.event = EVENT_ON_TEST_FAILURE;
                             ws.send(JSON.stringify(obj));
