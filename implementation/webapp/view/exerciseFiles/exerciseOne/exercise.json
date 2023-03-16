@@ -1,32 +1,37 @@
 {
-    "user_files" : [
-        "exerciseOne/ExerciseOne.cpp",
-        "exerciseOne/main.cpp"
-    ],
-    "compilation_files" : [
-        "exerciseOne/ExerciseOne.cpp",
-        "exerciseOne/ExerciseOne.h",
-        "exerciseOne/Car.cpp",
-        "exerciseOne/Car.h",
-        "exerciseOne/Lorry.cpp",
-        "exerciseOne/Lorry.h",
-        "exerciseOne/Showroom.cpp",
-        "exerciseOne/Showroom.h",
-        "exerciseOne/Vehicle.cpp",
-        "exerciseOne/Vehicle.h",
-        "exerciseOne/main.cpp"
-    ],
-    "test_files" : [
-        "exerciseOne/ExerciseOne.cpp",
-        "exerciseOne/ExerciseOne.h",
-        "exerciseOne/Car.cpp",
-        "exerciseOne/Car.h",
-        "exerciseOne/Lorry.cpp",
-        "exerciseOne/Lorry.h",
-        "exerciseOne/ShowroomTest.cpp",
-        "exerciseOne/Showroom.h",
-        "exerciseOne/Vehicle.cpp",
-        "exerciseOne/Vehicle.h",
-        "exerciseOne/main_test.cpp"
-    ]
+    "compilation" : {
+        "writable" : [
+            "exerciseOne/ExerciseOne.cpp",
+            "exerciseOne/main.cpp"
+        ],
+        "readonly" : [
+            "exerciseOne/ExerciseOne.h",
+            "exerciseOne/Car.cpp",
+            "exerciseOne/Car.h",
+            "exerciseOne/Lorry.cpp",
+            "exerciseOne/Lorry.h",
+            "exerciseOne/Showroom.cpp",
+            "exerciseOne/Showroom.h",
+            "exerciseOne/Vehicle.cpp",
+            "exerciseOne/Vehicle.h"
+        ]
+    },
+    "test" : {
+        "writable" : [
+                "exerciseOne/ExerciseOne.cpp"
+            ],
+        "readonly" : [
+            "exerciseOne/ExerciseOne.h",
+            "exerciseOne/Car.cpp",
+            "exerciseOne/Car.h",
+            "exerciseOne/Lorry.cpp",
+            "exerciseOne/Lorry.h",
+            "exerciseOne/ShowroomTest.cpp",
+            "exerciseOne/Showroom.h",
+            "exerciseOne/Vehicle.cpp",
+            "exerciseOne/Vehicle.h",
+            "exerciseOne/main_test.cpp"
+        ]
+    }
+    
 }
