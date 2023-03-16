@@ -11,7 +11,7 @@ int main()
 	cout << endl;
 	cout << endl;
 
-	cout << exerciseOne.getCarPriceRange();
+	cout << exerciseOne.getCarPriceRange() << endl;
 
 	return 0;
 }
