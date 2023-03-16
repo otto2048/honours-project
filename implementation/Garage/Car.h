@@ -7,7 +7,7 @@ private:
 
 public:
 	Car();
-	Car(int, string, int, float, float, float, int);
+	Car(int, int, int, float, float, float, int);
 	
 	int getNumDoors();
 };

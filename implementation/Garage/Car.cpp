@@ -3,7 +3,7 @@
 Car::Car()
 {
 	id = -1;
-	manufacturer = "";
+	manufacturer = 0;
 	colour = 0;
 	mpg = 0;
 	fuelCap = 0;
@@ -14,7 +14,7 @@ Car::Car()
 	numDoors = 4;
 }
 
-Car::Car(int id_, string manufacturer_, int colour_, float mpg_, float fuelCap_, float price_, int numDoors_)
+Car::Car(int id_, int manufacturer_, int colour_, float mpg_, float fuelCap_, float price_, int numDoors_)
 {
 	id = id_;
 	manufacturer = manufacturer_;

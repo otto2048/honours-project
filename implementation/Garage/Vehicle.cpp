@@ -3,7 +3,7 @@
 Vehicle::Vehicle()
 {
 	id = -1;
-	manufacturer = "";
+	manufacturer = 0;
 	colour = 0;
 	mpg = 0;
 	fuelCap = 0;
@@ -12,7 +12,7 @@ Vehicle::Vehicle()
 	range = getRange();
 }
 
-Vehicle::Vehicle(int id_, string manufacturer_, int colour_, float mpg_, float fuelCap_, float price_)
+Vehicle::Vehicle(int id_, int manufacturer_, int colour_, float mpg_, float fuelCap_, float price_)
 {
 	id = id_;
 	manufacturer = manufacturer_;
@@ -29,14 +29,9 @@ int Vehicle::getId()
 	return id;
 }
 
-string Vehicle::getRegNum()
-{
-	return regNum;
-}
-
 string Vehicle::getManufacturer()
 {
-	return manufacturer;
+	return manufacturers[manufacturer];
 }
 
 float Vehicle::getPrice()

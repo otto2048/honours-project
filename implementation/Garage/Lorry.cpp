@@ -3,7 +3,7 @@
 Lorry::Lorry()
 {
 	id = -1;
-	manufacturer = "";
+	manufacturer = 0;
 	colour = 0;
 	mpg = 0;
 	fuelCap = 0;
@@ -15,7 +15,7 @@ Lorry::Lorry()
 	haulage = 0;
 }
 
-Lorry::Lorry(int id_, string manufacturer_, int colour_, float mpg_, float fuelCap_, float price_, int wheels_, float haulage_)
+Lorry::Lorry(int id_, int manufacturer_, int colour_, float mpg_, float fuelCap_, float price_, int wheels_, float haulage_)
 {
 	id = id_;
 	manufacturer = manufacturer_;

@@ -8,7 +8,7 @@ private:
 
 public:
 	Lorry();
-	Lorry(int, string, int, float, float, float, int, float);
+	Lorry(int, int, int, float, float, float, int, float);
 
 	float getHaulage();
 	int getWheels();
