@@ -1,14 +1,18 @@
 {
     "comments": "Darts files",
-    "user_files" : [
-        "dartsSimplified/main.cpp",
-        "dartsSimplified/player.cpp",
-        "dartsSimplified/throwStrategy.cpp",
-        "dartsSimplified/player.h",
-        "dartsSimplified/throwStrategy.h",
-        "dartsSimplified/dartboard.h",
-        "dartsSimplified/dartboard.cpp"
-    ]
+    "compilation" : {
+        "writable" : [
+            "dartsSimplified/main.cpp",
+            "dartsSimplified/player.cpp",
+            "dartsSimplified/throwStrategy.cpp",
+            "dartsSimplified/player.h",
+            "dartsSimplified/throwStrategy.h",
+            "dartsSimplified/dartboard.h",
+            "dartsSimplified/dartboard.cpp"
+        ],
+        "readonly" : [
+        ]
+    }
 }
 
 
