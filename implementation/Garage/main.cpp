@@ -2,5 +2,7 @@
 
 int main()
 {
-	Showroom showroom(5, 5);
+	Showroom showroom;
+
+	return 0;
 }
