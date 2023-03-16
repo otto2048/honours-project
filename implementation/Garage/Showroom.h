@@ -6,6 +6,11 @@
 #include <cstdlib> // random numbers header file//
 #include <ctime> // used to get date and time information
 
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
 class Showroom
 {
 private:
@@ -17,6 +22,6 @@ private:
 public:
 	Showroom();
 
-	void PrintVehicles();
+	void printVehicles();
 };
 
