@@ -351,3 +351,6 @@ MigrationBackup/
 
 prototyping/dbConnTest/Connection.php
 implementation/webapp/model/ConnectionConfig.php
+implementation/Garage/Garage.vcxproj
+implementation/Garage/Garage.vcxproj.filters
+implementation/Garage/Garage.sln
