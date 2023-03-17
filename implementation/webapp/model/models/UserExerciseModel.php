@@ -56,7 +56,7 @@
             }
 
             $points = json_decode($pointsJson, JSON_INVALID_UTF8_SUBSTITUTE);
-            $userPoints = 0;
+            $userPoints = -1;
 
             if (!isset($points["isempty"]))
             {

@@ -57,7 +57,7 @@
                             {
                                 $mark = json_decode($markJson, JSON_INVALID_UTF8_SUBSTITUTE);
 
-                                if ($mark["points"] > 0)
+                                if ($mark["points"] >= 0)
                                 {
                                     //exercise is completed
                                     array_push($completedExercises, array("exercise"=>$exercise, "mark"=>$mark));
@@ -65,6 +65,7 @@
                                 else
                                 {
                                     //exercise is still to be completed
+                                    $mark["points"] = 0;
                                     array_push($assignedExercises, array("exercise"=>$exercise, "mark"=>$mark));
                                 }
                             }
