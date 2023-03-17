@@ -162,6 +162,14 @@ socketHost.onmessage = function(event) {
 
 function preparePage()
 {
+    //disable ctrl+s shortcut
+    //https://ej2.syncfusion.com/documentation/rich-text-editor/how-to/save/
+    $(document)[0].addEventListener("keydown",function(e) {
+        if(e.key === 's' && e.ctrlKey===true){
+              e.preventDefault(); // to prevent default ctrl+s action
+        }
+      });
+    
     debug.initialiseEditors(sendBreakpoint);
 
     //add event listener to play button
