@@ -7,11 +7,12 @@ int main()
 
 	ExerciseOne exerciseOne;
 
-	//exerciseOne.printVehicles();
+	exerciseOne.printVehicles();
 
 	cout << endl;
 	cout << endl;
-	cout << exerciseOne.boxesNeeded(56) << endl;
+	cout << exerciseOne.carsOnSale(4200, 4600, true) << endl;
+	cout << exerciseOne.carsOnSale(4200, 4600, false) << endl;
 
 	/*CountCars countCars;
 
