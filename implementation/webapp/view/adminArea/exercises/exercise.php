@@ -115,6 +115,8 @@
 
                                     <li>Availability: <?php echo $permission->getPermissionLevel($exerciseData[0]["availability"]); ?> and up</li>
                                     <li>Type: <?php echo $exerciseType->getExerciseType($exerciseData[0]["type"]); ?></li>
+
+                                    <li>Available points: <?php echo $exerciseData[0]["availablePoints"] ?></li>
                                 </ul>
 
                     <?php

@@ -149,6 +149,10 @@
                                             ?>
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="availablePoints">Available points:</label>
+                                        <input type="text" class="form-control" name="availablePoints" id="availablePoints" value="<?php echo $exerciseData[0]["availablePoints"]; ?>">
+                                    </div>
                                     <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                                 </form>
                             

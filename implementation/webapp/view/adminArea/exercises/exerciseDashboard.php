@@ -85,6 +85,7 @@
                                                 <th scope="col" data-tablesort-type="string">Visibility</th>
                                                 <th scope="col" data-tablesort-type="string">Availability</th>
                                                 <th scope="col" data-tablesort-type="string">Type</th>
+                                                <th scope="col" data-tablesort-type="int">Available points</th>
                                             </tr>
                                         </thead>
                                         <tbody class="paginateTableBody" id="exerciseInfoTableBody">
@@ -126,6 +127,7 @@
                                                     echo '</td>';
                                                     echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and up</td>';
                                                     echo '<td>'.$types->getExerciseType($row["type"]).'</td>';
+                                                    echo '<td>'.$row["availablePoints"].'</td>';
                                                     echo '</tr>';
                                                 }
                                             ?>
@@ -216,6 +218,10 @@
                                     }
                                 ?>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="availablePoints">Available points:</label>
+                            <input type="text" class="form-control" name="availablePoints" id="availablePoints">
                         </div>
                         <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                     </form>
