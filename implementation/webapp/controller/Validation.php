@@ -581,6 +581,13 @@
                 $errorMessage[6]["success"] = false;
             }
 
+            //validate available points
+            if (!$this->validateInt($exercise["availablePoints"]))
+            {
+                $errorMessage[0]["content"] = "Invalid available points";
+                $errorMessage[0]["success"] = false;
+            }
+
             //repack sanitized data
             $jsonData = json_encode($exercise, JSON_INVALID_UTF8_SUBSTITUTE);
 

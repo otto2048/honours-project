@@ -55,6 +55,7 @@
 
             $data -> availability = $_POST['availability'];
             $data -> type = $_POST['type'];
+            $data -> availablePoints = $_POST['availablePoints'];
 
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
@@ -98,6 +99,7 @@
 
             $data -> availability = $_POST['availability'];
             $data -> type = $_POST['type'];
+            $data -> availablePoints = $_POST['availablePoints'];
             
             $data -> codeId = $_POST['codeId'];
 
