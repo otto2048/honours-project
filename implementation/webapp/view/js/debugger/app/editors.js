@@ -162,7 +162,6 @@ function setUpEditors(breakpointFunc)
     //create editors
     for (var i=0; i<files.length; i++)
     {
-
         var e = CodeMirror.fromTextArea(files[i], 
             {mode: "clike", readOnly: files[i].readOnly, theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
             gutters: ["breakpoints", "CodeMirror-linenumbers", "tracking", "CodeMirror-foldgutter"]});
@@ -171,7 +170,7 @@ function setUpEditors(breakpointFunc)
         
         if (files[i].readOnly)
         {
-            element.classList.add("readOnly");
+            element.insertBefore(makeReadOnlyMessage(), element.firstChild);
         }
 
         editors.push({
@@ -273,4 +272,12 @@ function makeGutterDecoration(html, lightThemeColour, darkThemeColour) {
 
     marker.innerHTML = html;
     return marker;
+}
+
+function makeReadOnlyMessage() {
+    var div = document.createElement("div");
+    div.innerHTML = "This file is read only (breakpoints can still be set)";
+    div.classList = "readOnlyMessage";
+
+    return div;
 }
