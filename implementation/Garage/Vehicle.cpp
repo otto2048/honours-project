@@ -39,9 +39,14 @@ float Vehicle::getPrice()
 	return price;
 }
 
-string Vehicle::getColour()
+string Vehicle::getColourName()
 {
 	return colours[colour];
+}
+
+int Vehicle::getColour()
+{
+	return colour;
 }
 
 float Vehicle::getMpg()

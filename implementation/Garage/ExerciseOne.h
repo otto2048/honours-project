@@ -5,5 +5,6 @@ class ExerciseOne : public Showroom
 {
 public:
 	int getCarPriceRange();
+	int boxesNeeded(int);
 };
 

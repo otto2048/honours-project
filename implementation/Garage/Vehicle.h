@@ -32,7 +32,8 @@ public:
 	int getId();
 	string getManufacturer();
 	float getPrice();
-	string getColour();
+	string getColourName();
+	int getColour();
 	float getMpg();
 	float getRange();
 	float getFuelCap();

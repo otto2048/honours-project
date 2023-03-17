@@ -22,3 +22,15 @@ int ExerciseOne::getCarPriceRange()
 
     return largest - smallest;
 }
+
+int ExerciseOne::boxesNeeded(int apples)
+{
+    int remainder = apples % 20;
+
+    if (remainder == 0)
+    {
+        return apples / 20;
+    }
+
+    return apples / 20 + 1;
+}

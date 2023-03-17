@@ -1,4 +1,5 @@
 #include "ExerciseOne.h"
+#include "CountCars.h"
 
 int main()
 {
@@ -6,12 +7,17 @@ int main()
 
 	ExerciseOne exerciseOne;
 
-	exerciseOne.printVehicles();
+	//exerciseOne.printVehicles();
 
 	cout << endl;
 	cout << endl;
+	cout << exerciseOne.boxesNeeded(56) << endl;
 
-	cout << exerciseOne.getCarPriceRange();
+	/*CountCars countCars;
+
+	countCars.printVehicles();
+
+	cout << countCars.countVehicles(4500) << endl;*/
 
 	return 0;
 }
