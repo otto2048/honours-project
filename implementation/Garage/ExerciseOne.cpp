@@ -85,3 +85,36 @@ int ExerciseOne::carsOnSale(float minPrice, float maxPrice, bool weekend)
 
     return ret;
 }
+
+Car ExerciseOne::mostExpensiveCar(Car& a, Car& b, Car& c)
+{
+    if (a.getPrice() >= b.getPrice() && a.getPrice() >= c.getPrice())
+    {
+        return a;
+    }
+    else if (b.getPrice() >= a.getPrice() && b.getPrice() >= c.getPrice())
+    {
+        return b;
+    }
+
+    return c;
+}
+
+Car ExerciseOne::mostExpensiveCar(int a, int b, int c, int d, int e, int f)
+{
+    Car one = mostExpensiveCar(cars[a], cars[b], cars[c]);
+
+    Car two = mostExpensiveCar(cars[d], cars[e], cars[f]);
+
+    return mostExpensiveCar(one, two);
+}
+
+Car ExerciseOne::mostExpensiveCar(Car& a, Car& b)
+{
+    if (a.getPrice() > b.getPrice())
+    {
+        return a;
+    }
+
+    return b;
+}
