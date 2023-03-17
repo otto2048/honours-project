@@ -17,10 +17,10 @@
         public function getExerciseMark($userId, $codeId)
         {
             //get the total marks available
-            $this->sqlStmt = 'SELECT count(codeId_fk) as total FROM honours_code_answer WHERE codeId_fk = ?';
+            $this->sqlStmt = 'SELECT availablePoints FROM honours_code_exercise WHERE codeId = ?';
 
             $variables = new \stdClass();
-            $variables -> codeId_fk = $codeId;
+            $variables -> codeId = $codeId;
 
             $paramTypes = "i";
 
@@ -36,7 +36,7 @@
 
             if (!isset($total["isempty"]))
             {
-                $totalPoints = $total[0]["total"];
+                $totalPoints = $total[0]["availablePoints"];
             }
 
             //get user points for this exercise
