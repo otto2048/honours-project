@@ -72,7 +72,7 @@
                         if (!isset($exerciseData["isempty"]) && $userExerciseData)
                         {
                             //if the exercise is visible and the user has the permissions to view the exercise and the user hasnt already completed this exercise
-                            if ($exerciseData[0]["visible"] && $exerciseData[0]["availability"] <= $_SESSION["permissionLevel"] && $userExerciseData["points"] == 0)
+                            if ($exerciseData[0]["visible"] && $exerciseData[0]["availability"] <= $_SESSION["permissionLevel"] && $userExerciseData["points"] == -1)
                             {
                                 return $exerciseData;
                             }
