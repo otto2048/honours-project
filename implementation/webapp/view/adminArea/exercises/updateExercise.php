@@ -91,10 +91,6 @@
                                         <label for="exerciseFile">Exercise file location:</label>
                                         <input type="text" class="form-control" name="exerciseFile" required id="exerciseFile" value="<?php echo $exerciseData[0]["exerciseFile"]; ?>">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="instructionsFile">Instructions file location:</label>
-                                        <input type="text" class="form-control" name="instructionsFile" id="instructionsFile" value="<?php echo $exerciseData[0]["instructionsFile"]; ?>">
-                                    </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="visible" name="visible" <?php if ($exerciseData[0]["visible"]) {echo "checked";} ?>>
                                         <label class="form-check-label" for="visible">

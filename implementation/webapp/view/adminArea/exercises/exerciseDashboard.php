@@ -81,7 +81,6 @@
                                                 <th scope="col" data-tablesort-type="string">Title</th>
                                                 <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Description</th>
                                                 <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Exercise File</th>
-                                                <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Instructions File</th>
                                                 <th scope="col" data-tablesort-type="string">Visibility</th>
                                                 <th scope="col" data-tablesort-type="string">Availability</th>
                                                 <th scope="col" data-tablesort-type="string">Type</th>
@@ -107,13 +106,6 @@
                                                     echo '</td>';
 
                                                     echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/exerciseFiles/'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
-
-                                                    echo '<td class="d-none d-sm-none d-md-table-cell">';        
-                                                    if ($row["instructionsFile"])
-                                                    {
-                                                        echo '<u><a href="/honours/webapp/view/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u>';
-                                                    }
-                                                    echo '</td>';
 
                                                     echo '<td>';
                                                     if ($row["visible"])
@@ -172,10 +164,6 @@
                         <div class="form-group">
                             <label for="exerciseFile">Exercise file location:</label>
                             <input type="text" class="form-control" name="exerciseFile" required id="exerciseFile">
-                        </div>
-                        <div class="form-group">
-                            <label for="instructionsFile">Instructions file location:</label>
-                            <input type="text" class="form-control" name="instructionsFile" id="instructionsFile">
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="visible" name="visible">

@@ -102,13 +102,6 @@
                                     <?php } ?>
 
                                     <li><a href="/honours/webapp/view/exerciseFiles/<?php echo $exerciseData[0]["exerciseFile"]; ?>">Exercise File: <?php echo $exerciseData[0]["exerciseFile"] ?></a></li>
-                                    
-                                    <?php
-                                        if ($exerciseData[0]["instructionsFile"])
-                                        {
-                                    ?>
-                                            <li><a href="/honours/webapp/view/exerciseFiles/<?php echo $exerciseData[0]["instructionsFile"]; ?>">Instructions File: <?php echo $exerciseData[0]["instructionsFile"] ?></a></li>
-                                    <?php } ?>
 
                                     <li>Visibility: <?php if ($exerciseData[0]["visible"]) {echo "True";} else {echo "False";} ?></li>
 

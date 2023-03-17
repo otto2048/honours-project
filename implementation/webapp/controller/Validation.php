@@ -12,7 +12,6 @@
         const EXERCISE_TITLE_LENGTH = 100;
         const EXERCISE_DESCRIPTION_LENGTH = 250;
         const EXERCISE_EXERCISEFILE_LENGTH = 250;
-        const EXERCISE_INSTRUCTIONSFILE_LENGTH = 250;
 
         const SURVEY_QUESTION_CONTENTS = 150;
 
@@ -426,11 +425,6 @@
 
             $exercise["exerciseFile"] = $this->cleanInput($exercise["exerciseFile"]);
 
-            if (isset($exercise["instructionsFile"]))
-            {
-                $exercise["instructionsFile"] = $this->cleanInput($exercise["instructionsFile"]);
-            }
-
             $exercise["visible"] = $this->cleanInput($exercise["visible"]);
             $exercise["availability"] = $this->cleanInput($exercise["availability"]);
 
@@ -466,16 +460,6 @@
             {
                 $errorMessage[3]["content"] = "Invalid exercise file location";
                 $errorMessage[3]["success"] = false;
-            }
-
-            //validate instructions file if its set
-            if (isset($exercise["instructionsFile"]))
-            {
-                if (strlen($exercise["instructionsFile"]) != 0 && !$this->validateFileName($exercise["instructionsFile"], Validation::EXERCISE_INSTRUCTIONSFILE_LENGTH, "json"))
-                {
-                    $errorMessage[4]["content"] = "Invalid instructions file location";
-                    $errorMessage[4]["success"] = false;
-                }
             }
 
             //validate availability

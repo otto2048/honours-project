@@ -42,7 +42,6 @@
             $data -> description = $_POST['description'];
             
             $data -> exerciseFile = $_POST['exerciseFile'];
-            $data -> instructionsFile = $_POST['instructionsFile'];
 
             if (isset($_POST['visible']))
             {
@@ -86,7 +85,6 @@
             $data -> description = $_POST['description'];
             
             $data -> exerciseFile = $_POST['exerciseFile'];
-            $data -> instructionsFile = $_POST['instructionsFile'];
 
             if (isset($_POST['visible']))
             {
