@@ -113,10 +113,17 @@
                 </div>
                 <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
             </form>
+
+            <form action="file-upload.php" method="post" enctype="multipart/form-data" id="filesForm">
+                Send this directory:<br />
+                <input id="filesInput" name="userfile[]" type="file" webkitdirectory multiple />
+                <input type="submit" value="Send files" />
+            </form>
         
         </div>
 
         <script src="../../js/setTheme.js"></script>
+        <script src="../../js/exerciseCreation.js"></script>
 
     </body>
 </html>
