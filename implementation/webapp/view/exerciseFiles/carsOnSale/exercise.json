@@ -1,0 +1,34 @@
+{
+    "compilation" : {
+        "writable" : [
+            "carsOnSale/main.cpp",
+            "carsOnSale/Exercise.cpp"
+        ],
+        "readonly" : [
+            "carsOnSale/Exercise.h",
+            "garage/Showroom.cpp",
+            "garage/Showroom.h",
+            "garage/Vehicle.cpp",
+            "garage/Vehicle.h",
+            "garage/Car.cpp",
+            "garage/Car.h"
+        ]
+    },
+    "test" : {
+        "writable" : [
+                "carsOnSale/Exercise.cpp"
+            ],
+        "readonly" : [
+            "carsOnSale/Exercise.h",
+            "garage/Showroom.cpp",
+            "garage/Showroom.h",
+            "garage/Vehicle.cpp",
+            "garage/Vehicle.h",
+            "garage/Car.cpp",
+            "garage/Car.h",
+            "carsOnSale/main_test.cpp",
+            "carsOnSale/unit_test.cpp"
+        ]
+    }
+    
+}

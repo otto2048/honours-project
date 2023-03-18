@@ -1,0 +1,30 @@
+{
+    "compilation" : {
+        "writable" : [
+            "balanceRange/main.cpp",
+            "balanceRange/Exercise.cpp"
+        ],
+        "readonly" : [
+            "balanceRange/Exercise.h",
+            "bank/Account.cpp",
+            "bank/Account.h",
+            "bank/Bank.cpp",
+            "bank/Bank.h"
+        ]
+    },
+    "test" : {
+        "writable" : [
+                "balanceRange/Exercise.cpp"
+            ],
+        "readonly" : [
+            "balanceRange/Exercise.h",
+            "bank/Account.cpp",
+            "bank/Account.h",
+            "bank/Bank.cpp",
+            "bank/Bank.h",
+            "balanceRange/main_test.cpp",
+            "balanceRange/unit_test.cpp"
+        ]
+    }
+    
+}

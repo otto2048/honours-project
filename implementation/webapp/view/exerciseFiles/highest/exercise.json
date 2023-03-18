@@ -1,0 +1,34 @@
+{
+    "compilation" : {
+        "writable" : [
+            "highest/main.cpp",
+            "highest/Exercise.cpp"
+        ],
+        "readonly" : [
+            "highest/Exercise.h",
+            "garage/Showroom.cpp",
+            "garage/Showroom.h",
+            "garage/Vehicle.cpp",
+            "garage/Vehicle.h",
+            "garage/Car.cpp",
+            "garage/Car.h"
+        ]
+    },
+    "test" : {
+        "writable" : [
+                "highest/Exercise.cpp"
+            ],
+        "readonly" : [
+            "highest/Exercise.h",
+            "garage/Showroom.cpp",
+            "garage/Showroom.h",
+            "garage/Vehicle.cpp",
+            "garage/Vehicle.h",
+            "garage/Car.cpp",
+            "garage/Car.h",
+            "highest/main_test.cpp",
+            "highest/unit_test.cpp"
+        ]
+    }
+    
+}
