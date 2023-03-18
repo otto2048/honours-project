@@ -2,11 +2,11 @@
 
 Car Exercise::largestPrice(Car& a, Car& b, Car& c)
 {
-    if (a.getPrice() >= b.getPrice() && a.getPrice() >= c.getPrice())
+    if (a.getPrice() > b.getPrice() && a.getPrice() > c.getPrice())
     {
         return a;
     }
-    else if (b.getPrice() >= a.getPrice() && b.getPrice() >= c.getPrice())
+    else if (b.getPrice() > a.getPrice() && b.getPrice() > c.getPrice())
     {
         return b;
     }

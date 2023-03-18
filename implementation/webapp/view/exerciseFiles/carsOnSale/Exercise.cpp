@@ -12,9 +12,9 @@ int Exercise::carsOnSale(float minPrice, float maxPrice, bool weekend)
     {
         Car currentCar = cars[i];
 
-        if (!weekend)
+        if (weekend)
         {
-            if (currentCar.getPrice() >= minPrice && currentCar.getPrice() <= maxPrice)
+            if (currentCar.getPrice() > minPrice || currentCar.getPrice() <= maxPrice)
             {
                 ret++;
             }

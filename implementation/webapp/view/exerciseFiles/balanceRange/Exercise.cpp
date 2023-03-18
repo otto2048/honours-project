@@ -2,9 +2,9 @@
 
 float Exercise::getBalanceRange()
 {
-	float largest = accounts[0].getBalance();
+	float largest = 0;
 
-	float smallest = accounts[0].getBalance();
+	float smallest = 0;
 
 	for (int i = 0; i < Exercise::numAccounts; i++)
 	{
@@ -14,30 +14,6 @@ float Exercise::getBalanceRange()
 		}
 
 		if (accounts[i].getBalance() < smallest)
-		{
-			smallest = accounts[i].getBalance();
-		}
-	}
-
-	return largest - smallest;
-}
-
-// possible inputs: all positive numbers, all negative numbers, mixed positive and negative numbers
-float Exercise::getBalanceRangeErrors()
-{
-	float largest = 0;
-	float smallest = 0;
-
-	for (int i = 0; i < Exercise::numAccounts; i++)
-	{
-		Account currentAccount = accounts[i];
-
-		if (currentAccount.getBalance() > largest)
-		{
-			largest = accounts[i].getBalance();
-		}
-
-		if (currentAccount.getBalance() < smallest)
 		{
 			smallest = accounts[i].getBalance();
 		}
