@@ -214,11 +214,17 @@ def loadVariables(item, frame, graph, recurse_limit, parent = "top_level", level
     # get the variable type
     typeCode = item[2].code
 
-    # check if this is a pointer
-    if typeCode is gdb.TYPE_CODE_PTR:
+    # check if this is a pointer or reference
+    if typeCode is gdb.TYPE_CODE_PTR or typeCode is gdb.TYPE_CODE_REF:
         dereferenced = item[1].referenced_value()
 
-        child_type = dereferenced.type.name + " *"
+        child_type = ""
+        
+        if typeCode is gdb.TYPE_CODE_PTR:
+            child_type = dereferenced.type.name + " *"
+        else:
+            child_type = dereferenced.type.name + " &"
+
         child = (item[0], None, child_type, item[3], item[4])
 
         graph.add_edges_from([(parent, child)])
