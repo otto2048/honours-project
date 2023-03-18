@@ -13,7 +13,7 @@ using std::endl;
 class Showroom
 {
 public:
-	const static int numCars = 5;
+	const static int numCars = 10;
 
 protected:
 	Car cars[numCars]; 
