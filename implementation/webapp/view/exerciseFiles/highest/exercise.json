@@ -26,7 +26,7 @@
             "garage/Vehicle.h",
             "garage/Car.cpp",
             "garage/Car.h",
-            "highest/main_test.cpp",
+            "testing/main_test.cpp",
             "highest/unit_test.cpp"
         ]
     }

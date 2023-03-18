@@ -22,7 +22,7 @@
             "bank/Account.h",
             "bank/Bank.cpp",
             "bank/Bank.h",
-            "balanceRange/main_test.cpp",
+            "testing/main_test.cpp",
             "balanceRange/unit_test.cpp"
         ]
     }
