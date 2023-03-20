@@ -92,7 +92,11 @@
                     <?php
                     if (count($assignedExercises) == 0)
                     {
-                        echo "You have no assigned exercises";
+                        echo "You have no assigned exercises <br>";
+                        echo "If you haven't already, please complete the SUS survey to give feedback on this tool: ";
+                        ?>
+                            <p>Complete the SUS survey here: <a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></p>
+                        <?php
                     }
                     else
                     {

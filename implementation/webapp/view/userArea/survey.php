@@ -1,42 +1,57 @@
 <?php
     //SUS survey for web app
     //TODO: more user feedback and explanation of survey
+    echo "here";
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserSurveyModel.php");
+    echo "here 8";
 
     //check if user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
     {
+    echo "here 2";
+
         echo '<script type="text/javascript">window.open("/honours/webapp/view/userArea/signUp.php", name="_self")</script>';
     }
 
     if ($_SESSION["permissionLevel"] < PermissionLevels::CONTROL)
     {
+    echo "here 3";
+
         echo '<script type="text/javascript">window.open("/honours/webapp/view/login.php", name="_self")</script>';
     }
 
+    echo "here 7";
+
     //check if the user has already completed the survey
     $userSurveyModel = new UserSurveyModel();
+    echo "here 6";
 
     $jsonData = $userSurveyModel->getUserAnswers($_SESSION["userId"]);
 
     //if json data returned ok
     if ($jsonData)
     {
+    echo "here 4";
+
         $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
 
         //if there is results
         if (!isset($data["isempty"]))
         {
+    echo "here 5";
+
             //kick user out of this page
             echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php", name="_self")</script>';
         }
     }
     else
     {
+    echo "here 6";
+
         //kick user out of this page
         echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php", name="_self")</script>';
     }
@@ -52,7 +67,7 @@
     </head>
     <body>
         <?php
-            getNavigation(basename($_SERVER['PHP_SELF']));
+            getNavigation();
         ?>
         <div class="container p-3" >
             <div class="border rounded m-auto mt-5 mb-5 p-4 col-8 overflow-auto">
