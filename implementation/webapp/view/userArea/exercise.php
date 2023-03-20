@@ -106,6 +106,12 @@
                         <p><?php echo $exerciseData[0]["description"] ?></p>
                         <hr>
                         <h2>General Instructions</h2>
+                        <p>You can view the files for this exercise in the editor below by clicking on the file names</p>
+                        <p>You can edit the main.cpp file and the Exercise.cpp file</p>
+                        <br>
+                        <p>The main file can be used to call functions within the other files</p>
+                        <p>The Exercise files define a class that wraps around the parent class for this exercise</p>
+                        <br>
                         <p>Once you have completed the exercise, press the submit button below.</p>
                         <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
                     </div>
