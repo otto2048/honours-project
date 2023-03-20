@@ -34,13 +34,19 @@
         if (!isset($data["isempty"]))
         {
             //kick user out of this page
-            echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php", name="_self")</script>';
+            $failureMessage[0]["success"] = false;
+            $failureMessage[0]["content"] = "You have already submitted a survey response";
+
+            echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php?message='.urlencode(json_encode($failureMessage)).'", name="_self")</script>';
         }
     }
     else
     {
+        $failureMessage[0]["success"] = false;
+        $failureMessage[0]["content"] = "Failed to load survey";
+
         //kick user out of this page
-        echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php", name="_self")</script>';
+        echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php?message='.urlencode(json_encode($failureMessage)).'", name="_self")</script>';
     }
 
 ?>

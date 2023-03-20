@@ -7,6 +7,8 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
@@ -32,6 +34,15 @@
             getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
         <div class="container p-3" >
+            <?php
+                //check for errors on this page
+                if (isset($_GET["message"]))
+                {
+                    $message = $_GET["message"];
+                
+                    printErrorMessage($message);
+                }
+            ?>
             <h1>Your Exercises</h1>
             <hr>
             <?php
