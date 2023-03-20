@@ -39,18 +39,22 @@
                 $score = 0;
                 foreach ($answers as $question => $answer)
                 {
-                    $newAnswer = 0;
-
-                    if ($question % 2 == 0)
+                    //check that this is one of the sus questions
+                    if ($question < 11)
                     {
-                        $newAnswer = 5 - $answer;
-                    }
-                    else
-                    {
-                        $newAnswer = $answer - 1;
-                    }
+                        $newAnswer = 0;
 
-                    $score += $newAnswer;
+                        if ($question % 2 == 0)
+                        {
+                            $newAnswer = 5 - $answer;
+                        }
+                        else
+                        {
+                            $newAnswer = $answer - 1;
+                        }
+    
+                        $score += $newAnswer;
+                    }
                 }
 
                 $SUS = $score * 2.5;
