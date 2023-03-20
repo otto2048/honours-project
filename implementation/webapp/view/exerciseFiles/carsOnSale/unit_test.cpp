@@ -16,7 +16,7 @@ namespace {
 		EXPECT_EQ(4, garage.carsOnSale(2, 5, false));
 	}
 
-    TEST(carsOnSale, test3)
+	TEST(carsOnSale, test3)
 	{
         Exercise garage;
 

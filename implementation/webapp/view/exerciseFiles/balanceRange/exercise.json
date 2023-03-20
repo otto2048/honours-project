@@ -20,8 +20,8 @@
             "balanceRange/Exercise.h",
             "bank/Account.cpp",
             "bank/Account.h",
-            "bank/Bank.cpp",
-            "bank/Bank.h",
+            "bank/Bank_test.cpp",
+            "bank/Bank_test.h",
             "testing/main_test.cpp",
             "balanceRange/unit_test.cpp"
         ]

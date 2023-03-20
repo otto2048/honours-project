@@ -20,7 +20,7 @@
             ],
         "readonly" : [
             "highest/Exercise.h",
-            "garage/Showroom.cpp",
+            "garage/Showroom_test.cpp",
             "garage/Showroom.h",
             "garage/Vehicle.cpp",
             "garage/Vehicle.h",
