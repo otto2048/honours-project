@@ -1,7 +1,7 @@
 #pragma once
 #include "Showroom.h"
 
-class Exercise : public Showroom
+class My_Showroom : public Showroom
 {
 private:
 	Car largestPrice(Car&, Car&, Car&);

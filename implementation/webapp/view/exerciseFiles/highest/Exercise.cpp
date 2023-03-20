@@ -1,6 +1,6 @@
 #include "Exercise.h"
 
-Car Exercise::largestPrice(Car& a, Car& b, Car& c)
+Car My_Showroom::largestPrice(Car& a, Car& b, Car& c)
 {
     if (a.getPrice() > b.getPrice() && a.getPrice() > c.getPrice())
     {
@@ -14,7 +14,7 @@ Car Exercise::largestPrice(Car& a, Car& b, Car& c)
     return c;
 }
 
-Car Exercise::largestPrice(int a, int b, int c, int d, int e, int f)
+Car My_Showroom::largestPrice(int a, int b, int c, int d, int e, int f)
 {
     Car one = largestPrice(cars[a], cars[b], cars[c]);
 
@@ -23,7 +23,7 @@ Car Exercise::largestPrice(int a, int b, int c, int d, int e, int f)
     return largestPrice(one, two);
 }
 
-Car Exercise::largestPrice(Car& a, Car& b)
+Car My_Showroom::largestPrice(Car& a, Car& b)
 {
     if (a.getPrice() > b.getPrice())
     {

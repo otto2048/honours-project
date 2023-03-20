@@ -1,11 +1,11 @@
 #pragma once
 #include "Bank.h"
 
-class Exercise : public Bank
+class My_Bank : public Bank
 {
 public:
-    Exercise(char);
-    Exercise();
+    My_Bank(char);
+    My_Bank();
     
 	float getBalanceRange();
 };

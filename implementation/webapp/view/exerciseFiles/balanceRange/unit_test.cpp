@@ -4,21 +4,21 @@
 namespace {
 	TEST(balanceRange, test1)
 	{
-        Exercise bank('P');
+        My_Bank bank('P');
 
 		EXPECT_EQ(9, bank.getBalanceRange());
 	}
 
     TEST(balanceRange, test2)
 	{
-        Exercise bank('N');
+        My_Bank bank('N');
 
 		EXPECT_EQ(9, bank.getBalanceRange());
 	}
 
     TEST(balanceRange, test3)
 	{
-        Exercise bank('M');
+        My_Bank bank('M');
 
 		EXPECT_EQ(10, bank.getBalanceRange());
 	}

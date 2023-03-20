@@ -1,7 +1,7 @@
 #pragma once
 #include "Bank.h"
 
-class Exercise : public Bank
+class My_Bank : public Bank
 {
 public:
 	float getBalanceRange();

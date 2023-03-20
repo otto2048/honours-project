@@ -1,12 +1,12 @@
 #include "Exercise.h"
 
-float Exercise::getBalanceRange()
+float My_Bank::getBalanceRange()
 {
 	float largest = 0;
 
 	float smallest = 0;
 
-	for (int i = 0; i < Exercise::numAccounts; i++)
+	for (int i = 0; i < My_Bank::numAccounts; i++)
 	{
 		if (accounts[i].getBalance() > largest)
 		{
