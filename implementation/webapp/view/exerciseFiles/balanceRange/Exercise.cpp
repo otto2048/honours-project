@@ -1,5 +1,6 @@
 #include "Exercise.h"
 
+//get the difference between the largest and smallest balances in the bank - including overdrawn accounts
 float My_Bank::getBalanceRange()
 {
 	float largest = 0;

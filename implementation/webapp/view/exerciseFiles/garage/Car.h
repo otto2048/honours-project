@@ -9,6 +9,7 @@ public:
 	Car();
 	Car(int, int, int, float, float, float, int);
 	
+	//getters
 	int getNumDoors();
 };
 

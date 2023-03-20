@@ -18,6 +18,7 @@ Bank::Bank()
 	}
 }
 
+//output accounts information
 void Bank::printAccounts()
 {
 	cout << "Customer ID   Balance" << endl;

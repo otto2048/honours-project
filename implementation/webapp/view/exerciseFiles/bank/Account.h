@@ -9,6 +9,7 @@ public:
 	Account(float, int);
 	Account();
 
+	//getters
 	float getBalance();
 	int getCustId();
 };

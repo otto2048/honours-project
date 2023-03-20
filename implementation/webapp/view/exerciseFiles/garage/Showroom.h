@@ -16,6 +16,7 @@ public:
 	const static int numCars = 10;
 
 protected:
+	//collection of cars
 	Car cars[numCars]; 
 
 public:

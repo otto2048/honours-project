@@ -2,8 +2,7 @@
 
 // count the number of cars going on sale
 // cars going on sale must be between min and max price (inclusive)
-//      unless its the weekend then there is no upper bound to the cars going
-//      on sale
+//      unless its the weekend then there is no upper bound to the cars going on sale
 int My_Showroom::carsOnSale(float minPrice, float maxPrice, bool weekend)
 {
     int ret = 0;

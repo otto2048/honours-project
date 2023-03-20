@@ -9,6 +9,7 @@ Showroom::Showroom()
 	}
 }
 
+//output cars information
 void Showroom::printVehicles()
 {
 	cout << "Vehicle ID   Vehicle Type   Price";

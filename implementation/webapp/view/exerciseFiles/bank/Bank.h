@@ -15,6 +15,7 @@ public:
 	const static int numAccounts = 10;
 
 protected:
+	//collection of accounts
 	Account accounts[numAccounts];
 
 public:

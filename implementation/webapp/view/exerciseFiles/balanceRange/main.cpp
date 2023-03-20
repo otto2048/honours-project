@@ -2,7 +2,8 @@
 
 int main()
 {
-	srand(time(0)); //initialise random number generator with time
+	//initialise random number generator with time - allows us to create random bank accounts
+	srand(time(0)); 
 
 	My_Bank bank;
 

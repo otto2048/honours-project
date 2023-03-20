@@ -2,7 +2,8 @@
 
 int main()
 {
-	srand(time(0)); //initialise random number generator with time
+	//initialise random number generator with time - allows us to create random vehicles
+	srand(time(0));
 
 	My_Showroom my_showroom;
 

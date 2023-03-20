@@ -10,9 +10,10 @@ public:
 	const static int numManufacturers = 3;
 
 private:
-
+	//colour options
 	string colours[numColours] = { "Blue", "Red", "White", "Black", "Orange", "Yellow", "Pink", "Green", "Light Blue" };
 	
+	//manufacturer options
 	string manufacturers[numManufacturers] = { "test", "test1", "test2" };
 
 protected:
@@ -29,6 +30,7 @@ public:
 	Vehicle();
 	Vehicle(int, int, int, float, float, float);
 
+	//getters
 	int getId();
 	string getManufacturer();
 	float getPrice();
