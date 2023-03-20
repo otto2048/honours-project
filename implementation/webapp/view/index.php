@@ -7,11 +7,18 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
+
 
     //check if the user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
     {
         echo '<script type="text/javascript">window.open("/honours/webapp/view/userArea/signUp.php", name="_self")</script>';
+    }
+
+    if ($_SESSION["permissionLevel"] < PermissionLevels::CONTROL)
+    {
+        echo '<script type="text/javascript">window.open("/honours/webapp/view/login.php", name="_self")</script>';
     }
 ?>
 
@@ -27,6 +34,15 @@
             getNavigation(basename($_SERVER['PHP_SELF']));
         ?>
         <div class="container p-3" >
+            <?php
+                //check for errors on this page
+                if (isset($_GET["message"]))
+                {
+                    $message = $_GET["message"];
+                
+                    printErrorMessage($message);
+                }
+            ?>
             <h1>Your Exercises</h1>
             <hr>
             <?php
@@ -87,7 +103,11 @@
                     <?php
                     if (count($assignedExercises) == 0)
                     {
-                        echo "You have no assigned exercises";
+                        echo "You have no assigned exercises <br><br>";
+                        echo "If you haven't already, please complete the SUS survey to give feedback on this tool: ";
+                        ?>
+                            <p>Complete the SUS survey here: <a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></p>
+                        <?php
                     }
                     else
                     {

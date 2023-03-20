@@ -6,11 +6,18 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserSurveyModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
+
 
     //check if user is allowed to be here
     if (!isset($_SESSION["permissionLevel"]))
     {
         echo '<script type="text/javascript">window.open("/honours/webapp/view/userArea/signUp.php", name="_self")</script>';
+    }
+
+    if ($_SESSION["permissionLevel"] < PermissionLevels::CONTROL)
+    {
+        echo '<script type="text/javascript">window.open("/honours/webapp/view/login.php", name="_self")</script>';
     }
 
     //check if the user has already completed the survey
@@ -27,13 +34,19 @@
         if (!isset($data["isempty"]))
         {
             //kick user out of this page
-            echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php", name="_self")</script>';
+            $failureMessage[0]["success"] = false;
+            $failureMessage[0]["content"] = "You have already submitted a survey response";
+
+            echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php?message='.urlencode(json_encode($failureMessage)).'", name="_self")</script>';
         }
     }
     else
     {
+        $failureMessage[0]["success"] = false;
+        $failureMessage[0]["content"] = "Failed to load survey";
+
         //kick user out of this page
-        echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php", name="_self")</script>';
+        echo '<script type="text/javascript">window.open("/honours/webapp/view/index.php?message='.urlencode(json_encode($failureMessage)).'", name="_self")</script>';
     }
 
 ?>
@@ -47,7 +60,7 @@
     </head>
     <body>
         <?php
-            getNavigation(basename($_SERVER['PHP_SELF']));
+            getNavigation();
         ?>
         <div class="container p-3" >
             <div class="border rounded m-auto mt-5 mb-5 p-4 col-8 overflow-auto">
