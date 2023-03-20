@@ -95,7 +95,7 @@
             $data = new \stdClass();
             $data -> username = $_POST['username'];
             $data -> password = $password;
-            $data -> permissionLevel = PermissionLevels::UNASSIGNED;
+            $data -> permissionLevel = $_POST['permissionLevel'];
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //prepare success message

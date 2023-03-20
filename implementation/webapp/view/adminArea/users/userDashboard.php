@@ -135,6 +135,24 @@
                             <label for="password">Password:</label>
                             <input type="password" class="form-control" name="password" required id="password">
                         </div>
+                        <div class="form-group pt-1">
+                            <label for="permissionLevel">User group:</label>
+                            <select name="permissionLevel" id="permissionLevel">
+                                <?php
+                                    $permissionReflection = new \ReflectionClass("PermissionLevels");
+                                    $values = $permissionReflection->getConstants();
+
+                                    foreach ($values as $value)
+                                    {
+                                        $optionString = '<option value = "';
+                                        $optionString .= $value.'"';
+                                        $optionString .= ">".$permission->getPermissionLevel($value)."</option>";
+
+                                        echo $optionString;
+                                    }
+                                ?>
+                            </select>
+                        </div>
                         <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                     </form>
                 </div>
