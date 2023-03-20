@@ -4,9 +4,9 @@
 class Exercise : public Bank
 {
 public:
+    Exercise(char);
+    Exercise();
+    
 	float getBalanceRange();
-	float getBalanceRangeErrors();
-
-	Exercise(char);
 };
 

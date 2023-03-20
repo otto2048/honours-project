@@ -1,5 +1,10 @@
 #include "Exercise.h"
 
+Exercise::Exercise(char option) : Bank(option)
+{
+
+}
+
 float Exercise::getBalanceRange()
 {
 	float largest = accounts[0].getBalance();

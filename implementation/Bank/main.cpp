@@ -4,7 +4,7 @@ int main()
 {
 	srand(time(0)); //initialise random number generator with time
 
-	Exercise bank;
+	Exercise bank('P');
 
 	bank.printAccounts();
 

@@ -17,11 +17,12 @@
                 "balanceRange/Exercise.cpp"
             ],
         "readonly" : [
-            "balanceRange/Exercise.h",
+            "balanceRange/testing/Exercise.h",
+            "balanceRange/testing/Exercise_test.cpp",
             "bank/Account.cpp",
             "bank/Account.h",
-            "bank/Bank_test.cpp",
-            "bank/Bank_test.h",
+            "bank/bankTesting/Bank.cpp",
+            "bank/bankTesting/Bank.h",
             "testing/main_test.cpp",
             "balanceRange/unit_test.cpp"
         ]
