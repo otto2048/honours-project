@@ -2,11 +2,11 @@
 
     class PermissionLevels
     {
-        const ADMIN = 3;
-        const GUEST = 2;
-        const EXPERIMENT = 1;
-        const CONTROL = 0;
-        const UNASSIGNED = -1;
+        const ADMIN = 4;
+        const GUEST = 3;
+        const EXPERIMENT = 2;
+        const CONTROL = 1;
+        const UNASSIGNED = 0;
 
         //get string value associated with user permission
         public function getPermissionLevel($state)

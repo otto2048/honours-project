@@ -13,6 +13,11 @@
         echo '<script type="text/javascript">window.open("/honours/webapp/view/userArea/signUp.php", name="_self")</script>';
     }
 
+    if ($_SESSION["permissionLevel"] < PermissionLevels::CONTROL)
+    {
+        echo '<script type="text/javascript">window.open("/honours/webapp/view/login.php", name="_self")</script>';
+    }
+
     //check if the user has already completed the survey
     $userSurveyModel = new UserSurveyModel();
 

@@ -95,7 +95,7 @@
             $data = new \stdClass();
             $data -> username = $_POST['username'];
             $data -> password = $password;
-            $data -> permissionLevel = $_POST['permissionLevel'];
+            $data -> permissionLevel = PermissionLevels::UNASSIGNED;
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
             //prepare success message
@@ -129,8 +129,7 @@
             
             if (isset($_POST["consentFormCheck"]))
             {
-                //set this as experimental or control group
-                $data -> permissionLevel = PermissionLevels::CONTROL;
+                $data -> permissionLevel = PermissionLevels::UNASSIGNED;
             }
             else
             {
