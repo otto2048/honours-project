@@ -6,6 +6,7 @@
         const GUEST = 2;
         const EXPERIMENT = 1;
         const CONTROL = 0;
+        const UNASSIGNED = -1;
 
         //get string value associated with user permission
         public function getPermissionLevel($state)
@@ -20,6 +21,8 @@
                     return "Experimental Group";
                 case PermissionLevels::CONTROL:
                     return "Control Group";
+                case PermissionLevels::UNASSIGNED:
+                    return "Not yet assigned permission";
                 default:
                     return "Error finding status";
             }

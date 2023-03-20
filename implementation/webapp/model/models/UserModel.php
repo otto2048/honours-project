@@ -111,7 +111,7 @@
         //create a user
         public function createData($jsonData)
         {
-            $this->sqlStmt = 'INSERT INTO honours_user (username, password, permissionLevel) VALUES (?, ?, ?)';
+            $this->sqlStmt = 'INSERT INTO honours_user (username, password) VALUES (?, ?, ?)';
 
             $paramTypes = "ssi";
 
