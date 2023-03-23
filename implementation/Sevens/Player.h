@@ -7,9 +7,15 @@ public:
 	const static int numCards = 7;
 
 	Player();
+	Player(int);
+
+	Card* getCard(int);
+
+	void setCard(Card*, int);
 
 protected:
-	Card* cards[numCards];
+	Card* cards[numCards]{};
 	int score;
+	int id;
 };
 
