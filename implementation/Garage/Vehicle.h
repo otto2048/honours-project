@@ -22,12 +22,14 @@ protected:
 	float mpg;
 	float fuelCap;
 	float price;
+	int year;
+	string reg;
 
 	float range;
 
 public:
 	Vehicle();
-	Vehicle(int, int, int, float, float, float);
+	Vehicle(int, int, int, float, float, float, int, string);
 
 	int getId();
 	string getManufacturer();
@@ -37,5 +39,7 @@ public:
 	float getMpg();
 	float getRange();
 	float getFuelCap();
+	int getYear();
+	string getReg();
 };
 

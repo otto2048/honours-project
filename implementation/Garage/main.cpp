@@ -5,7 +5,7 @@ int main()
 {
 	srand(time(0)); //initialise random number generator with time
 
-	ExerciseOne exerciseOne;
+	/*ExerciseOne exerciseOne;
 
 	exerciseOne.printVehicles();
 
@@ -16,13 +16,13 @@ int main()
 
 	cout << endl;
 	cout << endl;
-	cout << "ID of most expensive car: " << exerciseOne.mostExpensiveCar(4, 1, 2, 3, 4, 2).getId();
+	cout << "ID of most expensive car: " << exerciseOne.mostExpensiveCar(4, 1, 2, 3, 4, 2).getId();*/
 
-	/*CountCars countCars;
+	CountCars countCars;
 
 	countCars.printVehicles();
 
-	cout << countCars.countVehicles(4500) << endl;*/
+	countCars.filterCars(19);
 
 	return 0;
 }

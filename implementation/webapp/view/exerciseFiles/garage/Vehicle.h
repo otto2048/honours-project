@@ -10,10 +10,9 @@ public:
 	const static int numManufacturers = 3;
 
 private:
-	//colour options
+
 	string colours[numColours] = { "Blue", "Red", "White", "Black", "Orange", "Yellow", "Pink", "Green", "Light Blue" };
 	
-	//manufacturer options
 	string manufacturers[numManufacturers] = { "test", "test1", "test2" };
 
 protected:
@@ -23,14 +22,15 @@ protected:
 	float mpg;
 	float fuelCap;
 	float price;
+	int year;
+	string reg;
 
 	float range;
 
 public:
 	Vehicle();
-	Vehicle(int, int, int, float, float, float);
+	Vehicle(int, int, int, float, float, float, int, string);
 
-	//getters
 	int getId();
 	string getManufacturer();
 	float getPrice();
@@ -39,5 +39,7 @@ public:
 	float getMpg();
 	float getRange();
 	float getFuelCap();
+	int getYear();
+	string getReg();
 };
 

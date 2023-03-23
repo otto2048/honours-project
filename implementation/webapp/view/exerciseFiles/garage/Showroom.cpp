@@ -5,7 +5,7 @@ Showroom::Showroom()
 	//create random cars
 	for (int i = 0; i < numCars; i++)
 	{
-		cars[i] = Car(i, rand() % Vehicle::numManufacturers, rand() % Vehicle::numColours, (rand() % 20) + 40, (rand() % 10) + 50, (rand() % 1000) + 4000, 4);
+		cars[i] = Car(i, rand() % Vehicle::numManufacturers, rand() % Vehicle::numColours, (rand() % 20) + 40, (rand() % 10) + 50, (rand() % 1000) + 4000, (rand() % 33) + 1990,"", 4);
 	}
 }
 

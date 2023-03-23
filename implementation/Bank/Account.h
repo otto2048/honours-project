@@ -1,7 +1,7 @@
 #pragma once
 class Account
 {
-private:
+protected:
 	float balance;
 	int custId;
 

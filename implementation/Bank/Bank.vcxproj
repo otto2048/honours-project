@@ -142,12 +142,18 @@
     <ClInclude Include="Account.h" />
     <ClInclude Include="Bank.h" />
     <ClInclude Include="Exercise.h" />
+    <ClInclude Include="My_SavingAccount.h" />
+    <ClInclude Include="NoSevens.h" />
+    <ClInclude Include="SavingAccount.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="Exercise.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="My_SavingAccount.cpp" />
+    <ClCompile Include="NoSevens.cpp" />
+    <ClCompile Include="SavingAccount.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
