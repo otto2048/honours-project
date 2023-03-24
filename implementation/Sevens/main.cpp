@@ -12,24 +12,27 @@ int main()
 
 	game.shuffleCards();
 
-	game.initPlayerCards();
+	game.initCards();
 
-	game.getVisibleCard();
-
-	for (int i = 0; i < 500; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		bool takesHidden = rand() > (RAND_MAX / 2);
 		if (i % 2 == 0)
 		{
-			game.playTurn(takesHidden, 100, 0);
+			game.playTurn(false, 100, 0);
 		}
 		else
 		{
-			game.playTurn(takesHidden, 100, 1);
+			game.playTurn(false, 100, 1);
 		}
 
-		cout << game.getSwitchPoint() << endl;
+		cout << takesHidden << " " << game.getSwitchPoint() << endl;
 	}
 
+	Card cards[4] = { Card(1, 1), Card(0, 4), Card(0, 2), Card(0,3) };
+
+	game.numberEqualityWinCondition(cards, 4);
+	game.sequenceEqualityWinCondition(cards, 4);
+	
 	return 0;
 }

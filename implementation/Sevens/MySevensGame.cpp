@@ -8,114 +8,155 @@ void MySevensGame::shuffleCards()
 
 		int cardTwoIndex = rand() % MySevensGame::numCards;
 
-		std::swap(cards[cardOneIndex], cards[cardTwoIndex]);
+		std::swap(fullDeck[cardOneIndex], fullDeck[cardTwoIndex]);
 	}
 }
 
-bool MySevensGame::checkIfCardHeld(Card card)
+void MySevensGame::initCards()
 {
-	// check if either player holds this card
-	for (int i = 0; i < Player::numCards; i++)
+	// get player cards
+	for (int i = 0; i < 14; i++)
 	{
-		if (players[0].getCard(i) == card || players[1].getCard(i) == card)
+		if (i % 2 == 0)
 		{
-			return true;
+			players[0].setCard(fullDeck[i], i / 2);
+		}
+		else
+		{
+			players[1].setCard(fullDeck[i], (i - 1) / 2);
 		}
 	}
 
-	return false;
+	// create stack of cards
+	int counter = 0;
+	for (int i = 15; i < numCards; i++)
+	{
+		stack[counter] = fullDeck[i];
+		counter++;
+	}
 }
 
 void MySevensGame::playTurn(bool pickHiddenCard, int swapChance, int playerId)
 {
 	int random = rand() % 100;
-	Card newCard;
+	Card* newCard;
 
 	if (pickHiddenCard)
 	{
+		cout << "Player takes new card: ";
+
 		// picking up a new card from the hidden pile
-		newCard = cards[switchPoint];
+		newCard = &stack[switchPoint];
+
+		cout << newCard->getSuit() << " " << newCard->getValue() << endl;
+
+		switchPoint++;
 	}
 	else
 	{
-		// picking up the visible card
-		int visCardIndex = getVisibleCard();
+		cout << "Player attempts to take visible card: ";
+
+		int visCardIndex = switchPoint - 1;
 
 		if (visCardIndex >= 0)
 		{
-			newCard = cards[visCardIndex];
+			newCard = &stack[visCardIndex];
 		}
 		else
 		{
-			newCard = cards[switchPoint];
+			cout << " (fails) " << endl;
+			cout << "Player takes new card: ";
+
+			newCard = &stack[switchPoint];
+			switchPoint++;
 		}
+
+		cout << newCard->getSuit() << " " << newCard->getValue() << endl;
 	}
 
-	switchPoint++;
-
-	if (switchPoint >= numCards)
+	if (switchPoint >= numStackCards)
 	{
 		//get new switch point
 		switchPoint = 0;
-
-		Card hiddenCard = cards[switchPoint];
-
-		while (checkIfCardHeld(hiddenCard))
-		{
-			switchPoint++;
-			hiddenCard = cards[switchPoint];
-		}
 	}
 
 	if (random < swapChance)
 	{
-		//swap the new card with the players highest card
-		players[playerId].swapCards(newCard, players[playerId].getWorstCard());
+		// swap new card with worst card from our hand
+		Card playerCard = players[playerId].getCard(players[playerId].getWorstCard());
+		Card stackCard = *newCard;
+
+		cout << "Player places down: " << playerCard.getSuit() << " " << playerCard.getValue() << endl;
+		cout << endl;
+		cout << endl;
+
+		*newCard = playerCard;
+		players[playerId].setCard(stackCard, players[playerId].getWorstCard());
 	}
 }
 
-int MySevensGame::getVisibleCard()
+bool MySevensGame::numberEqualityWinCondition(Card cards[], int numCards)
 {
-	int lastVisCardIndex = switchPoint;
+	bool ret = true;
+	int cardValue = cards[0].getValue();
 
-	bool cardHeld = true;
-	Card visibleCard;
-
-	while (cardHeld && lastVisCardIndex >= 0)
+	for (int i = 0; i < numCards; i++)
 	{
-		lastVisCardIndex--;
-
-		if (lastVisCardIndex >= 0)
+		if (cards[i].getValue() != cardValue)
 		{
-			visibleCard = cards[lastVisCardIndex];
+			ret = false;
+			break;
 		}
-
-		cardHeld = checkIfCardHeld(visibleCard);
 	}
 
-	if (!cardHeld)
-	{
-		return lastVisCardIndex;
-	}
-	else
-	{
-		return -1;
-	}
+	return ret;
 }
 
-void MySevensGame::initPlayerCards()
+bool MySevensGame::sequenceEqualityWinCondition(Card cards[], int numCards)
 {
-	for (int i = 0; i < 14; i++)
+	// sort the cards
+	bubbleSort(cards, numCards);
+
+	bool ret = true;
+
+	int initSuit = cards[0].getSuit();
+
+	// check if the cards increase in value by one each card and cards are all the same suit
+	for (int i = 1; i < numCards; i++)
 	{
-		if (i % 2 == 0)
+		if (cards[i].getValue() - cards[i - 1].getValue() != 1 || cards[i].getSuit() != initSuit)
 		{
-			players[0].setCard(cards[i], i / 2);
+			ret = false;
+			break;
 		}
-		else
+	}
+
+	return ret;
+}
+
+void MySevensGame::bubbleSort(Card cards[], int numCards)
+{
+	for (int step = 0; step < numCards - 1; step++)
+	{
+		//check if swapping has occured
+		int swapped = 0;
+
+		for (int i = 0; i < (numCards - step - 1); i++)
 		{
-			players[1].setCard(cards[i], (i  - 1) / 2);
+			//compare two elements
+			if (cards[i].getValue() > cards[i + 1].getValue())
+			{
+				//swap elements
+				std::swap(cards[i], cards[i + 1]);
+
+				swapped = 1;
+			}
 		}
 
-		switchPoint++;
+		if (swapped == 0)
+		{
+			//no swapping occured, array is sorted, break out of loop
+			break;
+		}
 	}
 }

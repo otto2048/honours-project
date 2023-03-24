@@ -2,8 +2,8 @@
 
 Card::Card()
 {
-	suit = 0;
-	value = 0;
+	suit = -1;
+	value = -1;
 }
 
 Card::Card(int suit_, int value_)

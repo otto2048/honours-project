@@ -37,8 +37,3 @@ int Player::getWorstCard()
 
 	return index;
 }
-
-void Player::swapCards(Card& newCard, int oldCardIndex)
-{
-	std::swap(cards[oldCardIndex], newCard);
-}

@@ -1,15 +1,23 @@
 #pragma once
 #include "Game.h"
 #include <algorithm>
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
 class MySevensGame : public Game
 {
 public:
-	void initPlayerCards();
 	void shuffleCards();
-	int getVisibleCard();
+
 	void playTurn(bool, int, int);
 
-private:
-	bool checkIfCardHeld(Card);
+	void initCards();
+
+	bool numberEqualityWinCondition(Card[], int);
+	bool sequenceEqualityWinCondition(Card[], int);
+
+	void bubbleSort(Card[], int);
 };
 

@@ -9,7 +9,7 @@ Game::Game()
 	{
 		for (int j = 0; j < 13; j++)
 		{
-			cards[counter] = Card(i, j + 1);
+			fullDeck[counter] = Card(i, j + 1);
 			counter++;
 		}
 	}
