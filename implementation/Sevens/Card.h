@@ -9,5 +9,10 @@ public:
 	Card(int, int);
 	Card();
 	~Card();
+
+	int getSuit();
+	int getValue();
+
+	bool operator==(const Card& obj);
 };
 

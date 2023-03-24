@@ -9,19 +9,19 @@ Game::Game()
 	{
 		for (int j = 0; j < 13; j++)
 		{
-			cards[counter] = new Card(i, j + 1);
+			cards[counter] = Card(i, j + 1);
 			counter++;
 		}
 	}
+
+	switchPoint = 0;
 }
 
 Game::~Game()
 {
-	for (int i = 0; i < numCards; i++)
-	{
-		if (cards[i])
-		{
-			delete cards[i];
-		}
-	}
+}
+
+int Game::getSwitchPoint()
+{
+	return switchPoint;
 }
