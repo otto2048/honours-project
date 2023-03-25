@@ -14,9 +14,6 @@ public:
 	//number of players
 	const static int numPlayers = 2;
 
-	//number of cards in full stack once player hands are given out
-	const static int numStackCards = numCards - 15;
-
 	Game();
 
 	int getSwitchPoint();
@@ -25,15 +22,6 @@ protected:
 
 	//deck of cards
 	Card fullDeck[numCards];
-
-	//stack of cards in play
-	Card stack[numStackCards];
-
-	//the wildcard for this round
-	int wildcard;
-
-	//the point the stack of cards is split at
-	int switchPoint;
 
 	//collection of players
 	Player players[numPlayers] = { Player(0), Player(1) };
