@@ -4,6 +4,7 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/ExerciseModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
@@ -49,25 +50,24 @@
 
                 // get the exercises the user has to do
 
+                // get user pre test exercises
+                    // if those are all complete get post test exercises and display video links
+                        // if all post test exercises are complete display sus survey link
+
                 $exerciseModel = new ExerciseModel();
                 $userModel = new UserModel();
                 $userExerciseModel = new UserExerciseModel();
 
-                $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], null, true);
-
-                if ($jsonExercises)
+                function sortExercises(&$completedExercises, &$assignedExercises, $jsonExercises)
                 {
                     $exercises = json_decode($jsonExercises, JSON_INVALID_UTF8_SUBSTITUTE);
-
-                    $completedExercises = array();
-                    $assignedExercises = array();
 
                     if (!isset($exercises["isempty"]))
                     {
                         foreach ($exercises as $exercise)
                         {
                             //get mark information to check if this exercise is completed
-                            $markJson = $userExerciseModel->getExerciseMark($_SESSION["userId"], $exercise["codeId"]);
+                            $markJson = $GLOBALS["userExerciseModel"]->getExerciseMark($_SESSION["userId"], $exercise["codeId"]);
 
                             if ($markJson)
                             {
@@ -91,53 +91,39 @@
                             }
                         }
                     }
-                    else
-                    {
-                        echo "You have no exercises";
-                    }
+                }
 
-                    //output assigned exercises
+                function outputAssignedExercises($assignedExercises)
+                {
                     ?>
                     <h2>Assigned exercises</h2>
                     <hr>
+                    <div class="row m-1">
                     <?php
-                    if (count($assignedExercises) == 0)
+                    foreach ($assignedExercises as $assignedExercise)
                     {
-                        echo "You have no assigned exercises <br><br>";
-                        echo "If you haven't already, please complete the SUS survey to give feedback on this tool: ";
-                        ?>
-                            <p>Complete the SUS survey here: <a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></p>
-                        <?php
-                    }
-                    else
-                    {
-                        ?>
-                        <div class="row m-1">
-                        <?php
-                        foreach ($assignedExercises as $assignedExercise)
-                        {
-                        ?>
-                        <div class="col-sm-4 pb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h3 class="card-title h5"><?php echo $assignedExercise["exercise"]["title"]; ?></h3>
-                                    <h4 class="card-subtitle mb-2 text-muted h6">Points: <?php if ($assignedExercise["mark"]) { echo $assignedExercise["mark"]["points"]."/".$assignedExercise["mark"]["total"];} else {echo "Failed to retrieve mark";} ?></h4>
-                                    <p class="card-text"><?php echo $assignedExercise["exercise"]["description"]; ?></p>
-                                    <div class="text-center">
-                                        <a href="userArea/exercise.php?id=<?php echo $assignedExercise["exercise"]["codeId"]; ?>" class="btn btn-primary">Complete exercise</a>
-                                    </div>
+                    ?>
+                    <div class="col-sm-4 pb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title h5"><?php echo $assignedExercise["exercise"]["title"]; ?></h3>
+                                <h4 class="card-subtitle mb-2 text-muted h6">Points: <?php if ($assignedExercise["mark"]) { echo $assignedExercise["mark"]["points"]."/".$assignedExercise["mark"]["total"];} else {echo "Failed to retrieve mark";} ?></h4>
+                                <p class="card-text"><?php echo $assignedExercise["exercise"]["description"]; ?></p>
+                                <div class="text-center">
+                                    <a href="userArea/exercise.php?id=<?php echo $assignedExercise["exercise"]["codeId"]; ?>" class="btn btn-primary">Complete exercise</a>
                                 </div>
                             </div>
                         </div>
-                        <?php
-                        }
-                        ?>
-                        </div>
-                        <?php
+                    </div>
+                    <?php
                     }
-                    
+                    ?>
+                    </div>
+                    <?php
+                }
 
-                    //output completed exercises
+                function outputCompletedExercises($completedExercises)
+                {
                     ?>
                     <h2>Completed exercises</h2>
                     <hr>
@@ -168,6 +154,61 @@
                         ?>
                         </div>
                         <?php
+                    }
+                }
+
+                //get pretest exercises
+                $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], ExerciseTypes::PRETEST, true);
+
+                if ($jsonExercises)
+                {
+                    $completedExercises = array();
+                    $assignedExercises = array();
+
+                    //sort these exercises into completed and assigned exercises
+                    sortExercises($completedExercises, $assignedExercises, $jsonExercises);
+
+                    //if there are no pre test 
+                    if (count($assignedExercises) == 0)
+                    {
+                        //get the post test exercises
+                        $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], ExerciseTypes::POSTTEST, true);
+
+                        if ($jsonExercises)
+                        {
+                            //sort these exercises into completed and assigned exercises
+                            sortExercises($completedExercises, $assignedExercises, $jsonExercises);
+
+                            //if there are no post test 
+                            if (count($assignedExercises) == 0)
+                            {
+                                echo "You have no assigned exercises <br><br>";
+                                echo "If you haven't already, please complete the SUS survey to give feedback on this tool: ";
+                                ?>
+                                    <p>Complete the SUS survey here: <a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></p>
+                                <?php
+                            }
+                            else
+                            {
+                                //give video links
+                                echo "Before completing the following exercises, watch the following video(s):";
+
+                                //output exercises
+                                outputAssignedExercises($assignedExercises);
+                            }
+
+                            outputCompletedExercises($completedExercises);
+                        }
+                        else
+                        {
+                            echo "Failed to load exercises";
+                        }
+                    }
+                    else
+                    {
+                        //output exercises
+                        outputAssignedExercises($assignedExercises);
+                        outputCompletedExercises($completedExercises);
                     }
                 }
                 else
