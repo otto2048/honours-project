@@ -36,43 +36,18 @@ void MySevensGame::initCards()
 	}
 }
 
-void MySevensGame::playTurn(bool pickHiddenCard, int swapChance, int playerId)
+Card* MySevensGame::pickHiddenCard(int playerId)
 {
-	int random = rand() % 100;
 	Card* newCard;
 
-	if (pickHiddenCard)
-	{
-		cout << "Player takes new card: ";
+	cout << "Player takes new card: ";
 
-		// picking up a new card from the hidden pile
-		newCard = &stack[switchPoint];
+	// picking up a new card from the hidden pile
+	newCard = &stack[switchPoint];
 
-		cout << newCard->getSuit() << " " << newCard->getValue() << endl;
+	cout << newCard->getSuit() << " " << newCard->getValue() << endl;
 
-		switchPoint++;
-	}
-	else
-	{
-		cout << "Player attempts to take visible card: ";
-
-		int visCardIndex = switchPoint - 1;
-
-		if (visCardIndex >= 0)
-		{
-			newCard = &stack[visCardIndex];
-		}
-		else
-		{
-			cout << " (fails) " << endl;
-			cout << "Player takes new card: ";
-
-			newCard = &stack[switchPoint];
-			switchPoint++;
-		}
-
-		cout << newCard->getSuit() << " " << newCard->getValue() << endl;
-	}
+	switchPoint++;
 
 	if (switchPoint >= numStackCards)
 	{
@@ -80,10 +55,36 @@ void MySevensGame::playTurn(bool pickHiddenCard, int swapChance, int playerId)
 		switchPoint = 0;
 	}
 
-	if (random < swapChance)
+	return newCard;
+}
+
+Card* MySevensGame::pickVisibleCard(int playerId)
+{
+	Card* newCard;
+
+	cout << "Player attempts to take visible card: ";
+
+	int visCardIndex = switchPoint - 1;
+
+	if (visCardIndex >= 0)
 	{
-		// swap new card with worst card from our hand
-		Card playerCard = players[playerId].getCard(players[playerId].getWorstCard());
+		newCard = &stack[visCardIndex];
+	}
+	else
+	{
+		pickHiddenCard(playerId);
+	}
+}
+
+void MySevensGame::swapCard(Card* newCard, int playerId)
+{
+	// swap new card with worst card from our hand
+	int worstCardIndex = players[playerId].getReplacementCard(*newCard);
+
+	// if the worst card isnt the new card
+	if (worstCardIndex > -1)
+	{
+		Card playerCard = players[playerId].getCard(worstCardIndex);
 		Card stackCard = *newCard;
 
 		cout << "Player places down: " << playerCard.getSuit() << " " << playerCard.getValue() << endl;
@@ -91,7 +92,14 @@ void MySevensGame::playTurn(bool pickHiddenCard, int swapChance, int playerId)
 		cout << endl;
 
 		*newCard = playerCard;
-		players[playerId].setCard(stackCard, players[playerId].getWorstCard());
+		players[playerId].setCard(stackCard, worstCardIndex);
+	}
+	else
+	{
+		cout << "The worst card was the one we picked up" << endl;
+		cout << "Player places down: " << newCard->getSuit() << " " << newCard->getValue() << endl;
+		cout << endl;
+		cout << endl;
 	}
 }
 

@@ -11,7 +11,10 @@ class MySevensGame : public Game
 public:
 	void shuffleCards();
 
-	void playTurn(bool, int, int);
+	Card* pickHiddenCard(int);
+	Card* pickVisibleCard(int);
+
+	void swapCard(Card*, int);
 
 	void initCards();
 

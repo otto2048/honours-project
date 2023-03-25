@@ -13,6 +13,7 @@ public:
 	int getSuit();
 	int getValue();
 
+	//function that lets us compare two Card objects
 	bool operator==(const Card& obj);
 };
 

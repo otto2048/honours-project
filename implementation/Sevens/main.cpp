@@ -19,11 +19,11 @@ int main()
 		bool takesHidden = rand() > (RAND_MAX / 2);
 		if (i % 2 == 0)
 		{
-			game.playTurn(false, 100, 0);
+			game.playTurn(takesHidden, 0);
 		}
 		else
 		{
-			game.playTurn(false, 100, 1);
+			game.playTurn(takesHidden, 1);
 		}
 
 		cout << takesHidden << " " << game.getSwitchPoint() << endl;

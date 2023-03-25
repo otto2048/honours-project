@@ -5,9 +5,8 @@
 class Player
 {
 public:
+	//number of cards in a players hand at any time
 	const static int numCards = 7;
-	const static int fourCards = 4;
-	const static int threeCards = 3;
 
 	Player();
 	Player(int);
@@ -16,14 +15,13 @@ public:
 
 	void setCard(Card, int);
 
-	int getWorstCard();
+	//get position in our cards of the card we want to replace
+	int getReplacementCard(Card&);
 
 protected:
+
+	//players hand of cards
 	Card cards[numCards]{};
-
-	Card groupFourCards[fourCards]{};
-
-	Card groupThreeCards[threeCards]{};
 
 	int score;
 	int id;

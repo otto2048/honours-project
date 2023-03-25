@@ -27,6 +27,7 @@ int Card::getValue()
 	return value;
 }
 
+//function that lets us compare two Card objects
 bool Card::operator==(const Card& obj)
 {
 	return (this->suit == obj.suit && this->value == obj.value);
