@@ -18,7 +18,6 @@ public:
 	const static int numStackCards = numCards - 15;
 
 	Game();
-	~Game();
 
 	int getSwitchPoint();
 

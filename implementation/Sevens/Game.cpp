@@ -17,10 +17,6 @@ Game::Game()
 	switchPoint = 0;
 }
 
-Game::~Game()
-{
-}
-
 int Game::getSwitchPoint()
 {
 	return switchPoint;

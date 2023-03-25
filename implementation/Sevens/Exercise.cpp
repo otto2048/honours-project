@@ -71,6 +71,7 @@ Card* Exercise::pickHiddenCard(int playerId)
 	return newCard;
 }
 
+// picking up the current visible card
 Card* Exercise::pickVisibleCard(int playerId)
 {
 	cout << "Player attempts to take visible card: ";
@@ -88,9 +89,9 @@ Card* Exercise::pickVisibleCard(int playerId)
 	return pickHiddenCard(playerId);
 }
 
+// swap a card in the stack with the worst card from our hand
 void Exercise::switchCard(Card* newCard, int playerId)
 {
-	// swap new card with worst card from our hand
 	int worstCardIndex = players[0].getReplacementCard(*newCard);
 
 	// if the worst card isnt the new card

@@ -8,6 +8,15 @@ public:
 	//number of cards in a players hand at any time
 	const static int numCards = 7;
 
+protected:
+
+	//players hand of cards
+	Card cards[numCards]{};
+
+	int score;
+	int id;
+
+public:
 	Player();
 	Player(int);
 
@@ -18,13 +27,5 @@ public:
 	//get position in our cards of the card we want to replace
 	int getReplacementCard(Card&);
 	int getReplacementCardBugs(Card&);
-
-protected:
-
-	//players hand of cards
-	Card cards[numCards]{};
-
-	int score;
-	int id;
 };
 
