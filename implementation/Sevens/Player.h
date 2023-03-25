@@ -11,12 +11,13 @@ public:
 	Player();
 	Player(int);
 
+	//getter and setter for cards in our hand
 	Card getCard(int);
-
 	void setCard(Card, int);
 
 	//get position in our cards of the card we want to replace
 	int getReplacementCard(Card&);
+	int getReplacementCardBugs(Card&);
 
 protected:
 

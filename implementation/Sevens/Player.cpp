@@ -40,6 +40,27 @@ int Player::getReplacementCard(Card& newCard)
 	return -1;
 }
 
+int Player::getReplacementCardBugs(Card& newCard)
+{
+	int worstValue = cards[0].getValue();
+	int index = 0;
+
+	for (int i = 0; i < Player::numCards; i++)
+	{
+		if (cards[0].getValue() > worstValue)
+		{
+			worstValue = cards[i].getValue();
+		}
+	}
+
+	if (worstValue > newCard.getValue())
+	{
+		return index;
+	}
+
+	return -1;
+}
+
 //set a card in the cards collection at a certain position
 void Player::setCard(Card card, int pos)
 {

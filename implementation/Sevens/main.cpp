@@ -14,7 +14,7 @@ int main()
 
 	game.initCards();
 
-	for (int i = 0; i < 10; i++)
+	/*for (int i = 0; i < 10; i++)
 	{
 		bool takesHidden = rand() > (RAND_MAX / 2);
 		if (i % 2 == 0)
@@ -27,7 +27,7 @@ int main()
 		}
 
 		cout << takesHidden << " " << game.getSwitchPoint() << endl;
-	}
+	}*/
 
 	Card cards[4] = { Card(1, 1), Card(0, 4), Card(0, 2), Card(0,3) };
 

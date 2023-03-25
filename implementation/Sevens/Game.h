@@ -20,8 +20,8 @@ public:
 	Game();
 	~Game();
 
-
 	int getSwitchPoint();
+
 protected:
 
 	//deck of cards
@@ -33,7 +33,7 @@ protected:
 	//the wildcard for this round
 	int wildcard;
 
-	//the point the stack of cards in split at
+	//the point the stack of cards is split at
 	int switchPoint;
 
 	//collection of players

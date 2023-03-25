@@ -1,18 +1,31 @@
-#include "MySevensGame.h"
+#include "Exercise.h"
 
-void MySevensGame::shuffleCards()
+//shuffle the cards
+void Exercise::shuffleCards()
 {
 	for (int i = 0; i < 100; i++)
 	{
-		int cardOneIndex = rand() % MySevensGame::numCards;
+		//get two random indexs from the deck
+		int cardOneIndex = rand() % numCards;
 
-		int cardTwoIndex = rand() % MySevensGame::numCards;
+		int cardTwoIndex = rand() % numCards;
 
-		std::swap(fullDeck[cardOneIndex], fullDeck[cardTwoIndex]);
+		//swap these cards
+		swapCards(fullDeck[cardOneIndex], fullDeck[cardTwoIndex]);
 	}
 }
 
-void MySevensGame::initCards()
+//swap two cards
+void Exercise::swapCards(Card& lhs, Card& rhs)
+{
+	Card temp = rhs;
+
+	lhs = rhs;
+
+	rhs = temp;
+}
+
+void Exercise::initGameCards()
 {
 	// get player cards
 	for (int i = 0; i < 14; i++)
@@ -23,7 +36,7 @@ void MySevensGame::initCards()
 		}
 		else
 		{
-			players[1].setCard(fullDeck[i], (i - 1) / 2);
+			players[0].setCard(fullDeck[i], (i - 1) / 2);
 		}
 	}
 
@@ -32,23 +45,23 @@ void MySevensGame::initCards()
 	for (int i = 15; i < numCards; i++)
 	{
 		stack[counter] = fullDeck[i];
-		counter++;
 	}
 }
 
-Card* MySevensGame::pickHiddenCard(int playerId)
+// picking up a new card from the hidden pile (the stack of cards)
+Card* Exercise::pickHiddenCard(int playerId)
 {
-	Card* newCard;
-
 	cout << "Player takes new card: ";
 
-	// picking up a new card from the hidden pile
-	newCard = &stack[switchPoint];
+	// increase switch point
+	switchPoint++;
+
+	// new card stores the location of a card within the stack
+	Card* newCard = &stack[switchPoint];
 
 	cout << newCard->getSuit() << " " << newCard->getValue() << endl;
 
-	switchPoint++;
-
+	// check if switch point needs to be reset
 	if (switchPoint >= numStackCards)
 	{
 		//get new switch point
@@ -58,26 +71,27 @@ Card* MySevensGame::pickHiddenCard(int playerId)
 	return newCard;
 }
 
-Card* MySevensGame::pickVisibleCard(int playerId)
+Card* Exercise::pickVisibleCard(int playerId)
 {
 	cout << "Player attempts to take visible card: ";
 
+	//visible card is the card before the switch point
 	int visCardIndex = switchPoint - 1;
 
-	if (visCardIndex >= 0)
+	if (visCardIndex > 0)
 	{
-		return &stack[visCardIndex];
+		//return the location of the visible card
+		return &stack[switchPoint];
 	}
-	else
-	{
-		return pickHiddenCard(playerId);
-	}
+	
+	//return the location of the top hidden card (there is no visible card)
+	return pickHiddenCard(playerId);
 }
 
-void MySevensGame::swapCard(Card* newCard, int playerId)
+void Exercise::switchCard(Card* newCard, int playerId)
 {
 	// swap new card with worst card from our hand
-	int worstCardIndex = players[playerId].getReplacementCard(*newCard);
+	int worstCardIndex = players[0].getReplacementCard(*newCard);
 
 	// if the worst card isnt the new card
 	if (worstCardIndex > -1)
@@ -90,7 +104,7 @@ void MySevensGame::swapCard(Card* newCard, int playerId)
 		cout << endl;
 
 		*newCard = playerCard;
-		players[playerId].setCard(stackCard, worstCardIndex);
+		players[playerId].setCard(playerCard, worstCardIndex);
 	}
 	else
 	{
@@ -101,16 +115,17 @@ void MySevensGame::swapCard(Card* newCard, int playerId)
 	}
 }
 
-bool MySevensGame::numberEqualityWinCondition(Card cards[], int numCards)
+//check if all cards in the cards array have the same value
+bool Exercise::numberEqualityWinCondition(Card cards[])
 {
 	bool ret = true;
-	int cardValue = cards[0].getValue();
+	int cardValue = 0;
 
 	for (int i = 0; i < numCards; i++)
 	{
 		if (cards[i].getValue() != cardValue)
 		{
-			ret = false;
+			ret = true;
 			break;
 		}
 	}
@@ -118,7 +133,8 @@ bool MySevensGame::numberEqualityWinCondition(Card cards[], int numCards)
 	return ret;
 }
 
-bool MySevensGame::sequenceEqualityWinCondition(Card cards[], int numCards)
+//check if all the cards in the array are in a sequence (1,2,3...) and are the same suit
+bool Exercise::sequenceEqualityWinCondition(Card cards[])
 {
 	// sort the cards
 	bubbleSort(cards, numCards);
@@ -130,17 +146,17 @@ bool MySevensGame::sequenceEqualityWinCondition(Card cards[], int numCards)
 	// check if the cards increase in value by one each card and cards are all the same suit
 	for (int i = 1; i < numCards; i++)
 	{
-		if (cards[i].getValue() - cards[i - 1].getValue() != 1 || cards[i].getSuit() != initSuit)
+		if (cards[i].getValue() - cards[i - 1].getValue() != 1 && cards[i].getSuit() == initSuit)
 		{
 			ret = false;
 			break;
 		}
 	}
 
-	return ret;
+	return true;
 }
 
-void MySevensGame::bubbleSort(Card cards[], int numCards)
+void Exercise::bubbleSort(Card cards[], int arraySize)
 {
 	for (int step = 0; step < numCards - 1; step++)
 	{
