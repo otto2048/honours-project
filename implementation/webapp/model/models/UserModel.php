@@ -128,6 +128,19 @@
             return parent::update($jsonData, $paramTypes);
         }
 
+        private function setPermissionLevel($permission, $userId)
+        {
+            $this->sqlStmt = 'UPDATE honours_user SET permissionLevel = ? WHERE userId = ?';
+
+            $WHERE_variables = new \stdClass();
+            $WHERE_variables->permissionLevel = $permission;
+            $WHERE_variables->userId = $userId;
+
+            $paramTypes = "ii";
+
+            return parent::update(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+        }
+
         //login user
         public function loginUser(&$userData, $username, $password)
         {
@@ -138,20 +151,38 @@
 
             $result = json_decode($resultJSON, JSON_INVALID_UTF8_SUBSTITUTE|JSON_OBJECT_AS_ARRAY);
 
-            echo $result;
-
             //check if user exists
             if (isset($result["isempty"]))
             {
                 return false;
             }
 
-            $result = json_decode($resultJSON, JSON_INVALID_UTF8_SUBSTITUTE|JSON_OBJECT_AS_ARRAY);
+            //check if the user doenst have a permission level
+            $updateUser = false;
+
+            if ($result[0]["permissionLevel"] == PermissionLevels::UNASSIGNED)
+            {
+                //set the permission level of this user based on their id
+                if ($result[0]["userId"] % 2 == 0)
+                {
+                    //control user
+                    $updateUser = $this->setPermissionLevel(PermissionLevels::CONTROL, $result[0]["userId"]);
+                }
+                else
+                {
+                    //experimental user
+                    $updateUser = $this->setPermissionLevel(PermissionLevels::EXPERIMENT, $result[0]["userId"]);
+                }
+            }
+            else
+            {
+                $updateUser = true;
+            }
 
             //verify password
-            if (password_verify($password, $result[0]["password"]))
+            if (password_verify($password, $result[0]["password"]) && $updateUser)
             {
-                $userData = $resultJSON;
+                $userData = $this->getUserByUsername($username);
                 return true;
             }
 

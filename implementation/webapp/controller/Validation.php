@@ -12,10 +12,6 @@
         const EXERCISE_TITLE_LENGTH = 100;
         const EXERCISE_DESCRIPTION_LENGTH = 250;
         const EXERCISE_EXERCISEFILE_LENGTH = 250;
-        const EXERCISE_INSTRUCTIONSFILE_LENGTH = 250;
-
-        const EXERCISE_ANSWER_INPUT = 50;
-        const EXERCISE_ANSWER_OUTPUT = 50;
 
         const SURVEY_QUESTION_CONTENTS = 150;
 
@@ -31,9 +27,6 @@
                     break;
                 case ModelClassTypes::EXERCISE:
                     return $this->validateExercise($jsonData, $errorMessageJson);
-                    break;
-                case ModelClassTypes::EXERCISE_ANSWER:
-                    return $this->validateExerciseAnswer($jsonData, $errorMessageJson);
                     break;
                 case ModelClassTypes::USER_EXERCISE:
                     return $this->validateUserExercise($jsonData, $errorMessageJson);
@@ -60,9 +53,6 @@
                     break;
                 case ModelClassTypes::EXERCISE:
                     return $this->validateExercisePK($jsonData);
-                    break;
-                case ModelClassTypes::EXERCISE_ANSWER:
-                    return $this->validateExerciseAnswerPK($jsonData);
                     break;
                 case ModelClassTypes::SURVEY_QUESTION:
                     return $this->validateSurveyQuestionPK($jsonData);
@@ -413,86 +403,6 @@
             return $this->validateInt($data["userId"]);
         }
 
-        //validate exercise answer pk
-        private function validateExerciseAnswerPK(&$jsonData)
-        {
-            $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
-
-            $data["answerId"] = $this->cleanInput($data["answerId"]);
-
-            //IMPORTANT: make sure jsonData is set to the sanitized version of the data
-            $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
-
-            return $this->validateInt($data["answerId"]);
-        }
-
-        private function validateExerciseAnswer(&$jsonData, &$errorMessageJson)
-        {
-            $errorMessage = array();
-
-            $exerciseAnswer = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
-
-            //sanitize data
-            $exerciseAnswer["answer"]["codeId_fk"] = $this->cleanInput($exerciseAnswer["answer"]["codeId_fk"]);
-            $exerciseAnswer["answer"]["output"] = $this->cleanInput($exerciseAnswer["answer"]["output"]);
-
-            foreach ($exerciseAnswer["inputs"] as &$input_)
-            {
-                $input_["value"] = $this->cleanInput($input_["value"]);
-                $input_["type"] = $this->cleanInput($input_["type"]);
-            }
-
-            //validate code id
-            if (!$this->validateInt($exerciseAnswer["answer"]["codeId_fk"]))
-            {
-                $errorMessage[1]["content"] = "Invalid code ID";
-                $errorMessage[1]["success"] = false;
-            }
-
-            //validate each input
-            $errorCounter = 2;
-            foreach ($exerciseAnswer["inputs"] as $key => $input)
-            {
-                //validate input
-                if (!$this->validateString($input["value"], Validation::EXERCISE_ANSWER_INPUT))
-                {
-                    $errorMessage[$errorCounter]["content"] = "Invalid input on input: ".substr($key, -1);
-                    $errorMessage[$errorCounter]["success"] = false;
-
-                    $errorCounter++;
-                }
-
-                //validate input type
-                if (!$this->validateInputType($input["type"]))
-                {
-                    $errorMessage[$errorCounter]["content"] = "Invalid input type on input: ".substr($key, -1);
-                    $errorMessage[$errorCounter]["success"] = false;
-
-                    $errorCounter++;
-                }
-            }
-
-            //validate output
-            if (!$this->validateString($exerciseAnswer["answer"]["output"], Validation::EXERCISE_ANSWER_OUTPUT))
-            {
-                $errorMessage[$errorCounter]["content"] = "Invalid output";
-                $errorMessage[$errorCounter]["success"] = false;
-            }
-
-            //repack sanitized data
-            $jsonData = json_encode($exerciseAnswer, JSON_INVALID_UTF8_SUBSTITUTE);
-
-            //check if we found any errors
-            if (count($errorMessage) == 0)
-            {
-                return true;
-            }
-
-            $errorMessageJson = json_encode($errorMessage);
-
-            return false;
-        }
-
         //validate exercise object
         private function validateExercise(&$jsonData, &$errorMessageJson)
         {
@@ -514,11 +424,6 @@
             }
 
             $exercise["exerciseFile"] = $this->cleanInput($exercise["exerciseFile"]);
-
-            if (isset($exercise["instructionsFile"]))
-            {
-                $exercise["instructionsFile"] = $this->cleanInput($exercise["instructionsFile"]);
-            }
 
             $exercise["visible"] = $this->cleanInput($exercise["visible"]);
             $exercise["availability"] = $this->cleanInput($exercise["availability"]);
@@ -557,16 +462,6 @@
                 $errorMessage[3]["success"] = false;
             }
 
-            //validate instructions file if its set
-            if (isset($exercise["instructionsFile"]))
-            {
-                if (strlen($exercise["instructionsFile"]) != 0 && !$this->validateFileName($exercise["instructionsFile"], Validation::EXERCISE_INSTRUCTIONSFILE_LENGTH, "json"))
-                {
-                    $errorMessage[4]["content"] = "Invalid instructions file location";
-                    $errorMessage[4]["success"] = false;
-                }
-            }
-
             //validate availability
             if (!$this->validateUserPermissionLevel($exercise["availability"]))
             {
@@ -579,6 +474,13 @@
             {
                 $errorMessage[6]["content"] = "Invalid exercise type";
                 $errorMessage[6]["success"] = false;
+            }
+
+            //validate available points
+            if (!$this->validateInt($exercise["availablePoints"]))
+            {
+                $errorMessage[0]["content"] = "Invalid available points";
+                $errorMessage[0]["success"] = false;
             }
 
             //repack sanitized data

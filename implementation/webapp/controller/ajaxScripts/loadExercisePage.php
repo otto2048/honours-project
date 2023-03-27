@@ -51,13 +51,6 @@
 
                     echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/exerciseFiles/'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
 
-                    echo '<td class="d-none d-sm-none d-md-table-cell">';        
-                    if ($row["instructionsFile"])
-                    {
-                        echo '<u><a href="/honours/webapp/view/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u>';
-                    }
-                    echo '</td>';
-
                     echo '<td>';
                     if ($row["visible"])
                     {

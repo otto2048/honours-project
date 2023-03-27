@@ -22,7 +22,10 @@ export function toggleReadOnlyMode(on)
         //editor is readonly
         for (var i=0; i<editors.length; i++)
         {
-            editors[i]["editor"].setOption("readOnly", true);
+            if (!editors[i]["readOnly"])
+            {
+                editors[i]["editor"].setOption("readOnly", true);
+            }
         }
     }
     else
@@ -39,7 +42,10 @@ export function toggleReadOnlyMode(on)
         //editor is editable
         for (var i=0; i<editors.length; i++)
         {
-            editors[i]["editor"].setOption("readOnly", false);
+            if (!editors[i]["readOnly"])
+            {
+                editors[i]["editor"].setOption("readOnly", false);
+            }
         }
     }
 }
@@ -157,14 +163,22 @@ function setUpEditors(breakpointFunc)
     for (var i=0; i<files.length; i++)
     {
         var e = CodeMirror.fromTextArea(files[i], 
-            {mode: "clike", theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
+            {mode: "clike", readOnly: files[i].readOnly, theme: "abcdef", lineNumbers: true, lineWrapping: true, foldGutter: true, gutter: true, 
             gutters: ["breakpoints", "CodeMirror-linenumbers", "tracking", "CodeMirror-foldgutter"]});
+
+        var element = files[i].parentElement.querySelector(".CodeMirror");
+        
+        if (files[i].readOnly)
+        {
+            element.insertBefore(makeReadOnlyMessage(), element.firstChild);
+        }
 
         editors.push({
             fileName: files[i].getAttribute("id"),
-            fileElement: files[i].parentElement.querySelector(".CodeMirror"), 
+            fileElement: element, 
             editor: e,
-            editedWidth: null
+            editedWidth: null,
+            readOnly: files[i].readOnly
         });
     }
 
@@ -258,4 +272,12 @@ function makeGutterDecoration(html, lightThemeColour, darkThemeColour) {
 
     marker.innerHTML = html;
     return marker;
+}
+
+function makeReadOnlyMessage() {
+    var div = document.createElement("div");
+    div.innerHTML = "This file is read only (breakpoints can still be set)";
+    div.classList = "readOnlyMessage";
+
+    return div;
 }

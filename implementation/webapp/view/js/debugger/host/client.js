@@ -22,7 +22,7 @@ $(document).ready(function(){
 });
 
 //web socket to connect to the host server
-let socketHost = new WebSocket("ws://192.168.17.60:8080");
+let socketHost = new WebSocket("ws://44.209.40.106:8080");
 
 //set up sockets
 
@@ -81,7 +81,7 @@ socketHost.onmessage = function(event) {
             $("#debugger-load-message")[0].innerHTML = message.message;
             //successfully launched environment
             //connect to the container wss
-            debug.socketObj.socket = new WebSocket("ws://192.168.17.60:" + message.value);
+            debug.socketObj.socket = new WebSocket("ws://44.209.40.106:" + message.value);
 
             debug.socketObj.socket.onopen = function(e) {
                 console.log("Connection established with compiler");
@@ -162,6 +162,14 @@ socketHost.onmessage = function(event) {
 
 function preparePage()
 {
+    //disable ctrl+s shortcut
+    //https://ej2.syncfusion.com/documentation/rich-text-editor/how-to/save/
+    $(document)[0].addEventListener("keydown",function(e) {
+        if(e.key === 's' && e.ctrlKey===true){
+              e.preventDefault(); // to prevent default ctrl+s action
+        }
+      });
+    
     debug.initialiseEditors(sendBreakpoint);
 
     //add event listener to play button

@@ -81,10 +81,10 @@
                                                 <th scope="col" data-tablesort-type="string">Title</th>
                                                 <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Description</th>
                                                 <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Exercise File</th>
-                                                <th scope="col" data-tablesort-type="string" class="d-none d-sm-none d-md-table-cell">Instructions File</th>
                                                 <th scope="col" data-tablesort-type="string">Visibility</th>
                                                 <th scope="col" data-tablesort-type="string">Availability</th>
                                                 <th scope="col" data-tablesort-type="string">Type</th>
+                                                <th scope="col" data-tablesort-type="int">Available points</th>
                                             </tr>
                                         </thead>
                                         <tbody class="paginateTableBody" id="exerciseInfoTableBody">
@@ -107,13 +107,6 @@
 
                                                     echo '<td class="d-none d-sm-none d-md-table-cell"><u><a href="/honours/webapp/view/exerciseFiles/'.$row["exerciseFile"].'">'.$row["exerciseFile"].'</a></u></td>';
 
-                                                    echo '<td class="d-none d-sm-none d-md-table-cell">';        
-                                                    if ($row["instructionsFile"])
-                                                    {
-                                                        echo '<u><a href="/honours/webapp/view/exerciseFiles/'.$row["instructionsFile"].'">'.$row["instructionsFile"].'</a></u>';
-                                                    }
-                                                    echo '</td>';
-
                                                     echo '<td>';
                                                     if ($row["visible"])
                                                     {
@@ -126,6 +119,7 @@
                                                     echo '</td>';
                                                     echo '<td>'.$permission->getPermissionLevel($row["availability"]).' and up</td>';
                                                     echo '<td>'.$types->getExerciseType($row["type"]).'</td>';
+                                                    echo '<td>'.$row["availablePoints"].'</td>';
                                                     echo '</tr>';
                                                 }
                                             ?>
@@ -171,10 +165,6 @@
                             <label for="exerciseFile">Exercise file location:</label>
                             <input type="text" class="form-control" name="exerciseFile" required id="exerciseFile">
                         </div>
-                        <div class="form-group">
-                            <label for="instructionsFile">Instructions file location:</label>
-                            <input type="text" class="form-control" name="instructionsFile" id="instructionsFile">
-                        </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="visible" name="visible">
                             <label class="form-check-label" for="visible">
@@ -216,6 +206,10 @@
                                     }
                                 ?>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="availablePoints">Available points:</label>
+                            <input type="text" class="form-control" name="availablePoints" id="availablePoints">
                         </div>
                         <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                     </form>

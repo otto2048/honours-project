@@ -129,8 +129,7 @@
             
             if (isset($_POST["consentFormCheck"]))
             {
-                //set this as experimental or control group
-                $data -> permissionLevel = PermissionLevels::CONTROL;
+                $data -> permissionLevel = PermissionLevels::UNASSIGNED;
             }
             else
             {

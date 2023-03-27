@@ -34,14 +34,41 @@
         ?>
 
         <div class="container">
-            <div class="border border-dark rounded m-auto mt-5 p-4 col-8 overflow-auto">
-                <h1 class="h2">Debugging Training Tool Sign Up:</h1>
+            <div class="border rounded m-auto mt-5 p-4 col-8 overflow-auto">
+                <h1><u>Debugging Training Tool Sign Up:</u></h1>
 
-                <h2 class="h3">Participant Information Sheet and Consent Form</h2>
+                <h2><u>Participant Information Sheet and Consent Form</u></h2>
                 <p>Project title: Improving the Debugging Skills of a Novice Programmer through Enhanced Knowledge of Interactive Debugging (EMS6541)</p>
                 <p>Researcher name(s): Elizabeth Blogg</p>
 
-                <!-- TODO: the rest of the consent form -->
+                <h3><u>What is the research about?</u></h3>
+                <p>This research project aims to create a training tool that improves the debugging skills of novice programmers. The training tool will do this by teaching novices how to use an interactive debugger (a tool that lets users interact with program code as it runs) effectively.</p>
+
+                <h3><u>Do I have to take part?</u></h3>
+                <p>This form has been written to help you decide if you would like to take part. It is up to you and you alone whether you wish to take part. If you do decide to take part you will be free to withdraw at any time without providing a reason and without penalty.
+<br><br>The data from this survey will be fully anonymised from the outset of its collection, meaning that it will be impossible to withdraw your data if submit your answers to the survey (as you will not be able to be identified within the dataset)
+<br><br>If you do not wish for your data to be stored and used within the study, you can still take part and use the training tool under a guest account. Your data will be stored temporarily (this is required for the training tool to function) but your data will be deleted when you logout from the tool</p>
+
+                <h3><u>What will I be required to do?</u></h3>
+                <p>Your participation will involve:
+                    <ul>
+                        <li>watching video(s) relating to the training tool</li>
+                        <li>the completion of debugging exercises - you will be given some code and you must fix the bugs within the code</li>
+                        <li>completing a System Usability Survey to evaluate the usability of the training tool</li>
+                    </ul>
+                </p>
+
+                <h3><u>How will you handle my data?</u></h3>
+                <p>Your data will be stored in an anonymised form and will only be accessible to Elizabeth Blogg and Dr Suzanne Prior. This means that nobody including the researchers could reasonably identify you within the data. Your data will be stored in a secure web server, with data fully anonymised at the earliest opportunity (i.e., at the point of collection). Your responses are treated in the strictest confidence - it will be impossible to identify individuals within a dataset when any of the research is disseminated (e.g., in publications/presentations). Abertay University acts as Data Controller (DataProtectionOfficer@abertay.ac.uk).</p>
+
+                <h3><u>Retention of research data</u></h3>
+                <p>Researchers are obliged to retain research data for up to 10 years' post-publication, however your anonymised research data may be retained indefinitely (e.g., so that researchers engage in open practice and other researchers can access their data to confirm the conclusions of published work). Consistent with our data retention policy, researchers retain consent forms for as long as we continue to hold information about a data subject and for 10 years for published research (including Research Degree thesis).</p>
+
+                <h3><u>Researcher contact details</u></h3>
+                <p>Elizabeth Blogg <br>Email: 1900414@abertay.ac.uk</p>
+
+                <h3><u>Project supervisor contact details</u></h3>
+                <p>Dr Suzanne Prior <br>Email: s.prior@abertay.ac.uk</p>
 
                 <p><b>Consent statement: </b></p>
                 <p>Abertay University attaches high priority to the ethical conduct of research. Please consider the following before indicating your consent on this form. Indicating your consent confirms that you are willing to participate in the research, however, indicating consent does not commit you to anything you do not wish to do and you are free to withdraw your participation at any time. You are indicating consent under the following assumptions:</p>

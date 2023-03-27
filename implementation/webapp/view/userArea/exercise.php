@@ -13,6 +13,11 @@
     {
         echo '<script type="text/javascript">window.open("/honours/webapp/view/userArea/signUp.php", name="_self")</script>';
     }
+
+    if ($_SESSION["permissionLevel"] < PermissionLevels::CONTROL)
+    {
+        echo '<script type="text/javascript">window.open("/honours/webapp/view/login.php", name="_self")</script>';
+    }
 ?>
 
 <!doctype html>
@@ -72,7 +77,7 @@
                         if (!isset($exerciseData["isempty"]) && $userExerciseData)
                         {
                             //if the exercise is visible and the user has the permissions to view the exercise and the user hasnt already completed this exercise
-                            if ($exerciseData[0]["visible"] && $exerciseData[0]["availability"] <= $_SESSION["permissionLevel"] && $userExerciseData["points"] == 0)
+                            if ($exerciseData[0]["visible"] && $exerciseData[0]["availability"] <= $_SESSION["permissionLevel"] && $userExerciseData["points"] == -1)
                             {
                                 return $exerciseData;
                             }
@@ -106,6 +111,7 @@
                         <p><?php echo $exerciseData[0]["description"] ?></p>
                         <hr>
                         <h2>General Instructions</h2>
+                        <p>You can view the files for this exercise in the editor below by clicking on the file names</p>
                         <p>Once you have completed the exercise, press the submit button below.</p>
                         <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
                     </div>
@@ -131,7 +137,21 @@
                         <div class="col-sm">
                             <ul class="nav-tabs nav" role="tablist">
                                 <?php
-                                    foreach ($exerciseFile["user_files"] as $fileName)
+                                    foreach ($exerciseFile["compilation"]["writable"] as $fileName)
+                                    {
+                                        //get the contents of this file
+                                        $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
+                                        $pathInfo = pathinfo($fileName);
+
+                                        ?>
+                                        <li class="nav-item">
+                                            <button class="nav-link tab-header <?php if ($pathInfo["filename"] == "main") {echo "active";} ?>" id="<?php  echo str_replace(".", "", $pathInfo["basename"]); ?>File" data-bs-toggle="tab" data-bs-target="#<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" type="button" role="tab" aria-controls="<?php echo $pathInfo["basename"]; ?>" aria-selected="false"><?php echo $pathInfo["basename"]; ?></button>
+                                        </li>
+                                        <?php
+                                    }
+                                ?>
+                                <?php
+                                    foreach ($exerciseFile["compilation"]["readonly"] as $fileName)
                                     {
                                         //get the contents of this file
                                         $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
@@ -150,7 +170,7 @@
                             <div class="tab-content">
 
                                 <?php
-                                    foreach ($exerciseFile["user_files"] as $fileName)
+                                    foreach ($exerciseFile["compilation"]["writable"] as $fileName)
                                     {
                                         //get the contents of this file
                                         $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
@@ -160,6 +180,23 @@
 
                                         <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
                                             <textarea id="<?php echo $pathInfo["basename"]; ?>" class="editor resize">
+<?php echo $file; ?>
+                                            </textarea>
+                                        </div>
+
+                                        <?php
+                                    }
+
+                                    foreach ($exerciseFile["compilation"]["readonly"] as $fileName)
+                                    {
+                                        //get the contents of this file
+                                        $file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/exerciseFiles/".$fileName);
+                                        $pathInfo = pathinfo($fileName);
+
+                                        ?>
+
+                                        <div class="tab-pane fade <?php if ($pathInfo["filename"] == "main") {echo "show active ";} ?>" id="<?php echo str_replace(".", "", $pathInfo["basename"]); ?>FileContainer" role="tabpanel" aria-labelledby="<?php echo $pathInfo["filename"]; ?>File">
+                                            <textarea id="<?php echo $pathInfo["basename"]; ?>" class="editor resize" readonly>
 <?php echo $file; ?>
                                             </textarea>
                                         </div>

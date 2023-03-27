@@ -116,6 +116,11 @@
     font-size: 15px;
 }
 
+.readOnlyMessage {
+    background-color: var(--bs-warning);
+    color: black;
+}
+
 /* variables */
 .variable-table-triangles {
     font-size: 12px;

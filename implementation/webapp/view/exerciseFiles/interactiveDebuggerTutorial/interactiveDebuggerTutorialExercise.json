@@ -1,8 +1,0 @@
-{
-    "comments": "The files for a three part interactive debugger tutorial",
-    "files" : [
-        "partOne.cpp",
-        "partTwo.cpp",
-        "partThree.cpp"
-    ]
-}
