@@ -41,7 +41,7 @@
         //create survey question
         public function createData($jsonData)
         {
-            $this->sqlStmt = 'INSERT INTO honours_survey_question (questionId, contents, type) VALUES (?, ?)';
+            $this->sqlStmt = 'INSERT INTO honours_survey_question (questionId, contents, type) VALUES (?, ?, ?)';
 
             $paramTypes = "isi";
 
@@ -51,7 +51,7 @@
         //update survey question
         public function updateData($jsonData)
         {
-            $this->sqlStmt = 'UPDATE honours_survey_question SET contents = ?, SET type = ? WHERE questionId = ?';
+            $this->sqlStmt = 'UPDATE honours_survey_question SET contents = ?, type = ? WHERE questionId = ?';
 
             $paramTypes = "ssi";
 

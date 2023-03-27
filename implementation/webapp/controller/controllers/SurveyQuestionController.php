@@ -13,6 +13,7 @@
             $data = new \stdClass();
             $data -> questionId = $_POST['questionId'];
             $data -> contents = $_POST['contents'];
+            $data -> type = $_POST["type"];
 
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 
@@ -67,6 +68,7 @@
             //user input into json object
             $data = new \stdClass();
             $data -> contents = $_POST['contents'];
+            $data -> type = $_POST["type"];
             $data -> questionId = $_POST['questionId'];
 
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);

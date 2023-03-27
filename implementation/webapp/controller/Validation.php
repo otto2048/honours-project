@@ -1,6 +1,7 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ModelClassTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/SurveyQuestionTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/AnswerTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
 
@@ -214,6 +215,12 @@
                 $errorMessage[1]["success"] = false;
             }
 
+            if (!$this->validateSurveyQuestionType($surveyQuestion["type"]))
+            {
+                $errorMessage[2]["content"] = "Invalid survey question type";
+                $errorMessage[2]["success"] = false;
+            }
+
             //check if we found any errors
             if (count($errorMessage) == 0)
             {
@@ -345,6 +352,25 @@
             $permissions = new PermissionLevels();
 
             if ($permissions->getPermissionLevel(intval($input)) == "Error finding status")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private function validateSurveyQuestionType($input)
+        {
+            //check if this is a valid int
+            if (!$this->validateInt($input))
+            {
+                return false;
+            }
+
+            //check if this survey question type an actual survey question type in the system
+            $permissions = new SurveyQuestionTypes();
+
+            if ($permissions->getQuestionType(intval($input)) == "Error finding type")
             {
                 return false;
             }
