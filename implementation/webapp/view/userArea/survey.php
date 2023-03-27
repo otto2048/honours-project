@@ -6,6 +6,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserSurveyModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/SurveyQuestionTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
 
 
@@ -84,6 +85,8 @@
                 <?php
                             foreach ($questionData as $row)
                             {
+                                if ($row["type"] == SurveyQuestionTypes::LIKERT)
+                                {
                 ?>
                                 <div class="pb-2 pt-2">
                                     <p class="m-0">Question <?php echo $row["questionId"]; ?>: <?php echo $row["contents"] ?></p>
@@ -109,6 +112,18 @@
                                 </div>
                                 <hr>
                 <?php
+                                }
+                                else if ($row["type"] == SurveyQuestionTypes::TEXT)
+                                {
+                ?>
+                                    <div class="form-group">
+                                        <p class="m-0">Question <?php echo $row["questionId"]; ?>: <?php echo $row["contents"] ?></p>
+                                        <label for="question <?php echo $row["questionId"]; ?>">Answer:</label>
+                                        <input type="text" class="form-control" name="question <?php echo $row["questionId"]; ?>" id="question <?php echo $row["questionId"]; ?>">
+                                    </div>
+                                    <hr>
+                <?php
+                                }
                             }
                 ?>
                                 <input type="submit" class="btn btn-dark theme mt-2 float-end" name="button" value="Submit"/>
