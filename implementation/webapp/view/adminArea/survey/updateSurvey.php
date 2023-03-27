@@ -3,6 +3,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/SurveyQuestionTypes.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
@@ -45,6 +46,7 @@
                 {
                     //get survey question
                     $surveyQuestionModel = new SurveyQuestionModel();
+                    $types = new SurveyQuestionTypes();
 
                     $jsonQuestionData = $surveyQuestionModel->getSurveyQuestion($input);
 
@@ -75,6 +77,30 @@
                                     <label for="contents">Contents:</label>
                                     <input type="text" class="form-control" name="contents" required id="contents" value="<?php echo $questionData[0]["contents"] ?>">
                                 </div>
+                                <div class="form-group pt-1">
+                                        <label for="type">Type:</label>
+                                        <select name="type" id="type">
+                                            <?php
+                                                $typeReflection = new \ReflectionClass("SurveyQuestionTypes");
+                                                $values = $typeReflection->getConstants();
+
+                                                foreach ($values as $value)
+                                                {
+                                                    $optionString = '<option value = "';
+                                                    $optionString .= $value.'"';
+
+                                                    if ($value == $questionData[0]["type"])
+                                                    {
+                                                        $optionString.='selected="selected"';
+                                                    }
+
+                                                    $optionString .= ">".$types->getQuestionType($value)."</option>";
+
+                                                    echo $optionString;
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
                                 <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                             </form>
                             
