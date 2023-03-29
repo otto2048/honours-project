@@ -117,9 +117,8 @@
                                 {
                 ?>
                                     <div class="form-group">
-                                        <p class="m-0">Question <?php echo $row["questionId"]; ?>: <?php echo $row["contents"] ?></p>
-                                        <label for="question <?php echo $row["questionId"]; ?>">Answer:</label>
-                                        <input type="text" class="form-control" name="question <?php echo $row["questionId"]; ?>" id="question <?php echo $row["questionId"]; ?>">
+                                        <p>Question <?php echo $row["questionId"]; ?>: <?php echo $row["contents"] ?></p>
+                                        <input type="text" placeholder="Enter answer..." class="form-control" name="<?php echo $row["questionId"]; ?>" aria-label="question <?php echo $row["questionId"]; ?>" id="<?php echo $row["questionId"]; ?>">
                                     </div>
                                     <hr>
                 <?php
