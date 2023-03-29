@@ -66,7 +66,8 @@
         ?>
         <div class="container p-3" >
             <div class="border rounded m-auto mt-5 mb-5 p-4 col-8 overflow-auto">
-                <h1>SUS Survey</h1>
+                <h1>System Usability Scale (SUS) Survey</h1>
+                <p>Please complete this survey to give feedback on the usability of the tool</p>
                 <?php
                     //check for errors on this page
                     if (isset($_GET["message"]))
