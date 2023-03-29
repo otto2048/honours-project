@@ -129,7 +129,7 @@
                 ?>
                                     <div class="form-group">
                                         <p>Question <?php echo $row["questionId"]; ?>: <?php echo $row["contents"] ?></p>
-                                        <textarea rows="4" cols="50" type="text" class="form-control" name="<?php echo $row["questionId"].";".SurveyQuestionTypes::TEXT; ?>" aria-label="question <?php echo $row["questionId"]; ?>" id="<?php echo $row["questionId"]; ?>"></textarea>
+                                        <textarea maxlength="1000" rows="4" cols="50" type="text" class="form-control" name="<?php echo $row["questionId"].";".SurveyQuestionTypes::TEXT; ?>" aria-label="question <?php echo $row["questionId"]; ?>" id="<?php echo $row["questionId"]; ?>"></textarea>
                                     </div>
                                     <hr>
                 <?php

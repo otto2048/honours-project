@@ -15,7 +15,7 @@
         const EXERCISE_EXERCISEFILE_LENGTH = 250;
 
         const SURVEY_QUESTION_CONTENTS = 150;
-        const SURVEY_TEXT_ANSWER_LENGTH = 250;
+        const SURVEY_TEXT_ANSWER_LENGTH = 1000;
 
         const SUS_LIKERT_MIN = 1;
         const SUS_LIKERT_MAX = 5;
