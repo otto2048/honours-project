@@ -1,6 +1,7 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/SurveyQuestionTypes.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
@@ -45,6 +46,7 @@
                 {
                     //get survey question
                     $surveyQuestionModel = new SurveyQuestionModel();
+                    $types = new SurveyQuestionTypes();
 
                     $jsonQuestionData = $surveyQuestionModel->getSurveyQuestion($input);
 
@@ -85,6 +87,7 @@
                                 <ul>
                                     <li>Question ID: <?php echo $questionData[0]["questionId"] ?></li>
                                     <li>Contents: <?php echo $questionData[0]["contents"] ?></li>
+                                    <li>Type: <?php echo $types->getQuestionType($questionData[0]["type"]) ?></li>
                                 </ul>
 
                     <?php

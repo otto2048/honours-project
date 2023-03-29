@@ -28,9 +28,9 @@
                     $variables = new \stdClass();
                     $variables->questionId = $question;
                     $variables->userId = $userId;
-                    $variables->answer = $answer;
+                    $variables->answer = $answer["value"];
 
-                    $paramTypes = "iii";
+                    $paramTypes = "iis";
 
                     parent::create(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
                 }
@@ -41,13 +41,16 @@
                 {
                     $newAnswer = 0;
 
-                    if ($question % 2 == 0)
+                    if (intval($question) < 11)
                     {
-                        $newAnswer = 5 - $answer;
-                    }
-                    else
-                    {
-                        $newAnswer = $answer - 1;
+                        if (intval($question) % 2 == 0)
+                        {
+                            $newAnswer = 5 - intval($answer["value"]);
+                        }
+                        else
+                        {
+                            $newAnswer = intval($answer["value"]) - 1;
+                        }
                     }
 
                     $score += $newAnswer;

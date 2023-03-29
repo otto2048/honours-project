@@ -1,6 +1,7 @@
 <?php
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/SurveyQuestionTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/SurveyQuestionModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Validation.php");
 
@@ -54,6 +55,7 @@
                         //get survey questions
 
                         $surveyQuestionModel = new SurveyQuestionModel();
+                        $types = new SurveyQuestionTypes();
 
                         $jsonQuestionData = $surveyQuestionModel->getAllSurveyQuestions();
 
@@ -73,6 +75,7 @@
                                             <tr>
                                                 <th scope="col" data-tablesort-type="int">ID</th>
                                                 <th scope="col" data-tablesort-type="string">Contents</th>
+                                                <th scope="col" data-tablesort-type="string">Type</th>
                                             </tr>
                                         </thead>
                                         <tbody class="paginateTableBody" id="surveyQuestionTableBody">
@@ -84,6 +87,8 @@
                                                     echo '<td>'.$row["questionId"].'</td>';
 
                                                     echo '<td><u><a href="survey.php?id='.$row["questionId"].'">'.$row["contents"].'</a></u></td>';
+
+                                                    echo '<td>'.$types->getQuestionType($row["type"]).'</td>';
 
                                                     echo '</tr>';
                                                 }
@@ -119,6 +124,24 @@
                         <div class="form-group">
                             <label for="contents">Contents:</label>
                             <input type="text" class="form-control" name="contents" required id="contents">
+                        </div>
+                        <div class="form-group pt-1">
+                            <label for="type">Type:</label>
+                            <select name="type" id="type">
+                                <?php
+                                    $typeReflection = new \ReflectionClass("SurveyQuestionTypes");
+                                    $values = $typeReflection->getConstants();
+
+                                    foreach ($values as $value)
+                                    {
+                                        $optionString = '<option value = "';
+                                        $optionString .= $value.'"';
+                                        $optionString .= ">".$types->getQuestionType($value)."</option>";
+
+                                        echo $optionString;
+                                    }
+                                ?>
+                            </select>
                         </div>
                         <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                     </form>

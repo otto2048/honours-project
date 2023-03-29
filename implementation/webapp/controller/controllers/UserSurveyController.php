@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserSurveyModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Controller.php");
 
@@ -15,7 +18,14 @@
             {
                 if ($name != "button")
                 {
-                    $data -> answers -> $name = $val;
+                    $nameData = explode(";", $name);
+
+                    $nameData_name = $nameData[0];
+
+                    $data -> answers -> $nameData_name = new \stdClass();
+
+                    $data -> answers -> $nameData_name -> value = $val;
+                    $data -> answers -> $nameData_name -> type = $nameData[1];
                 }
             }
 
