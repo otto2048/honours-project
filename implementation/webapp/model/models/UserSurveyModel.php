@@ -88,7 +88,7 @@
         //get all the records for a user
         public function getUserAnswers($userId)
         {
-            $this->sqlStmt = 'SELECT * FROM honours_user_survey WHERE userId = ?';
+            $this->sqlStmt = 'SELECT honours_user_survey.questionId, honours_user_survey.answer, honours_survey_question.contents FROM honours_user_survey INNER JOIN honours_survey_question ON honours_user_survey.questionId = honours_survey_question.questionId WHERE userId = ?';
 
             $WHERE_variables = new \stdClass();
             $WHERE_variables -> userId = $userId;
