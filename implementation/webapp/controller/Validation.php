@@ -15,6 +15,7 @@
         const EXERCISE_EXERCISEFILE_LENGTH = 250;
 
         const SURVEY_QUESTION_CONTENTS = 150;
+        const SURVEY_TEXT_ANSWER_LENGTH = 250;
 
         const SUS_LIKERT_MIN = 1;
         const SUS_LIKERT_MAX = 5;
@@ -119,10 +120,10 @@
             //sanitize data
             $userSurveyAnswer["userId"] = $this->cleanInput($userSurveyAnswer["userId"]);
 
-            foreach ($userSurveyAnswer["answers"] as &$answers)
+            foreach ($userSurveyAnswer["answers"] as &$a)
             {
-                $answers[0] = $this->cleanInput($answers[0]);
-                $answers[1] = $this->cleanInput($answers[1]);
+                $a["value"] = $this->cleanInput($a["value"]);
+                $a["type"] = $this->cleanInput($a["type"]);
             }
 
             //repack sanitized data
@@ -135,14 +136,8 @@
                 $errorMessage[0]["success"] = false;
             }
 
-            if (count($userSurveyAnswer["answers"]) != 10)
-            {
-                $errorMessage[1]["content"] = "Not enough survey answers";
-                $errorMessage[1]["success"] = false;
-            }
-
             //validate each answer
-            $errorCounter = 2;
+            $errorCounter = 1;
             foreach ($userSurveyAnswer["answers"] as $question => $answer)
             {
                 //validate question id
@@ -155,9 +150,30 @@
                 }
 
                 //validate question answer
-                if (!$this->validateLikertAnswer($answer, Validation::SUS_LIKERT_MIN, Validation::SUS_LIKERT_MAX))
+                if ($answer["type"] == SurveyQuestionTypes::LIKERT)
                 {
-                    $errorMessage[$errorCounter]["content"] = "Invalid answer: ".$answer;
+                    if (!$this->validateLikertAnswer($answer["value"], Validation::SUS_LIKERT_MIN, Validation::SUS_LIKERT_MAX))
+                    {
+                        $errorMessage[$errorCounter]["content"] = "Invalid answer: ".$answer["value"]." for question: ".$question;
+                        $errorMessage[$errorCounter]["success"] = false;
+    
+                        $errorCounter++;
+                    }
+                }
+                else if ($answer["type"] == SurveyQuestionTypes::TEXT)
+                {
+                    if (!$this->validateString($answer["value"], Validation::SURVEY_TEXT_ANSWER_LENGTH))
+                    {
+                        $errorMessage[$errorCounter]["content"] = "Invalid answer: ".$answer["value"]." for question: ".$question;
+                        $errorMessage[$errorCounter]["success"] = false;
+
+                        $errorCounter++;
+
+                    }
+                }
+                else
+                {
+                    $errorMessage[$errorCounter]["content"] = "Invalid answer: ".$answer["value"]." for question: ".$question;
                     $errorMessage[$errorCounter]["success"] = false;
 
                     $errorCounter++;

@@ -8,6 +8,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserSurveyModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/SurveyQuestionTypes.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
 
 
     //check if user is allowed to be here
@@ -66,6 +67,15 @@
         <div class="container p-3" >
             <div class="border rounded m-auto mt-5 mb-5 p-4 col-8 overflow-auto">
                 <h1>SUS Survey</h1>
+                <?php
+                    //check for errors on this page
+                    if (isset($_GET["message"]))
+                    {
+                        $message = $_GET["message"];
+                    
+                        printErrorMessage($message);
+                    }
+                ?>
 
                 <?php
                     //display all survey questions in form with likert answers
@@ -93,19 +103,19 @@
                                     <ul class="likert">
                                         <li>Strongly Disagree</li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="1" aria-label="question <?php echo $row["questionId"]; ?>, strongly disagree" required/>
+                                            <input type="radio" name="<?php echo $row["questionId"].";".SurveyQuestionTypes::LIKERT; ?>" value="1" aria-label="question <?php echo $row["questionId"]; ?>, strongly disagree" required/>
                                         </li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="2" aria-label="question <?php echo $row["questionId"]; ?>, disagree" required/>
+                                            <input type="radio" name="<?php echo $row["questionId"].";".SurveyQuestionTypes::LIKERT; ?>" value="2" aria-label="question <?php echo $row["questionId"]; ?>, disagree" required/>
                                         </li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="3" aria-label="question <?php echo $row["questionId"]; ?>, neither agree or disagree" required/>
+                                            <input type="radio" name="<?php echo $row["questionId"].";".SurveyQuestionTypes::LIKERT; ?>" value="3" aria-label="question <?php echo $row["questionId"]; ?>, neither agree or disagree" required/>
                                         </li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="4" aria-label="question <?php echo $row["questionId"]; ?>, agree" required/>
+                                            <input type="radio" name="<?php echo $row["questionId"].";".SurveyQuestionTypes::LIKERT; ?>" value="4" aria-label="question <?php echo $row["questionId"]; ?>, agree" required/>
                                         </li>
                                         <li class="likert-option">
-                                            <input type="radio" name="<?php echo $row["questionId"]; ?>" value="5" aria-label="question <?php echo $row["questionId"]; ?>, strongly agree" required/>
+                                            <input type="radio" name="<?php echo $row["questionId"].";".SurveyQuestionTypes::LIKERT; ?>" value="5" aria-label="question <?php echo $row["questionId"]; ?>, strongly agree" required/>
                                         </li>
                                         <li>Strongly Agree</li>
                                     </ul>
@@ -118,7 +128,7 @@
                 ?>
                                     <div class="form-group">
                                         <p>Question <?php echo $row["questionId"]; ?>: <?php echo $row["contents"] ?></p>
-                                        <input type="text" placeholder="Enter answer..." class="form-control" name="<?php echo $row["questionId"]; ?>" aria-label="question <?php echo $row["questionId"]; ?>" id="<?php echo $row["questionId"]; ?>">
+                                        <textarea rows="4" cols="50" type="text" class="form-control" name="<?php echo $row["questionId"].";".SurveyQuestionTypes::TEXT; ?>" aria-label="question <?php echo $row["questionId"]; ?>" id="<?php echo $row["questionId"]; ?>"></textarea>
                                     </div>
                                     <hr>
                 <?php

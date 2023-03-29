@@ -28,7 +28,7 @@
                     $variables = new \stdClass();
                     $variables->questionId = $question;
                     $variables->userId = $userId;
-                    $variables->answer = $answer;
+                    $variables->answer = $answer["value"];
 
                     $paramTypes = "iis";
 
@@ -45,11 +45,11 @@
                     {
                         if (intval($question) % 2 == 0)
                         {
-                            $newAnswer = 5 - $answer;
+                            $newAnswer = 5 - intval($answer["value"]);
                         }
                         else
                         {
-                            $newAnswer = $answer - 1;
+                            $newAnswer = intval($answer["value"]) - 1;
                         }
                     }
 

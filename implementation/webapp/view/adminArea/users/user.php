@@ -94,6 +94,7 @@
                                 <ul>
                                     <li>User ID: <?php echo $userData[0]["userId"] ?></li>
                                     <li>Username: <?php echo $userData[0]["username"] ?></li>
+                                    <li>SUS Score: <?php echo $userData[0]["SUS_Score"]?></li>
                                     <li>User Group: <?php echo $permission->getPermissionLevel($userData[0]["permissionLevel"]) ?></li>
                                 </ul>
                             
