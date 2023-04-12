@@ -19,7 +19,6 @@ const OP_TEST = "TEST";
 const EVENT_ON_BREAK = "EVENT_ON_BREAK";
 const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
 const EVENT_ON_INFERIOR_EXIT = "EVENT_ON_PROG_EXIT";
-const EVENT_ON_INFERIOR_EXIT_END = "EVENT_ON_PROG_EXIT_END";
 const EVENT_ON_STEP = "EVENT_ON_STEP";
 const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
@@ -282,7 +281,7 @@ function onConnect(ws) {
 
                     logger.info(fileString_);
 
-                    var command_ = "g++ -Wall -g -pthread " + fileString_ + " /usr/local/lib/libgtest.a -o unitTest";
+                    var command_ = "g++ -g -pthread " + fileString_ + " /usr/local/lib/libgtest.a -o unitTest";
 
                     exec(command_, function(err, stdout, stderr)
                     {
