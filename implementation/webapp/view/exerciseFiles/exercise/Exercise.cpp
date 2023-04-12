@@ -1,24 +1,26 @@
 #include "Exercise.h"
 
 // calculate the average of two numbers
-void Exercise::average(float a, float b)
+float Exercise::average(float a, float b)
 {
-    int average = a + b / 2;
+    return a + b / 2;
 }
 
 // add up the numbers in an array
-void Exercise::totalArray(int array[], int arraySize)
+int Exercise::totalArray(int array[], int arraySize)
 {
     int arrayTotal = 0;
 
     for (int i=0; i<=arraySize; i++)
     {
-        arrayTotal += array[i];
+        arrayTotal =+ array[i];
     }
+
+    return arrayTotal;
 }
 
 // find the difference between the smallest and largest values in an array
-void Exercise::range(int array[], int arraySize)
+int Exercise::range(int array[], int arraySize)
 {
     int largest = 0;
     int smallest = 0;
@@ -35,6 +37,8 @@ void Exercise::range(int array[], int arraySize)
             smallest = array[i];
         }
     }
+
+    return largest - smallest;
 }
 
 // find the highest number out of three integers
@@ -63,13 +67,37 @@ void Exercise::swapValues(int& a, int& b)
 }
 
 // increment a value with a pointer to its value
-void Exercise::incrementValue(int a)
+void Exercise::incrementValue(int& a)
 {
     int* p1;
 
     p1 = &a;
 
     *p1++;
+}
+
+// determine if the sum of two numbers is even or odd
+bool Exercise::sumIsEven(int a, int b)
+{
+    if ((a + a) % 2 == 2)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+// determine if factor and factorTwo are factors of num
+bool Exercise::testFactors(int num, int factor, int factorTwo)
+{
+    if (num % factor && num % factorTwo)
+    {
+        return true;
+    }
+    
+    return false;
 }
 
 // a good dinner is where you eat between 10 and 20 pizzas (inclusive),
@@ -133,18 +161,3 @@ void Exercise::filterData(int filter, int replacement, int data[], int dataSize)
         }
     }
 }
-
-// determine if the sum of two numbers is even or odd
-bool Exercise::sumIsEven(int a, int b)
-{
-    if ((a + a) % 2 == 2)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-

@@ -7,6 +7,16 @@
         "readonly" : [
             "exercise/Exercise.h"
         ]
+    },
+    "test" : {
+        "writable" : [
+                "exercise/Exercise.cpp"
+            ],
+        "readonly" : [
+            "exercise/Exercise.h",
+            "testing/main_test.cpp",
+            "exercise/unit_test.cpp"
+        ]
     }
 }
 
