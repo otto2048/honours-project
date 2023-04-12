@@ -19,28 +19,6 @@ int Exercise::totalArray(int array[], int arraySize)
     return arrayTotal;
 }
 
-// find the difference between the smallest and largest values in an array
-int Exercise::range(int array[], int arraySize)
-{
-    int largest = 0;
-    int smallest = 0;
-
-    for (int i=0; i<=arraySize; i++)
-    {
-        if (array[i] > largest)
-        {
-            largest = array[i];
-        }
-
-        if (array[i] < smallest)
-        {
-            smallest = array[i];
-        }
-    }
-
-    return largest - smallest;
-}
-
 // find the highest number out of three integers
 int Exercise::highest(int a, int b, int c)
 {
@@ -98,6 +76,28 @@ bool Exercise::testFactors(int num, int factor, int factorTwo)
     }
     
     return false;
+}
+
+// find the difference between the smallest and largest values in an array
+int Exercise::range(int array[], int arraySize)
+{
+    int largest = 0;
+    int smallest = 0;
+
+    for (int i=0; i<=arraySize; i++)
+    {
+        if (array[i] > largest)
+        {
+            largest = array[i];
+        }
+
+        if (array[i] < smallest)
+        {
+            smallest = array[i];
+        }
+    }
+
+    return largest - smallest;
 }
 
 // a good dinner is where you eat between 10 and 20 pizzas (inclusive),
