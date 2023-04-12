@@ -97,7 +97,7 @@ int Exercise::range(int array[], int arraySize)
         }
     }
 
-    return largest - smallest;
+    return smallest - largest;
 }
 
 // a good dinner is where you eat between 10 and 20 pizzas (inclusive),
