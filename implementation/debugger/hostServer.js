@@ -29,6 +29,9 @@ const ENV_LAUNCHING = 2;
 const ENV_SUCCESS = 3;
 const ENV_MULTIPLE_ERROR = 4;
 
+const AVAILABLE_PORTS = 200;
+const LAUNCH_ATTEMPTS = 30;
+
 //keep track of the clients
 const clients = [];
 
@@ -226,7 +229,7 @@ function launchContainer(userMessage, responseObj, ws)
     ws.send(JSON.stringify(responseObj));
 
     //generate a port for the container
-    var port = generatePort(3, 15);
+    var port = generatePort(AVAILABLE_PORTS, LAUNCH_ATTEMPTS);
 
     if (!port)
     {
