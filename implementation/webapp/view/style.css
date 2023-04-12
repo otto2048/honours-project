@@ -136,3 +136,7 @@
 
     border: 3px var(--bs-border-style) var(--bs-border-color);
 }
+
+.container {
+    padding-bottom: 5rem;
+}
