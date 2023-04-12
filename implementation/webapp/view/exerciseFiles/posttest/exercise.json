@@ -1,0 +1,21 @@
+{
+    "compilation" : {
+        "writable" : [
+            "posttest/main.cpp",
+            "posttest/Exercise.cpp"
+        ],
+        "readonly" : [
+            "posttest/Exercise.h"
+        ]
+    },
+    "test" : {
+        "writable" : [
+                "posttest/Exercise.cpp"
+            ],
+        "readonly" : [
+            "posttest/Exercise.h",
+            "testing/main_test.cpp",
+            "posttest/unit_test.cpp"
+        ]
+    }
+}
