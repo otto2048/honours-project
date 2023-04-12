@@ -32,6 +32,66 @@ namespace {
         EXPECT_EQ(5, exercise.average(a, b));
     }
 
+    TEST(highest, test0)
+    {
+        Exercise exercise;
+        EXPECT_EQ(5, exercise.highest(5, 4, 3));
+    }
+    
+    TEST(highest, test1)
+    {
+        Exercise exercise;
+        EXPECT_EQ(5, exercise.highest(3, 5, 4));
+    }
+    
+    TEST(highest, test2)
+    {
+        Exercise exercise;
+        EXPECT_EQ(5, exercise.highest(4, 3, 5));
+    }
+    
+    TEST(highest, test3)
+    {
+        Exercise exercise;
+        EXPECT_EQ(4, exercise.highest(4, 4, 3));
+    }
+    
+    TEST(highest, test4)
+    {
+        Exercise exercise;
+        EXPECT_EQ(4, exercise.highest(3, 4, 4));
+    }
+    
+    TEST(highest, test5)
+    {
+        Exercise exercise;
+        EXPECT_EQ(4, exercise.highest(4, 3, 4));
+    }
+    
+    TEST(highest, test6)
+    {
+        Exercise exercise;
+        EXPECT_EQ(5, exercise.highest(4, 4, 5));
+    }
+    
+    TEST(highest, test7)
+    {
+        Exercise exercise;
+        EXPECT_EQ(5, exercise.highest(5, 4, 4));
+    }
+    
+    TEST(highest, test8)
+    {
+        Exercise exercise;
+        EXPECT_EQ(5, exercise.highest(4, 5, 4));
+    }
+    
+    TEST(highest, test9)
+    {
+        Exercise exercise;
+        EXPECT_EQ(4, exercise.highest(4, 4, 4));
+    }
+
     TEST(totalArray, test0)
     {
         Exercise exercise;
