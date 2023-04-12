@@ -1,5 +1,7 @@
 #include "Exercise.h"
 #include "gtest/gtest.h"
+#include <algorithm>
+#include <iterator>
 
 namespace {
     TEST(average, test0)
@@ -244,5 +246,18 @@ namespace {
         Exercise exercise;
 
         EXPECT_EQ(true, exercise.goodDinner(21, true));
+    }
+
+    TEST(filterData, test0)
+    {
+        int array[14] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+
+        int correctArray[14] = {0, 1, 2, -1, 4, 5, -1, 7, 8, -1, 10, 11, -1, -1};
+
+        Exercise exercise;
+
+        exercise.filterData(3, -1, array, 14);
+
+        EXPECT_TRUE(std::equal(std::begin(array), std::end(array), std::begin(correctArray), std::end(correctArray)));
     }
 }
