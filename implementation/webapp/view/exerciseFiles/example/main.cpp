@@ -28,7 +28,7 @@ int leastCommonMultiple(int a, int b)
     int greater = max(a, b);
     int smallest = min(a, b);
 
-    for (int i = greater; ; i += greater) {
+    for (int i = 0; ; i += greater) {
         if (i % smallest == 0)
         {
             return i;
