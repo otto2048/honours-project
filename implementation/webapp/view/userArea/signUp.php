@@ -112,6 +112,8 @@
                     </div>
                         
                     <div id="getUserDetails">
+                        <br>
+                        <p>Enter a password and take note of your login details incase you need to re-login to the training tool</p>
                         <div class="form-group">
                             <label for="password">Enter Password:</label>
                             <input type="password" class="form-control" name="password" id="password" required />

@@ -111,8 +111,25 @@
                         <p><?php echo $exerciseData[0]["description"] ?></p>
                         <hr>
                         <h2>General Instructions</h2>
+                        <h3>The Code</h3>
                         <p>You can view the files for this exercise in the editor below by clicking on the file names</p>
-                        <p>Once you have completed the exercise, press the submit button below.</p>
+                        <p>The main.cpp file and the Exercise.cpp file can be modified, all other files are readonly</p>
+                        <br>
+                        <h3>Debugger output</h3>
+                        <p>Output from the debugger can be seen in the Output window</p>
+                        <br>
+                        <h3>Program output</h3>
+                        <p>Output from the program can be seen in the Program Output window. <b>Output will only appear if it is followed by a newline (std::endl)</b></p>
+                        <p>Input can be sent to the program by entering it into the console within the Program Output window</p>
+                        <br>
+                        <h3>General environment rules</h3>
+                        <p><b>The environment will time you out if you are inactive and you will lose all progress in the exercise</b></p>
+                        <p>You can open the environment in multiple tabs, but you can only run code in one tab at a time</p>
+                        <br>
+                        <h3>Completing the exercise</h3>
+                        <p>The exercise will require you to fix bugs within the Exercise.cpp file, you can call functions from Exercise.cpp in the main.cpp file</p>
+                        <p><b>Once you have completed the exercise, press the submit button below.</b></p>
+                        <br>
                         <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
                     </div>
 
