@@ -1,0 +1,17 @@
+{
+    "compilation" : {
+        "writable" : [
+            "example/main.cpp"
+        ],
+        "readonly" : [
+        ]
+    },
+    "test" : {
+        "writable" : [
+            ],
+        "readonly" : [
+        ]
+    }
+}
+
+
