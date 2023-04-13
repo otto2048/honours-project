@@ -126,7 +126,7 @@
                         <p><b>The environment will time you out if you are inactive and you will lose all progress in the exercise</b></p>
                         <p>You can open the environment in multiple tabs, but you can only run code in one tab at a time</p>
                         <br>
-                        <h3>Completing the exercise</h3>
+                        <h2>Completing the exercise</h2>
                         <p>The exercise will require you to fix bugs within the Exercise.cpp file, you can call functions from Exercise.cpp in the main.cpp file</p>
                         <p><b>Once you have completed the exercise, press the submit button below.</b></p>
                         <br>
