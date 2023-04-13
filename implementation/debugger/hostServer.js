@@ -87,7 +87,7 @@ function onConnect(ws, req) {
 
         if (timeout)
         {
-            console.log("Clearing the timeout");
+            //console.log("Clearing the timeout");
             clearTimeout(timeout);
         }
 
@@ -116,20 +116,20 @@ function onConnect(ws, req) {
                     checkUserContainerStatus(5000, launchAttempts, function()
                     {
                         //callback function
-                        console.log("Waiting for removal");
+                        //console.log("Waiting for removal");
                         obj.message = "Refreshing environment...";
                         obj.status = ENV_REFRESH;
                         ws.send(JSON.stringify(obj));
                     }, function() {
                         //failure function
-                        console.log("Removal timeout");
+                        //console.log("Removal timeout");
                         obj.message = "Failed to launch environment. Try reloading the page?";
                         obj.status = ENV_FAIL;
                         ws.send(JSON.stringify(obj));
                     },
                     function()
                     {
-                        console.log("Success function");
+                        //console.log("Success function");
                         launchContainer(message, obj, ws);
                     }
                     , message.value);
@@ -151,7 +151,7 @@ function onConnect(ws, req) {
         }
         else if (message.operation == OP_MOVE_ACTIVE_SESSION)
         {
-            console.log("Calling op move active session");
+            //console.log("Calling op move active session");
             var keys = Object.keys(clients);
 
             //if client in clients
@@ -169,14 +169,14 @@ function onConnect(ws, req) {
 
     ws.on('close', function()
     {
-        console.log("Calling close function");
+        //console.log("Calling close function");
         //get client information
         var values = Object.entries(clients);
         var client = values.find(doc => doc[1].websocket === ws);
 
         if (client)
         {
-            console.log("Calling stop function");
+            //console.log("Calling stop function");
             //clean up container for this client
             stopContainer(client[0], client[1].containerId);
         }
@@ -192,29 +192,29 @@ function stopContainer(clientId, containerId)
     command = "docker stop " + containerId;
     exec(command, (error, stdout, stderr) => {
         if (error) {
-            console.error(`error: ${error.message}`);
+            //console.error(`error: ${error.message}`);
             return;
         }
     
         if (stderr) {
-            console.error(`stderr: ${stderr}`);
+            //console.error(`stderr: ${stderr}`);
             return;
         }
 
         command = "docker rm " + containerId;
         exec(command, (error, stdout, stderr) => {
             if (error) {
-                console.error(`error: ${error.message}`);
+                //console.error(`error: ${error.message}`);
                 return;
             }
         
             if (stderr) {
-                console.error(`stderr: ${stderr}`);
+                //console.error(`stderr: ${stderr}`);
                 return;
             }
 
             //remove reference to client
-            console.log("Deleting reference to client");
+            //console.log("Deleting reference to client");
             delete clients[clientId];
         });
     });
@@ -233,7 +233,7 @@ function launchContainer(userMessage, responseObj, ws)
 
     if (!port)
     {
-        console.log("Out of available ports");
+        //console.log("Out of available ports");
         responseObj.message = "Failed to launch environment";
         responseObj.status = ENV_FAIL;
         ws.send(JSON.stringify(responseObj));
@@ -246,18 +246,18 @@ function launchContainer(userMessage, responseObj, ws)
     //launch a debugger container for this user
     exec(command, (error, stdout, stderr) => {
         if (error) {
-            console.error(`error: ${error.message}`);
+            //console.error(`error: ${error.message}`);
             ws.send(JSON.stringify(responseObj));
             return;
         }
 
         if (stderr) {
-            console.error(`stderr: ${stderr}`);
+            //console.error(`stderr: ${stderr}`);
             ws.send(JSON.stringify(responseObj));
             return;
         }
 
-        console.log(`stdout:\n${stdout}`);
+        //console.log(`stdout:\n${stdout}`);
 
         //send back the port the container was launched on
         responseObj.value = port;
