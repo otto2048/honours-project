@@ -5,7 +5,7 @@ int main()
 {
     Exercise exercise;
 
-    std::cout << exercise.leastCommonMultiple(5, 7) << std::endl;
+    std::cout << exercise.leastCommonMultiple(7, 5) << std::endl;
 
     return 0;
 }
