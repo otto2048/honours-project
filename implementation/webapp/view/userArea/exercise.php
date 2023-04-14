@@ -110,6 +110,12 @@
                         <h1>Exercise: <?php echo $exerciseData[0]["title"] ?></h1>
                         <p><?php echo $exerciseData[0]["description"] ?></p>
                         <hr>
+                        <h2>Completing the exercise</h2>
+                        <p>The exercise will require you to <b>fix bugs within the code.</b> All bugs are in the Exercise.cpp file. You can call functions from Exercise.cpp in the main.cpp file</p>
+                        <p><b>Once you have completed the exercise, press the submit button below.</b></p>
+                        <br>
+                        <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
+                        <hr>
                         <h2>General Instructions</h2>
                         <h3>The Code</h3>
                         <p>You can view the files for this exercise in the editor below by clicking on the file names</p>
@@ -126,18 +132,13 @@
                         <p><b>The environment will time you out if you are inactive and you will lose all progress in the exercise</b></p>
                         <p>You can open the environment in multiple tabs, but you can only run code in one tab at a time</p>
                         <br>
-                        <h2>Completing the exercise</h2>
-                        <p>The exercise will require you to fix bugs within the Exercise.cpp file, you can call functions from Exercise.cpp in the main.cpp file</p>
-                        <p><b>Once you have completed the exercise, press the submit button below.</b></p>
-                        <br>
-                        <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
                     </div>
 
                     <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
 
                     <div class="row pt-1 pb-1 ">
                         <div class="col-8">
-                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control on-connected ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
+                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control on-connected ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Run program</button>
                             <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
                             <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop" title="stop"></span></button>
                         </div>
