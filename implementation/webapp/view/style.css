@@ -140,3 +140,10 @@
 .container {
     padding-bottom: 5rem;
 }
+
+.timerContainer {
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+    z-index: 5;
+}

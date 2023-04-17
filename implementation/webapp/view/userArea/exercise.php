@@ -112,7 +112,7 @@
                         <hr>
                         <h2>Completing the exercise</h2>
                         <p>The exercise will require you to <b>fix bugs within the code.</b> All bugs are in the Exercise.cpp file. You can call functions from Exercise.cpp in the main.cpp file</p>
-                        <p><b>Once you have completed the exercise, press the submit button below.</b></p>
+                        <p><b>Once you have completed the exercise, press the submit button below.</b> (or the exercise will submit automatically once the Time Remaining timer reaches 0)</p>
                         <br>
                         <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
                         <hr>
@@ -132,6 +132,11 @@
                         <p><b>The environment will time you out if you are inactive and you will lose all progress in the exercise</b></p>
                         <p>You can open the environment in multiple tabs, but you can only run code in one tab at a time</p>
                         <br>
+                    </div>
+
+                    <div class="alert alert-info show d-flex align-items-center timerContainer" role="alert">
+                        <p class="pe-1 m-0">Time remaining: </p>
+                        <p id="timerText" class="m-0">12:00</p>
                     </div>
 
                     <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>

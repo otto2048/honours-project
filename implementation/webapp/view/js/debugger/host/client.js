@@ -86,6 +86,49 @@ socketHost.onmessage = function(event) {
             debug.socketObj.socket.onopen = function(e) {
                 console.log("Connection established with compiler");
 
+                //set timeout for the exercise
+                //source: https://stackoverflow.com/questions/1191865/code-for-a-simple-javascript-countdown-timer/1192001#1192001:~:text=21-,Here,-is%20another%20one
+                var mins = 10;
+                var secs = mins * 60;
+                var currentSeconds = 0;
+                var currentMinutes = 0;
+
+                setTimeout(Decrement,1000); 
+
+                function Decrement() {
+                    currentMinutes = Math.floor(secs / 60);
+                    currentSeconds = secs % 60;
+
+                    //handle leading zero on seconds
+                    if(currentSeconds <= 9)
+                    {
+                        currentSeconds = "0" + currentSeconds;
+                    }
+                    
+                    secs--;
+                    document.getElementById("timerText").innerHTML = currentMinutes + ":" + currentSeconds; //Set the element id you need the time put into.
+                    
+                    if(secs !== -1)
+                    {
+                        setTimeout(Decrement,1000);
+                    }
+                    else
+                    {
+                        //submit user answer
+                        if (connected)
+                        {
+                            $("#submitting-exercise-message")[0].innerHTML = "Submitting exercise...";
+                            $("#spinner-exercise").show();
+                            $("#submitting-exercise-status")[0].innerHTML = "Submitting...";
+                            $("#submit-exercise-modal").modal("show");
+                
+                            //submit user answer
+                            debug.testProgram();
+                            socketHost.send(JSON.stringify(pingHostObj));
+                        }
+                    }
+                }
+
                 //client on onopen function
                 debug.on_open();
 
