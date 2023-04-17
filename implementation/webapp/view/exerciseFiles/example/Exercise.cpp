@@ -14,7 +14,7 @@ int Exercise::max(int a, int b)
 // return the smallest integer out of two inputs
 int Exercise::min(int a, int b)
 {
-  	if (a > b)
+  	if (a < b)
     {
         return a;
     }

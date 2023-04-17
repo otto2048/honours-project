@@ -1,7 +1,4 @@
-//users need to be able to:
-    //create a cpp file through this server
-    //create an executable through this server
-    //run the executable through this server, sending input and getting output
+// A NodeJS file that lets users compile their code and run their program through a GDB process
 
 // Socket setup based on tutorial: https://javascript.info/websocket
 //include required modules
@@ -12,6 +9,7 @@ const exec = require('child_process').exec;
 const Response = require('./response.js');
 const tail = require("tail").Tail;
 
+// constants
 const OP_INPUT = "INPUT";
 const OP_COMPILE = "COMPILE";
 const OP_TEST = "TEST";
@@ -148,8 +146,6 @@ function onConnect(ws) {
                         if (stderr)
                         {
                             //give compilation errors
-                            // stderr = stderr.replace(' << "'+ GDB_OUTPUT_STRING + " " + PROGRAM_OUTPUT_STRING + '"', "");
-                            // stderr = stderr.replace(' << " ' + PROGRAM_OUTPUT_STRING_END + '"', "");
                             obj.value = "Failed to compile\nErrors:\n" + stderr;
                             obj.event = EVENT_ON_COMPILE_FAILURE;
                             ws.send(JSON.stringify(obj));

@@ -2,8 +2,6 @@ import gdb
 import json
 import networkx as nx
 
-#TODO: handle nested functions (multiple frames), also test on recursion
-
 # custom next command
 class StepOver(gdb.Command):
 
