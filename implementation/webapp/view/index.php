@@ -192,6 +192,21 @@
                             {
                                 //give video links
                                 echo "Before completing the following exercises, watch the following video(s):";
+                                
+                                ?>
+                                    <ol>
+                                        <li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/EQekumBU3cpOuQ_y5s9wGEIBTIiJuD42rc-4IVlsQCD6DQ?e=zQp1aN">Debugging Tutorial</a></li>
+
+                                        <?php
+                                            if ($_SESSION["permissionLevel"] >= PermissionLevels::EXPERIMENT)
+                                            {
+                                        ?>
+                                                <li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/EbHoyYXeiyxLg-2WHnIIHX8Bo2qXZyJQSDOInPq7ZGvrWg?e=HbrcgR">Debugging Strategy Tutorial</a></li>
+                                        <?php
+                                            }
+                                        ?>
+                                    </ol>
+                                <?php
 
                                 //output exercises
                                 outputAssignedExercises($assignedExercises);
