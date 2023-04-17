@@ -136,7 +136,7 @@
 
                     <div class="alert alert-info show d-flex align-items-center timerContainer" role="alert">
                         <p class="pe-1 m-0">Time remaining: </p>
-                        <p id="timerText" class="m-0">12:00</p>
+                        <p id="timerText" class="m-0">10:00</p>
                     </div>
 
                     <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
