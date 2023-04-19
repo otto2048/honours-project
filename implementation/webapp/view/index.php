@@ -191,7 +191,7 @@
                             else
                             {
                                 //give video links
-                                echo "Before completing the following exercises, watch the following video(s):";
+                                echo "Before completing any more exercises, watch the following video(s):";
                                 
                                 ?>
                                     <ol>
