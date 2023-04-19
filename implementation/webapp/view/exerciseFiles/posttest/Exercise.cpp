@@ -3,7 +3,10 @@
 // determine if factor and factorTwo are factors of num
 bool Exercise::testFactors(int num, int factor, int factorTwo)
 {
-    if (num % factor && num % factorTwo)
+    int testFactorOne = num % factor;
+    int testFactorTwo = num % factorTwo;
+
+    if (testFactorOne && testFactorTwo)
     {
         return true;
     }
@@ -14,7 +17,9 @@ bool Exercise::testFactors(int num, int factor, int factorTwo)
 // determine if the sum of two numbers is even or odd
 bool Exercise::sumIsEven(int a, int b)
 {
-    if ((a + a) % 2 == 2)
+    int sum = a + a;
+
+    if (sum % 2 == 2)
     {
         return false;
     }
@@ -32,14 +37,16 @@ int Exercise::range(int array[], int arraySize)
 
     for (int i=0; i<=arraySize; i++)
     {
-        if (array[i] > largest)
+        int element = array[i];
+
+        if (element > largest)
         {
-            largest = array[i];
+            largest = element;
         }
 
-        if (array[i] < smallest)
+        if (element < smallest)
         {
-            smallest = array[i];
+            smallest = element;
         }
     }
 
@@ -75,8 +82,10 @@ void Exercise::filterData(int filter, int replacement, int data[], int dataSize)
 {
     for (int i=0; i<dataSize; i++)
     {
+        int element = data[i];
+        
         //check if data point is divisible by the filter
-        if (data[i] % filter == 0)
+        if (element % filter == 0)
         {
             data[i] = replacement;
         }
