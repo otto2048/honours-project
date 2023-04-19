@@ -98,6 +98,14 @@
     color: #FFF;
 }
 
+[data-bs-theme=light] .alert-danger li {
+    color: #000;
+}
+
+[data-bs-theme=dark] .alert-danger li {
+    color: #FFF;
+}
+
 .likert li {
     float: left;
     list-style-type: none;

@@ -134,8 +134,8 @@
                         <br>
                     </div>
 
-                    <div class="alert alert-info show d-flex align-items-center timerContainer" role="alert">
-                        <p class="pe-1 m-0">Time remaining: </p>
+                    <div class="alert alert-danger show d-flex align-items-center timerContainer" role="alert">
+                        <p class="pe-1 m-0"><b>Time remaining: </b></p>
                         <p id="timerText" class="m-0">10:00</p>
                     </div>
 
