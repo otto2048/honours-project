@@ -84,7 +84,6 @@
                     }
                 }
 
-
                 // get the tasks a user has to do based on where they are in the experiement (eg. pretest, video, posttest or survey)
 
                 //get pretest exercises
@@ -146,7 +145,7 @@
                     }
                     else
                     {
-                        //load the posttest exercises
+                        //load the posttest exercises and videos
 
                         //get the post test exercises
                         $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], ExerciseTypes::POSTTEST, true);
@@ -159,76 +158,72 @@
                             //if there are no post test, display survey
                             if (count($assignedExercises) == 0)
                             {
-                                ?>
-                                
+                                //check if the user has already completed the survey
+                                $userSurveyModel = new UserSurveyModel();
 
-                                <?php
-                                    //check if the user has already completed the survey
-                                    $userSurveyModel = new UserSurveyModel();
+                                $jsonData = $userSurveyModel->getUserAnswers($_SESSION["userId"]);
 
-                                    $jsonData = $userSurveyModel->getUserAnswers($_SESSION["userId"]);
+                                //if json data returned ok
+                                if ($jsonData)
+                                {
+                                    $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
 
-                                    //if json data returned ok
-                                    if ($jsonData)
+                                    ?>
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h2 class="card-title h4 text-muted">Task 1 - Exercises <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
+                                                <p class="m-0 text-muted">You have completed this task</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h2 class="card-title h4 text-muted">Task 2 - Tutorials <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
+                                                <p class="m-0 text-muted">You have completed this task</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h2 class="card-title h4 text-muted">Task 3 - More Exercises <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
+                                                <p class="m-0 text-muted">You have completed this task</p>
+                                            </div>
+                                        </div>
+                                    <?php
+
+                                    //if there is results
+                                    if (!isset($data["isempty"]))
                                     {
-                                        $data = json_decode($jsonData, JSON_INVALID_UTF8_SUBSTITUTE);
-
-                                        ?>
-                                            <div class="card mb-3">
-                                                <div class="card-body">
-                                                    <h2 class="card-title h4 text-muted">Task 1 - Exercises <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
+                                ?>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h2 class="card-title h4 text-muted" >Task 4 - Survey <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
+                                                <div class="card-text">
                                                     <p class="m-0 text-muted">You have completed this task</p>
                                                 </div>
                                             </div>
-
-                                            <div class="card mb-3">
-                                                <div class="card-body">
-                                                    <h2 class="card-title h4 text-muted">Task 2 - Tutorials <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
-                                                    <p class="m-0 text-muted">You have completed this task</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="card mb-3">
-                                                <div class="card-body">
-                                                    <h2 class="card-title h4 text-muted">Task 3 - More Exercises <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
-                                                    <p class="m-0 text-muted">You have completed this task</p>
-                                                </div>
-                                            </div>
-                                        <?php
-
-                                        //if there is results
-                                        if (!isset($data["isempty"]))
-                                        {
-?>
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h2 class="card-title h4 text-muted" >Task 4 - Survey <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
-                                                    <div class="card-text">
-                                                        <p class="m-0 text-muted">You have completed this task</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-<?php
-                                        }
-                                        else
-                                        {
-?>
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h2 class="card-title h4" >Task 4 - Survey</h2>
-                                                    <div class="card-text">
-                                                        <p>Please complete the System Usability Scale (SUS) survey to give feedback on this tool:</p>
-                                                        <p>Complete the SUS survey here: <a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-<?php
-                                        }
+                                        </div>
+                                <?php
                                     }
                                     else
                                     {
-                                        echo "Failed to load tasks";
+                                ?>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h2 class="card-title h4" >Task 4 - Survey</h2>
+                                                <div class="card-text">
+                                                    <p>Please complete the System Usability Scale (SUS) survey to give feedback on this tool:</p>
+                                                    <p>Complete the SUS survey here: <a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                <?php
                                     }
+                                }
+                                else
+                                {
+                                    echo "Failed to load tasks";
+                                }
                                 ?>
 
                                 
@@ -239,7 +234,6 @@
                                 // output video
                                 ?>
 
-                                <div class="overflow-auto">
                                 <div class="card mb-3">
                                     <div class="card-body">
                                         <h2 class="card-title h4 text-muted">Task 1 - Exercises <span class="mdi mdi-checkbox-marked-circle ms-1"></span></h2>
@@ -292,7 +286,6 @@
                                         <h2 class="card-title h4 text-muted" >Task 4 - Survey</h2>
                                         <p class="m-0 text-muted">Complete prior tasks to access this task</p>
                                     </div>
-                                </div>
                                 </div>
 
                                 <?php
