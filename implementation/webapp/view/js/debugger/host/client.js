@@ -22,7 +22,7 @@ $(document).ready(function(){
 });
 
 //web socket to connect to the host server
-let socketHost = new WebSocket("ws://44.209.40.106:8080");
+let socketHost = new WebSocket("ws://34.234.3.95:8080");
 
 //set up sockets
 
@@ -81,7 +81,7 @@ socketHost.onmessage = function(event) {
             $("#debugger-load-message")[0].innerHTML = message.message;
             //successfully launched environment
             //connect to the container wss
-            debug.socketObj.socket = new WebSocket("ws://44.209.40.106:" + message.value);
+            debug.socketObj.socket = new WebSocket("ws://34.234.3.95:" + message.value);
 
             debug.socketObj.socket.onopen = function(e) {
                 console.log("Connection established with compiler");
