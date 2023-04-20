@@ -1,5 +1,4 @@
 <?php
-
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/Model.php");
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/PermissionLevels.php");
@@ -129,21 +128,34 @@
         }
     }
 
+    // need to change server permissions to run this code
     $test = new ExperimentDataModel();
 
     $json = $test->getExperimentData();
 
     $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
 
-    echo "<pre>";
-    var_dump($actual);
-    echo "</pre>";
+    $fp = fopen('experiment.csv', 'w');
+
+    fputcsv($fp, array('user','group','exercise', 'exercise type', 'points', 'total'));
+
+    foreach ($actual as $fields) {
+        fputcsv($fp,$fields);
+    }
+
+    fclose($fp);
 
     $json = $test->getSurveyData();
 
     $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
 
-    echo "<pre>";
-    var_dump($actual);
-    echo "</pre>";
+    $fp = fopen('survey.csv', 'w');
+
+    fputcsv($fp, array('user','group','sus', 'further comments'));
+
+    foreach ($actual as $fields) {
+        fputcsv($fp,$fields);
+    }
+
+    fclose($fp);
 ?>
