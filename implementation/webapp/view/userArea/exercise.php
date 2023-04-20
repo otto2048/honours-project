@@ -112,26 +112,11 @@
                         <hr>
                         <h2>Completing the exercise</h2>
                         <p>The exercise will require you to <b>fix bugs within the code.</b> All bugs are in the Exercise.cpp file. You can call functions from Exercise.cpp in the main.cpp file</p>
+                        <p><b>The environment will time you out if you are inactive and you will lose all progress in the exercise</b></p>
                         <p><b>Once you have completed the exercise, press the submit button below.</b> (or the exercise will submit automatically once the Time Remaining timer reaches 0)</p>
                         <br>
                         <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
                         <hr>
-                        <h2>General Instructions</h2>
-                        <h3>The Code</h3>
-                        <p>You can view the files for this exercise in the editor below by clicking on the file names</p>
-                        <p>The main.cpp file and the Exercise.cpp file can be modified, all other files are readonly</p>
-                        <br>
-                        <h3>Debugger output</h3>
-                        <p>Output from the debugger can be seen in the Output window</p>
-                        <br>
-                        <h3>Program output</h3>
-                        <p>Output from the program can be seen in the Program Output window. <b>Output will only appear if it is followed by a newline (std::endl)</b></p>
-                        <p>Input can be sent to the program by entering it into the console within the Program Output window</p>
-                        <br>
-                        <h3>General environment rules</h3>
-                        <p><b>The environment will time you out if you are inactive and you will lose all progress in the exercise</b></p>
-                        <p>You can open the environment in multiple tabs, but you can only run code in one tab at a time</p>
-                        <br>
                     </div>
 
                     <div class="alert alert-danger show d-flex align-items-center timerContainer" role="alert">
@@ -258,7 +243,7 @@
                         <div class="col-sm mt-2 border pb-3 me-3">
                             <h2 class="h4 ps-2 pt-3">Output</h2>
                             <hr>
-                            <p class="ps-2">See debugger output messages here</p>
+                            <p class="ps-2">See environment output messages here</p>
                             <div class="overflow-auto resize max-height-box" id="compilation-messages-box">
                                 <ul class="list-unstyled list-group">
                                     
@@ -269,6 +254,7 @@
                         <div class="col-sm mt-2 border ms-sm-3">
                             <h2 class="h4 ps-2 pt-3">Program Output</h2>
                             <hr>
+                            <p>Output will only appear if it is followed by a newline (std::endl)</p>
                             <!-- container for terminal -->
                             <div id="code-output"></div>
                             <div class="d-flex justify-content-center mt-3 mb-3">
