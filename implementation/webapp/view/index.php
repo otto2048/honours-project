@@ -76,18 +76,18 @@
                                 if ($mark["points"] >= 0)
                                 {
                                     //exercise is completed
-                                    array_push($completedExercises, array("exercise"=>$exercise, "mark"=>$mark));
+                                    array_push($completedExercises, array("exercise"=>$exercise));
                                 }
                                 else
                                 {
                                     //exercise is still to be completed
                                     $mark["points"] = 0;
-                                    array_push($assignedExercises, array("exercise"=>$exercise, "mark"=>$mark));
+                                    array_push($assignedExercises, array("exercise"=>$exercise));
                                 }
                             }
                             else
                             {
-                                array_push($assignedExercises, array("exercise"=>$exercise, "mark"=>null));
+                                array_push($assignedExercises, array("exercise"=>$exercise));
                             }
                         }
                     }
@@ -107,7 +107,6 @@
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="card-title h5"><?php echo $assignedExercise["exercise"]["title"]; ?></h3>
-                                <h4 class="card-subtitle mb-2 text-muted h6">Points: <?php if ($assignedExercise["mark"]) { echo $assignedExercise["mark"]["points"]."/".$assignedExercise["mark"]["total"];} else {echo "Failed to retrieve mark";} ?></h4>
                                 <p class="card-text"><?php echo $assignedExercise["exercise"]["description"]; ?></p>
                                 <div class="text-center">
                                     <a href="userArea/exercise.php?id=<?php echo $assignedExercise["exercise"]["codeId"]; ?>" class="btn btn-primary">Complete exercise</a>
@@ -144,7 +143,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h3 class="card-title h5"><?php echo $completedExercise["exercise"]["title"]; ?></h3>
-                                    <h4 class="card-subtitle mb-2 text-muted h6">Points: <?php if ($completedExercise["mark"]) { echo $completedExercise["mark"]["points"]."/".$completedExercise["mark"]["total"];} else {echo "Failed to retrieve mark";} ?></h4>
                                     <p class="card-text"><?php echo $completedExercise["exercise"]["description"]; ?></p>
                                 </div>
                             </div>
