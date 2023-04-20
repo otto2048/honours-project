@@ -44,7 +44,7 @@
                     printErrorMessage($message);
                 }
             ?>
-            <h1>Your Exercises</h1>
+            <h1>Tasks</h1>
             <hr>
             <?php
 
@@ -58,7 +58,7 @@
                 $userModel = new UserModel();
                 $userExerciseModel = new UserExerciseModel();
 
-                function sortExercises(&$completedExercises, &$assignedExercises, $jsonExercises)
+                function sortExercises(&$assignedExercises, $jsonExercises)
                 {
                     $exercises = json_decode($jsonExercises, JSON_INVALID_UTF8_SUBSTITUTE);
 
@@ -73,21 +73,11 @@
                             {
                                 $mark = json_decode($markJson, JSON_INVALID_UTF8_SUBSTITUTE);
 
-                                if ($mark["points"] >= 0)
-                                {
-                                    //exercise is completed
-                                    array_push($completedExercises, array("exercise"=>$exercise));
-                                }
-                                else
+                                if ($mark["points"] < 0)
                                 {
                                     //exercise is still to be completed
-                                    $mark["points"] = 0;
                                     array_push($assignedExercises, array("exercise"=>$exercise));
                                 }
-                            }
-                            else
-                            {
-                                array_push($assignedExercises, array("exercise"=>$exercise));
                             }
                         }
                     }
@@ -96,8 +86,6 @@
                 function outputAssignedExercises($assignedExercises)
                 {
                     ?>
-                    <h2>Assigned exercises</h2>
-                    <hr>
                     <div class="row m-1">
                     <?php
                     foreach ($assignedExercises as $assignedExercise)
@@ -121,80 +109,65 @@
                     <?php
                 }
 
-                function outputCompletedExercises($completedExercises)
-                {
-                    ?>
-                    <h2>Completed exercises</h2>
-                    <hr>
-                    <?php
-                    if (count($completedExercises) == 0)
-                    {
-                        echo "You have no completed exercises";
-                    }
-                    else
-                    {
-                        ?>
-                        <div class="row m-1">
-                        <?php
-                        foreach ($completedExercises as $completedExercise)
-                        {
-                        ?>
-                        <div class="col-sm-4 pb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h3 class="card-title h5"><?php echo $completedExercise["exercise"]["title"]; ?></h3>
-                                    <p class="card-text"><?php echo $completedExercise["exercise"]["description"]; ?></p>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                        }
-                        ?>
-                        </div>
-                        <?php
-                    }
-                }
+
+                // get the tasks a user has to do based on where they are in the experiement (eg. pretest, video, posttest or survey)
 
                 //get pretest exercises
                 $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], ExerciseTypes::PRETEST, true);
 
                 if ($jsonExercises)
                 {
-                    $completedExercises = array();
                     $assignedExercises = array();
 
-                    //sort these exercises into completed and assigned exercises
-                    sortExercises($completedExercises, $assignedExercises, $jsonExercises);
+                    //remove completed exercises
+                    sortExercises($assignedExercises, $jsonExercises);
 
-                    //if there are no pre test 
-                    if (count($assignedExercises) == 0)
+                    //if there are pretest exercises to be completed
+                    if (count($assignedExercises) > 0)
                     {
+                        ?>
+                            <h2>Task 1</h2>
+                            <p>Complete these exercise(s): </p>
+                        <?php
+                        outputAssignedExercises($assignedExercises);
+                    }
+                    else
+                    {
+                        //load the posttest exercises
+
                         //get the post test exercises
                         $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], ExerciseTypes::POSTTEST, true);
 
                         if ($jsonExercises)
                         {
-                            //sort these exercises into completed and assigned exercises
-                            sortExercises($completedExercises, $assignedExercises, $jsonExercises);
+                            //remove completed exercises
+                            sortExercises($assignedExercises, $jsonExercises);
 
                             //if there are no post test 
                             if (count($assignedExercises) == 0)
                             {
                                 ?>
-                                    <div class="alert alert-danger show" role="alert">
-                                        <p>You have no assigned exercises</p>
-                                        <p>Please complete the SUS survey to give feedback on this tool:</p>
-                                        <p>Complete the SUS survey here: <a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></p>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h2 class="card-title" >Task 1</h2>
+                                        <div class="card-text">
+                                            <p>Please complete the System Usability Scale (SUS) survey to give feedback on this tool:</p>
+                                            <p>Complete the SUS survey here: <a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></p>
+                                        </div>
                                     </div>
+                                </div>
                                 <?php
                             }
                             else
                             {
+                                // output video
                                 ?>
-
-                                <div class="alert alert-danger show" role="alert">
-                                    <p>Before completing any more exercises, watch the following video(s):</p>
-                                        <ol class="m-0">
+                                
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h2 class="card-title h4">Task 1 - Tutorials</h2>
+                                        <p class="m-0">Watch the following video(s):</p>
+                                        <ol>
                                             <li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/EQekumBU3cpOuQ_y5s9wGEIBTIiJuD42rc-4IVlsQCD6DQ?e=zQp1aN" target="_blank">Debugging Tutorial</a></li>
 
                                             <?php
@@ -206,30 +179,46 @@
                                                 }
                                             ?>
                                         </ol>
+                                    </div>
                                 </div>
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h2 class="card-title h4">Task 2 - Exercises</h2>
+                                        <p class="m-0">Complete these exercise(s): </p>
+                                        <ol>
+                                            <?php
+                                            foreach ($assignedExercises as $assignedExercise)
+                                            {
+                                            ?>
+                                            <li>
+                                                <a href="userArea/exercise.php?id=<?php echo $assignedExercise["exercise"]["codeId"]; ?>" class="">
+                                                    <?php echo $assignedExercise["exercise"]["title"]; ?>
+                                                </a>
+                                            </li>
+                                            <?php
+                                            }
+                                            ?>
+                                        </ol>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                    
+                                    </ul>
+                                </div>
+
                                 <?php
 
-                                //output exercises
-                                outputAssignedExercises($assignedExercises);
                             }
-
-                            outputCompletedExercises($completedExercises);
                         }
                         else
                         {
-                            echo "Failed to load exercises";
+                            echo "Failed to load tasks";
                         }
-                    }
-                    else
-                    {
-                        //output exercises
-                        outputAssignedExercises($assignedExercises);
-                        outputCompletedExercises($completedExercises);
                     }
                 }
                 else
                 {
-                    echo "Failed to load exercises";
+                    echo "Failed to load tasks";
                 }
             ?>
         </div>
