@@ -6,7 +6,7 @@ bool Exercise::testFactors(int num, int factor, int factorTwo)
     int testFactorOne = num % factor;
     int testFactorTwo = num % factorTwo;
 
-    if (testFactorOne && testFactorTwo)
+    if (testFactorOne || testFactorTwo)
     {
         return true;
     }
@@ -23,10 +23,8 @@ bool Exercise::sumIsEven(int a, int b)
     {
         return false;
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }
 
 // find the difference between the smallest and largest values in an array
