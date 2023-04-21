@@ -2,6 +2,10 @@
 <!-- list the exercises the user has to do -->
 
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/ExerciseModel.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/ExerciseTypes.php");
@@ -10,6 +14,7 @@
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/printErrorMessages.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/model/models/UserSurveyModel.php");
+    require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/Task.php");
 
 
     //check if the user is allowed to be here
@@ -25,21 +30,39 @@
 
     // check what task the user is on
 
-    // task 1: exercises
-        // data -> exercises
-    // task 2: video and exercises
-        // data -> exercises and video links
-    // task 3: more exercises
-        // data -> exercises
-    // task 4: survey
-        // data -> survey
+    // control:
+        // task 1: video
+        // task 2: exercise
+        // task 3: exercise
+
+        // task 4: survey
+
+    // experimental:
+        // task 1: video 
+        // task 2: exercise
+
+        // task 3: video
+        // task 4: exercise
+
+        // task 5: survey
+
+    // create array of tasks
+    $tasks = array();
 
     $exerciseModel = new ExerciseModel();
     $userModel = new UserModel();
     $userExerciseModel = new UserExerciseModel();
 
-    $tasks = array();
     $tasksComplete = 0;
+
+    if ($_SESSION["permissionLevel"] == PermissionLevels::CONTROL)
+    {
+        $tasksToComplete = 4;
+    }
+    else
+    {
+        $tasksToComplete = 5;
+    }
 
     function sortExercises(&$assignedExercises, $jsonExercises)
     {
@@ -66,29 +89,6 @@
         }
     }
 
-    function printTask($task)
-    {
-        ?>
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h2 class="card-title h4 <?php if ($task->hidden) {echo "text-muted";} ?>"><?php echo $task->title; if ($task->completed) {echo "<span class='mdi mdi-checkbox-marked-circle ms-1'></span>";} ?></h2>
-                    <p class="m-0 <?php if ($task->hidden) {echo "text-muted";} ?>"><?php echo $task->text ?></p>
-
-                    <?php if (!$task->hidden) { ?>
-                        <ol class="m-0">
-                            <?php
-                            foreach ($task->items as $item)
-                            {
-                                echo $item;
-                            }
-                            ?>
-                        </ol>
-                    <?php } ?>
-                </div>
-            </div>
-        <?php
-    }
-
     // load pretest exercises
     $jsonExercises = $exerciseModel->getAvailableExercises($_SESSION["permissionLevel"], ExerciseTypes::PRETEST, true);
 
@@ -103,39 +103,42 @@
         if (count($assignedExercises) > 0)
         {
             // user is on task 1
-            $tasks[0] = new \stdClass();
-            $tasks[0] -> title = "Task 1 - Exercises";
-            $tasks[0] -> text = "Complete these exercise(s):";
-            $tasks[0] -> hidden = false;
-            $tasks[0] -> completed = false;
-            $tasks[0] -> items = array();
+            $tasks[0] = new Task(false, false);
+            $tasks[0] -> title = "Task 1 - Tutorial";
+            $tasks[0] -> text = "Watch the following video(s):";
+            array_push($tasks[0] -> items, '<li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/EQekumBU3cpOuQ_y5s9wGEIBTIiJuD42rc-4IVlsQCD6DQ?e=zQp1aN" target="_blank">Debugger Tutorial</a></li>');
+
+            $tasks[1] = new Task(false, false);
+            $tasks[1] -> title = "Task 2 - Exercises";
+            $tasks[1] -> text = "Complete these exercise(s):";
 
             foreach ($assignedExercises as $item)
             {
                 $link = '<li><a href="userArea/exercise.php?id='.$item["exercise"]["codeId"].'">'.$item["exercise"]["title"].'</a></li>';
-                array_push($tasks[0] -> items, $link);
+                array_push($tasks[1] -> items, $link);
             }
 
-            $tasks[1] = new \stdClass();
-            $tasks[1] -> title = "Task 2 - Tutorials";
-            $tasks[1] -> text = "Complete prior tasks to access this task";
-            $tasks[1] -> items = array();
-            $tasks[1] -> hidden = true;
-            $tasks[1] -> completed = false;
+            // control tasks
+            if ($_SESSION["permissionLevel"] == PermissionLevels::CONTROL)
+            {
+                $tasks[2] = new Task(true, false);
+                $tasks[2] -> title = "Task 3 - Exercises";
 
-            $tasks[2] = new \stdClass();
-            $tasks[2] -> title = "Task 3 - More Exercises";
-            $tasks[2] -> text = "Complete prior tasks to access this task";
-            $tasks[2] -> items = array();
-            $tasks[2] -> hidden = true;
-            $tasks[2] -> completed = false;
+                $tasks[3] = new Task(true, false);
+                $tasks[3] -> title = "Task 4 - Survey";
+            }
+            // experimental tasks
+            else
+            {
+                $tasks[2] = new Task(true, false);
+                $tasks[2] -> title = "Task 3 - Tutorial";
+                
+                $tasks[3] = new Task(true, false);
+                $tasks[3] -> title = "Task 4 - Exercises";
 
-            $tasks[3] = new \stdClass();
-            $tasks[3] -> title = "Task 4 - Survey";
-            $tasks[3] -> text = "Complete prior tasks to access this task";
-            $tasks[3] -> items = array();
-            $tasks[3] -> hidden = true;
-            $tasks[3] -> completed = false;
+                $tasks[4] = new Task(true, false);
+                $tasks[4] -> title = "Task 5 - Survey";
+            }
         }
         else
         {
@@ -151,48 +154,46 @@
                 if (count($assignedExercises) > 0)
                 {
                     // user is on task 2 and 3
-                    $tasks[0] = new \stdClass();
-                    $tasks[0] -> title = "Task 1 - Exercises";
-                    $tasks[0] -> text = "You have completed this task";
-                    $tasks[0] -> items = array();
-                    $tasks[0] -> hidden = true;
-                    $tasks[0] -> completed = true;
+                    $tasks[0] = new Task(true, true);
+                    $tasks[0] -> title = "Task 1 - Tutorial";
 
-                    $tasks[1] = new \stdClass();
-                    $tasks[1] -> title = "Task 2 - Tutorials";
-                    $tasks[1] -> text = "Watch the following video(s):";
-                    $tasks[1] -> items = array();
-                    $tasks[1] -> hidden = false;
-                    $tasks[1] -> completed = false;
+                    $tasks[1] = new Task(true, true);
+                    $tasks[1] -> title = "Task 2 - Exercises";
 
-                    array_push($tasks[1] -> items, '<li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/EQekumBU3cpOuQ_y5s9wGEIBTIiJuD42rc-4IVlsQCD6DQ?e=zQp1aN" target="_blank">Debugger Tutorial</a></li>');
-
-                    if ($_SESSION["permissionLevel"] >= PermissionLevels::EXPERIMENT)
-                    {
-                        array_push($tasks[1] -> items, '<li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/EbHoyYXeiyxLg-2WHnIIHX8Bo2qXZyJQSDOInPq7ZGvrWg?e=HbrcgR" target="_blank">Debugging Strategy Tutorial</a></li>');
-                    }
-
-                    $tasks[2] = new \stdClass();
-                    $tasks[2] -> title = "Task 3 - More Exercises";
-                    $tasks[2] -> text = "Complete these exercise(s):";
-                    $tasks[2] -> items = array();
-                    $tasks[2] -> hidden = false;
-                    $tasks[2] -> completed = false;
+                    $posttest = new Task(false, false);
+                    $posttest -> text = "Complete these exercise(s):";
 
                     foreach ($assignedExercises as $item)
                     {
                         $link = '<li><a href="userArea/exercise.php?id='.$item["exercise"]["codeId"].'">'.$item["exercise"]["title"].'</a></li>';
-                        array_push($tasks[2] -> items, $link);
+                        array_push($posttest -> items, $link);
                     }
 
-                    $tasks[3] = new \stdClass();
-                    $tasks[3] -> title = "Task 4 - Survey";
-                    $tasks[3] -> text = "Complete prior tasks to access this task";
-                    $tasks[3] -> items = array();
-                    $tasks[3] -> hidden = true;
-                    $tasks[3] -> completed = false;
+                    // control tasks
+                    if ($_SESSION["permissionLevel"] == PermissionLevels::CONTROL)
+                    {
+                        $tasks[2] = $posttest;
+                        $tasks[2] -> title = "Task 3 - Exercises";
 
-                    $tasksComplete = 1;
+                        $tasks[3] = new Task(true, false);
+                        $tasks[3] -> title = "Task 4 - Survey";
+                    }
+                    // experimental tasks
+                    else
+                    {
+                        $tasks[2] = new Task(false, false);
+                        $tasks[2] -> title = "Task 3 - Tutorial";
+
+                        array_push($tasks[2] -> items, '<li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/EbHoyYXeiyxLg-2WHnIIHX8Bo2qXZyJQSDOInPq7ZGvrWg?e=HbrcgR" target="_blank">Debugging Strategy Tutorial</a></li>');
+                        
+                        $tasks[3] = $posttest;
+                        $tasks[3] -> title = "Task 4 - Exercises";
+
+                        $tasks[4] = new Task(true, false);
+                        $tasks[4] -> title = "Task 5 - Survey";
+                    }
+
+                    $tasksComplete = 2;
                 }
                 else
                 {
@@ -210,70 +211,84 @@
                         if (!isset($data["isempty"]))
                         {
                             // user has finished all tasks
-                            $tasks[0] = new \stdClass();
-                            $tasks[0] -> title = "Task 1 - Exercises";
-                            $tasks[0] -> text = "You have completed this task";
-                            $tasks[0] -> items = array();
-                            $tasks[0] -> hidden = true;
-                            $tasks[0] -> completed = true;
+                            $tasks[0] = new Task(true, true);
+                            $tasks[0] -> title = "Task 1 - Tutorial";
 
-                            $tasks[1] = new \stdClass();
-                            $tasks[1] -> title = "Task 2 - Tutorials";
-                            $tasks[1] -> text = "You have completed this task";
-                            $tasks[1] -> items = array();
-                            $tasks[1] -> hidden = true;
-                            $tasks[1] -> completed = true;
+                            $tasks[1] = new Task(true, true);
+                            $tasks[1] -> title = "Task 2 - Exercises";
 
-                            $tasks[2] = new \stdClass();
-                            $tasks[2] -> title = "Task 3 - More Exercises";
-                            $tasks[2] -> text = "You have completed this task";
-                            $tasks[2] -> items = array();
-                            $tasks[2] -> hidden = true;
-                            $tasks[2] -> completed = true;
+                            $posttest = new Task(true, true);
+                            $survey = new Task(true, true);
 
-                            $tasks[3] = new \stdClass();
-                            $tasks[3] -> title = "Task 4 - Survey";
-                            $tasks[3] -> text = "You have completed this task";
-                            $tasks[3] -> items = array();
-                            $tasks[3] -> hidden = true;
-                            $tasks[3] -> completed = true;
+                            // control tasks
+                            if ($_SESSION["permissionLevel"] == PermissionLevels::CONTROL)
+                            {
+                                $tasks[2] = $posttest;
+                                $tasks[2] -> title = "Task 3 - Exercises";
 
-                            $tasksComplete = 4;
+                                $tasks[3] = $survey;
+                                $tasks[3] -> title = "Task 4 - Survey";
+
+                                $tasksComplete = 4;
+                            }
+                            // experimental tasks
+                            else
+                            {
+                                $tasks[2] = new Task(true, true);
+                                $tasks[2] -> title = "Task 3 - Tutorial";
+
+                                $tasks[3] = $posttest;
+                                $tasks[3] -> title = "Task 4 - Exercises";
+
+                                $tasks[4] = $survey;
+                                $tasks[4] -> title = "Task 5 - Survey";
+
+                                $tasksComplete = 5;
+                            }
                         }
                         else
                         {
-                            // user is on task 4
-                            $tasks[0] = new \stdClass();
-                            $tasks[0] -> title = "Task 1 - Exercises";
-                            $tasks[0] -> text = "You have completed this task";
-                            $tasks[0] -> items = array();
-                            $tasks[0] -> hidden = true;
-                            $tasks[0] -> completed = true;
+                            // user is on task 4/5
+                            $tasks[0] = new Task(true, true);
+                            $tasks[0] -> title = "Task 1 - Tutorial";
 
-                            $tasks[1] = new \stdClass();
-                            $tasks[1] -> title = "Task 2 - Tutorials";
-                            $tasks[1] -> text = "You have completed this task";
-                            $tasks[1] -> items = array();
-                            $tasks[1] -> hidden = true;
-                            $tasks[1] -> completed = true;
+                            $tasks[1] = new Task(true, true);
+                            $tasks[1] -> title = "Task 2 - Exercises";
 
-                            $tasks[2] = new \stdClass();
-                            $tasks[2] -> title = "Task 3 - More Exercises";
-                            $tasks[2] -> text = "You have completed this task";
-                            $tasks[2] -> items = array();
-                            $tasks[2] -> hidden = true;
-                            $tasks[2] -> completed = true;
+                            $posttest = new Task(true, true);
+                            $survey = new Task(false, false);
 
-                            $tasks[3] = new \stdClass();
-                            $tasks[3] -> title = "Task 4 - Survey";
-                            $tasks[3] -> text = "Please complete the System Usability Scale (SUS) survey to give feedback on this tool:";
-                            $tasks[3] -> items = array();
-                            $tasks[3] -> hidden = false;
-                            $tasks[3] -> completed = false;
+                            // control tasks
+                            if ($_SESSION["permissionLevel"] == PermissionLevels::CONTROL)
+                            {
+                                $tasks[2] = $posttest;
+                                $tasks[2] -> title = "Task 3 - Exercises";
 
-                            array_push($tasks[3] -> items, '<li><a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></li>');
+                                $tasks[3] = $survey;
+                                $tasks[3] -> title = "Task 4 - Survey";
+                                $tasks[3] -> text = "Please complete the System Usability Scale (SUS) survey to give feedback on this tool:";
 
-                            $tasksComplete = 3;
+                                array_push($tasks[3] -> items, '<li><a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></li>');
+
+                                $tasksComplete = 3;
+                            }
+                            // experimental tasks
+                            else
+                            {
+                                $tasks[2] = new Task(true, true);
+                                $tasks[2] -> title = "Task 3 - Tutorial";
+
+                                $tasks[3] = $posttest;
+                                $tasks[3] -> title = "Task 4 - Exercises";
+
+                                $tasks[4] = $survey;
+                                $tasks[4] -> title = "Task 5 - Survey";
+                                $tasks[4] -> text = "Please complete the System Usability Scale (SUS) survey to give feedback on this tool:";
+
+                                array_push($tasks[4] -> items, '<li><a href="/honours/webapp/view/userArea/survey.php">SUS Survey</a></li>');
+
+                                $tasksComplete = 4;
+                            }
                         }
                     }
                 }
@@ -304,10 +319,10 @@
                     printErrorMessage($message);
                 }
             ?>
-            <h1>Tasks <span class="float-end h4 pt-3">Completed: <?php echo $tasksComplete ?>/4</span></h1>
+            <h1>Tasks <span class="float-end h4 pt-3">Completed: <?php echo $tasksComplete ?>/<?php echo $tasksToComplete ?></span></h1>
             <hr>
             <?php
-                if ($tasksComplete == 4)
+                if ($tasksComplete == $tasksToComplete)
                 {
             ?>
                     <div class="alert alert-success show d-flex align-items-center" role="alert">
@@ -318,7 +333,7 @@
 
                 foreach ($tasks as $task)
                 {
-                    printTask($task);
+                    echo($task);
                 }
 
                 if (count($tasks) == 0)
