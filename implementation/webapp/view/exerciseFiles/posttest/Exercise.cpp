@@ -58,9 +58,9 @@ bool Exercise::goodDinner(int pizzasEaten, bool weekend)
 {
     if (weekend)
     {
-        if (pizzasEaten > 10 || pizzasEaten <= 20)
+        if (pizzasEaten > 10 || pizzasEaten >= 15)
         {
-            return true;
+            return false;
         }
     }
     else
@@ -71,7 +71,7 @@ bool Exercise::goodDinner(int pizzasEaten, bool weekend)
         }
     }
 
-    return false;
+    return true;
 }
 
 // filter a number out of some data
