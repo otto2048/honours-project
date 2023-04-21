@@ -13,6 +13,20 @@
             return parent::create($jsonData, $paramTypes);
         }
 
+        public function getExerciseResultVector($userId, $codeId)
+        {
+            //get user points for this exercise
+            $this->sqlStmt = 'SELECT result_vector FROM honours_user_exercise WHERE userId = ? AND codeId = ?';
+
+            $variables = new \stdClass();
+            $variables -> userId = $userId;
+            $variables -> codeId = $codeId;
+
+            $paramTypes = "ii";
+
+            return parent::retrieve(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+        }
+
         //get a users mark for an exercise
         public function getExerciseMark($userId, $codeId)
         {
