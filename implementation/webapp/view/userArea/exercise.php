@@ -106,6 +106,8 @@
 
                     ?>
 
+                    <span class="d-none" aria-hidden="true" id="exerciseTimeLimit"><?php echo $exerciseData[0]["time_limit"] ?></span>
+
                     <div class="mt-5 mb-5">
                         <h1>Exercise: <?php echo $exerciseData[0]["title"] ?></h1>
                         <p><?php echo $exerciseData[0]["description"] ?></p>
@@ -121,7 +123,7 @@
 
                     <div class="alert alert-danger show d-flex align-items-center timerContainer" role="alert">
                         <p class="pe-1 m-0"><b>Time remaining: </b></p>
-                        <p id="timerText" class="m-0">10:00</p>
+                        <p id="timerText" class="m-0"><?php echo $exerciseData[0]["time_limit"] ?>:00</p>
                     </div>
 
                     <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>

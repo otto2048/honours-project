@@ -9,13 +9,13 @@ float Exercise::average(float a, float b)
 // find the highest number out of three integers
 int Exercise::highest(int a, int b, int c)
 {
-    if (a < b && a > c)
+    if (a < b && a < c)
     {
         return a;
     }
-    else if (b > c || b > c)
+    else if (b > c && b < a)
     {
-        return b;
+        return c;
     }
 
     return b;

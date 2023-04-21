@@ -88,7 +88,7 @@ socketHost.onmessage = function(event) {
 
                 //set timeout for the exercise
                 //source: https://stackoverflow.com/questions/1191865/code-for-a-simple-javascript-countdown-timer/1192001#1192001:~:text=21-,Here,-is%20another%20one
-                var mins = 10;
+                var mins = parseInt($("#exerciseTimeLimit").text());
                 var secs = mins * 60;
                 var currentSeconds = 0;
                 var currentMinutes = 0;

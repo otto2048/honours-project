@@ -109,6 +109,8 @@
                                     <li>Type: <?php echo $exerciseType->getExerciseType($exerciseData[0]["type"]); ?></li>
 
                                     <li>Available points: <?php echo $exerciseData[0]["availablePoints"] ?></li>
+
+                                    <li>Time limit: <?php echo $exerciseData[0]["time_limit"] ?></li>
                                 </ul>
 
                     <?php

@@ -46,10 +46,14 @@
                                 {
                                     //get mark information
                                     $markJson = $userExerciseModel->getExerciseMark($user["userId"], $exercise["codeId"]);
+
+                                    //get result vector
+                                    $resultVectorJson = $userExerciseModel->getExerciseResultVector($user["userId"], $exercise["codeId"]);
                                 
-                                    if ($markJson)
+                                    if ($markJson && $resultVectorJson)
                                     {
                                         $mark = json_decode($markJson, JSON_INVALID_UTF8_SUBSTITUTE);
+                                        $resultVector = json_decode($resultVectorJson, JSON_INVALID_UTF8_SUBSTITUTE);
 
                                         $obj = new \stdClass;
 
@@ -59,6 +63,7 @@
                                         $obj -> exerciseType = $exerciseTypes->getExerciseType($exercise["type"]);
                                         $obj -> points = $mark["points"];
                                         $obj -> total = $mark["total"];
+                                        $obj -> resultVector = $resultVector[0]["result_vector"];
 
                                         array_push($data, $obj);
                                     }
