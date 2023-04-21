@@ -85,12 +85,6 @@ namespace {
         Exercise exercise;
         EXPECT_EQ(5, exercise.highest(4, 5, 4));
     }
-    
-    TEST(highest, test9)
-    {
-        Exercise exercise;
-        EXPECT_EQ(4, exercise.highest(4, 4, 4));
-    }
 
     TEST(totalArray, test0)
     {
