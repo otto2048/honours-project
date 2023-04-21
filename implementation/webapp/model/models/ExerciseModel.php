@@ -93,9 +93,9 @@
         //create an exercise
         public function createData($jsonData)
         {
-            $this->sqlStmt = 'INSERT INTO honours_code_exercise (title, description, exerciseFile, visible, availability, type, availablePoints) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            $this->sqlStmt = 'INSERT INTO honours_code_exercise (title, description, exerciseFile, visible, availability, type, availablePoints, time_limit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
-            $paramTypes = "sssiiii";
+            $paramTypes = "sssiiiii";
 
             return parent::create($jsonData, $paramTypes);
         }
@@ -103,9 +103,9 @@
         //update an exercise
         public function updateData($jsonData)
         {
-            $this->sqlStmt = 'UPDATE honours_code_exercise SET title = ?, description = ?, exerciseFile = ?, visible = ?, availability = ?, type = ?, availablePoints = ? WHERE codeId = ?';
+            $this->sqlStmt = 'UPDATE honours_code_exercise SET title = ?, description = ?, exerciseFile = ?, visible = ?, availability = ?, type = ?, availablePoints = ?, time_limit = ? WHERE codeId = ?';
 
-            $paramTypes = "sssiiiii";
+            $paramTypes = "sssiiiiii";
 
             return parent::update($jsonData, $paramTypes);
         }

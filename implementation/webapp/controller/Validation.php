@@ -469,6 +469,7 @@
 
             $exercise["visible"] = $this->cleanInput($exercise["visible"]);
             $exercise["availability"] = $this->cleanInput($exercise["availability"]);
+            $exercise["time_limit"] = $this->cleanInput($exercise["time_limit"]);
 
             //validate id if its set
             if (isset($exercise["codeId"]))
@@ -521,8 +522,15 @@
             //validate available points
             if (!$this->validateInt($exercise["availablePoints"]))
             {
-                $errorMessage[0]["content"] = "Invalid available points";
-                $errorMessage[0]["success"] = false;
+                $errorMessage[7]["content"] = "Invalid available points";
+                $errorMessage[7]["success"] = false;
+            }
+
+            //validate time limit
+            if (!$this->validateInt($exercise["time_limit"]))
+            {
+                $errorMessage[8]["content"] = "Invalid time limit";
+                $errorMessage[8]["success"] = false;
             }
 
             //repack sanitized data
