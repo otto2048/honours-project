@@ -6,9 +6,9 @@
     {
         public function createData($jsonData)
         {
-            $this->sqlStmt = 'INSERT INTO honours_user_exercise (userId, codeId, mark, completed) VALUES (?, ?, ?, ?)';
+            $this->sqlStmt = 'INSERT INTO honours_user_exercise (userId, codeId, mark, completed, result_vector) VALUES (?, ?, ?, ?, ?)';
 
-            $paramTypes = "iiii";
+            $paramTypes = "iiiis";
 
             return parent::create($jsonData, $paramTypes);
         }

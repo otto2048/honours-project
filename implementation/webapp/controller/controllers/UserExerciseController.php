@@ -12,6 +12,7 @@
             $data->codeId = $_POST["codeId"];
             $data->mark = $_POST["mark"];
             $data->completed = true;
+            $data->result_vector = $_POST["resultVector"];
 
             $jsonData = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
 

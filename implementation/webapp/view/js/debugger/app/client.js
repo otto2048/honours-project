@@ -188,10 +188,12 @@ export function on_message(messageEvent)
 
             break;
         case constants.EVENT_ON_TEST_SUCCESS:
-            //get number of tests succeeded
+            //get number of tests succeeded and result vector
             var value = message.value.replace(/\s/g, "");
 
-            value = value.split("DEBUGGING_TOOL_RESULT:").pop();
+            var points = value.split("DEBUGGING_TOOL_RESULT:").pop();
+
+            var testVector = value.split("TEST_VECTOR:").pop().split("DEBUGGING_TOOL_RESULT:")[0];
 
             const urlParams = new URLSearchParams(window.location.search);
 
@@ -199,7 +201,7 @@ export function on_message(messageEvent)
             $.ajax({
                 type: "POST",
                 url: "/honours/webapp/controller/ajaxScripts/logUserExerciseAttempt.php",
-                data: {codeId: urlParams.get("id"), mark: value},
+                data: {codeId: urlParams.get("id"), mark: points, resultVector: testVector},
                 success: function(data) {
                     if (data != 0)
                     {

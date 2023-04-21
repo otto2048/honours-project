@@ -20,6 +20,8 @@
         const SUS_LIKERT_MIN = 1;
         const SUS_LIKERT_MAX = 5;
 
+        const RESULT_VECTOR_MAX_LENGTH = 50;
+
         public function validate($modelClassType, &$jsonData, &$errorMessageJson)
         {
             switch ($modelClassType)
@@ -260,6 +262,7 @@
             $userExercise["codeId"] = $this->cleanInput($userExercise["codeId"]);
             $userExercise["mark"] = $this->cleanInput($userExercise["mark"]);
             $userExercise["completed"] = $this->cleanInput($userExercise["completed"]);
+            $userExercise["result_vector"] = $this->cleanInput($userExercise["result_vector"]);
 
             //repack sanitized data
             $jsonData = json_encode($userExercise, JSON_INVALID_UTF8_SUBSTITUTE);
@@ -287,6 +290,12 @@
             {
                 $errorMessage[3]["content"] = "Invalid completed value";
                 $errorMessage[3]["success"] = false;
+            }
+
+            if (!$this->validateString($userExercise["result_vector"], Validation::RESULT_VECTOR_MAX_LENGTH))
+            {
+                $errorMessage[4]["content"] = "Invalid result vector";
+                $errorMessage[4]["success"] = false;
             }
 
             //check if we found any errors
