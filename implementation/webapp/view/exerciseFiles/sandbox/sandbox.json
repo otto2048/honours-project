@@ -1,0 +1,17 @@
+{
+    "compilation" : {
+        "writable" : [
+            "sandbox/main.cpp"
+        ],
+        "readonly" : [
+        ]
+    },
+    "test" : {
+        "writable" : [
+            ],
+        "readonly" : [
+        ]
+    }
+}
+
+
