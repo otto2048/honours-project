@@ -106,6 +106,7 @@ error_reporting(E_ALL);
             $tasks[0] = new Task(false, false);
             $tasks[0] -> title = "Task 1 - Tutorial";
             $tasks[0] -> text = "Watch the following video(s):";
+            array_push($tasks[0] -> items, '<li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/ERh-ddpHpw1AvPo1p1lR7LgBOj-ikA7bSorv-6ezzb33Dg?e=ngkHQQ" target="_blank">Environment Overview</a></li>');
             array_push($tasks[0] -> items, '<li><a href="https://liveabertayac-my.sharepoint.com/:v:/g/personal/1900414_uad_ac_uk/EQekumBU3cpOuQ_y5s9wGEIBTIiJuD42rc-4IVlsQCD6DQ?e=zQp1aN" target="_blank">Debugger Tutorial</a></li>');
 
             $tasks[1] = new Task(false, false);
