@@ -112,6 +112,12 @@
                         <h1>Exercise: <?php echo $exerciseData[0]["title"] ?></h1>
                         <p><?php echo $exerciseData[0]["description"] ?></p>
                         <hr>
+                        <h2>The Environment</h2>
+                        <p>This environment is a simplified IDE. It lets you compile and run code within your browser. Additionally, it comes with some debugger functionality (breakpoints, stepping and viewing variable values)</p>
+                        <p>The code files available to you are in the editor, you can edit any of these files (unless they are marked as Read Only)</p>
+                        <p>Any compilation output will be in the Output window at the bottom left of the screen (i.e., compilation messages and program return messages)</p>
+                        <p>The output of your program will be in console window at the bottom right of the screen</p>
+                        <hr>
                         <h2>Completing the exercise</h2>
                         <p>The exercise will require you to <b>fix bugs within the code.</b> All bugs are in the Exercise.cpp file. You can call functions from Exercise.cpp in the main.cpp file</p>
                         <p><b>The environment will time you out if you are inactive and you will lose all progress in the exercise</b></p>
