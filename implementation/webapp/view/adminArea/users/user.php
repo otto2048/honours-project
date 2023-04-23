@@ -129,6 +129,7 @@
                                                     <th scope="col" data-tablesort-type="int">ID</th>
                                                     <th scope="col" data-tablesort-type="string">Title</th>
                                                     <th scope="col" data-tablesort-type="string">Mark</th>
+                                                    <th scope="col" data-tablesort-type="string">Vector</th>
                                                     <th scope="col" data-tablesort-type="string">Visible</th>
                                                 </tr>
                                             </thead>
@@ -157,6 +158,20 @@
                                                         {
                                                             echo 'Failed to retrieve mark</td>';
                                                         }
+
+                                                        $vectorJson = $userExerciseModel->getExerciseResultVector($userData[0]["userId"], $row["codeId"]);
+                                                        echo '<td>';
+                                                        if ($vectorJson)
+                                                        {
+                                                            $vector = json_decode($vectorJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                                            echo $vector[0]["result_vector"];
+                                                        }
+                                                        else
+                                                        {
+                                                            echo 'Failed to retrieve vector';
+                                                        }
+                                                        echo '</td>';
 
                                                         echo '<td>';
                                                         if ($row["visible"])
@@ -213,6 +228,7 @@
                                                     <th scope="col" data-tablesort-type="int">ID</th>
                                                     <th scope="col" data-tablesort-type="string">Title</th>
                                                     <th scope="col" data-tablesort-type="string">Mark</th>
+                                                    <th scope="col" data-tablesort-type="string">Vector</th>
                                                     <th scope="col" data-tablesort-type="string">Visible</th>
                                                 </tr>
                                             </thead>
@@ -241,6 +257,20 @@
                                                         {
                                                             echo 'Failed to retrieve mark</td>';
                                                         }
+
+                                                        $vectorJson = $userExerciseModel->getExerciseResultVector($userData[0]["userId"], $row["codeId"]);
+                                                        echo '<td>';
+                                                        if ($vectorJson)
+                                                        {
+                                                            $vector = json_decode($vectorJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                                            echo $vector[0]["result_vector"];
+                                                        }
+                                                        else
+                                                        {
+                                                            echo 'Failed to retrieve vector';
+                                                        }
+                                                        echo '</td>';
 
                                                         echo '<td>';
                                                         if ($row["visible"])
@@ -296,6 +326,7 @@
                                                     <th scope="col" data-tablesort-type="int">ID</th>
                                                     <th scope="col" data-tablesort-type="string">Title</th>
                                                     <th scope="col" data-tablesort-type="string">Mark</th>
+                                                    <th scope="col" data-tablesort-type="string">Vector</th>
                                                     <th scope="col" data-tablesort-type="string">Visible</th>
                                                 </tr>
                                             </thead>
@@ -313,6 +344,7 @@
 
                                                         //get mark information
                                                         $markJson = $userExerciseModel->getExerciseMark($userData[0]["userId"], $row["codeId"]);
+                                                        $vectorJson = $userExerciseModel->getExerciseResultVector($userData[0]["userId"], $row["codeId"]);
 
                                                         if ($markJson)
                                                         {
@@ -324,6 +356,19 @@
                                                         {
                                                             echo 'Failed to retrieve mark</td>';
                                                         }
+
+                                                        echo '<td>';
+                                                        if ($vectorJson)
+                                                        {
+                                                            $vector = json_decode($vectorJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                                            echo $vector[0]["result_vector"];
+                                                        }
+                                                        else
+                                                        {
+                                                            echo 'Failed to retrieve vector';
+                                                        }
+                                                        echo '</td>';
 
                                                         echo '<td>';
                                                         if ($row["visible"])

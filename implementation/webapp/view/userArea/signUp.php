@@ -53,8 +53,8 @@
                 <p>Your participation will involve:
                     <ul>
                         <li>the completion of debugging exercises - you will be given some code and you must fix the bugs within the code</li>
-                        <li>watching video(s) relating to the training tool</li>
-                        <li>completing a System Usability Survey to evaluate the usability of the training tool</li>
+                        <li>watching videos relating to the training tool</li>
+                        <li>completing a System Usability Scale survey to evaluate the usability of the training tool</li>
                     </ul>
                 </p>
 
