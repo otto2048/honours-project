@@ -33,8 +33,8 @@
                     // for each user, get their pre and post test scores
                     foreach ($userData as $user)
                     {
-                        // get available exercises        
-                        $jsonExercises = $exerciseModel->getAvailableExercises($user["permissionLevel"], null, true);
+                        // get available pretest exercises        
+                        $jsonExercises = $exerciseModel->getAvailableExercises($user["permissionLevel"], ExerciseTypes::PRETEST, true);
 
                         if ($jsonExercises)
                         {
@@ -63,14 +63,54 @@
                                         $obj -> exerciseType = $exerciseTypes->getExerciseType($exercise["type"]);
                                         $obj -> points = $mark["points"];
                                         $obj -> total = $mark["total"];
-                                        $obj -> resultVector = $resultVector[0]["result_vector"];
+                                        $obj -> resultVector = $resultVector[0]["result_vector"]."_";
 
                                         array_push($data, $obj);
                                     }
                                 }
                             }
                         }
+                    }
 
+                    foreach ($userData as $user)
+                    {
+                        // get available posttest exercises        
+                        $jsonExercises = $exerciseModel->getAvailableExercises($user["permissionLevel"], ExerciseTypes::POSTTEST, true);
+
+                        if ($jsonExercises)
+                        {
+                            $exercises = json_decode($jsonExercises, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                            if (!isset($exercises["isempty"]))
+                            {
+                                foreach ($exercises as $exercise)
+                                {
+                                    //get mark information
+                                    $markJson = $userExerciseModel->getExerciseMark($user["userId"], $exercise["codeId"]);
+
+                                    //get result vector
+                                    $resultVectorJson = $userExerciseModel->getExerciseResultVector($user["userId"], $exercise["codeId"]);
+                                
+                                    if ($markJson && $resultVectorJson)
+                                    {
+                                        $mark = json_decode($markJson, JSON_INVALID_UTF8_SUBSTITUTE);
+                                        $resultVector = json_decode($resultVectorJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                                        $obj = new \stdClass;
+
+                                        $obj -> username = $user["username"];
+                                        $obj -> permission = $userPermissions->getPermissionLevel($user["permissionLevel"]);
+                                        $obj -> exercise = $exercise["codeId"];
+                                        $obj -> exerciseType = $exerciseTypes->getExerciseType($exercise["type"]);
+                                        $obj -> points = $mark["points"];
+                                        $obj -> total = $mark["total"];
+                                        $obj -> resultVector = $resultVector[0]["result_vector"]."_";
+
+                                        array_push($data, $obj);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
