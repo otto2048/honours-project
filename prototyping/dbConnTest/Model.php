@@ -369,7 +369,6 @@
             if ($querySuccess)
             {
                 //get ID
-                //TODO: change this since not all tables are identified by one id column
                 $retValue = $data["id"];
             }
 

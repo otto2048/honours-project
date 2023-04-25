@@ -519,8 +519,3 @@ function getMessageContents(flag, element)
         return null;
     }
 }
-
-//TODO: output program exit code
-
-//TODO: tail only outputs a line after endl
-//TODO: sometimes exit code is printed before output
