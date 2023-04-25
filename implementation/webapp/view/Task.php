@@ -1,5 +1,5 @@
 <?php
-
+    //class to display tasks for users
     Class Task {
         public $title;
         public $text;
@@ -13,16 +13,20 @@
             $this->hidden = $hidden_;
             $this->items = array();
             
+            //if task is hidden and not completed
             if ($this->hidden == true && $this->completed == false)
             {
                 $this->text = "Complete prior tasks to access this task";
             }
+            // if task is hidden and completed
             else if ($this->hidden == true && $this->completed == true)
             {
                 $this->text = "You have completed this task";
             }
         }
 
+
+        //output task information
         public function __toString()
         {
             $ret = "";

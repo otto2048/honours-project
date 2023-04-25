@@ -1,3 +1,5 @@
+//js for setting theme
+
 window.onload = preparePage();
 
 function preparePage()

@@ -166,6 +166,7 @@
             </div>
         </div>
 
+        <!-- js includes -->
         <script src="../../js/deleteConfirmation.js"></script>
         <script src="../../js/modifyTableRows.js"></script>
         <script src="../../js/addFormInput.js"></script>

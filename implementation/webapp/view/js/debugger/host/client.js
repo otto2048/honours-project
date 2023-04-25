@@ -1,8 +1,4 @@
-// javascript for controlling an exercise, client side
-
-// need to launch docker container to complete exercise in
-
-// need to handle instruction file if it exists
+// This file controls the connection between the client and the host WSS
 
 import * as constants from "/honours/webapp/view/js/debugger/host/hostConstants.js";
 import * as debug from "/honours/webapp/view/js/debugger/app/client.js"

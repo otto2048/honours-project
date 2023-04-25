@@ -1,6 +1,5 @@
 <?php
     //SUS survey for web app
-    //TODO: more user feedback and explanation of survey
 
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/controller/Session.php");
     require_once($_SERVER['DOCUMENT_ROOT']."/honours/webapp/view/navigation.php");

@@ -1,5 +1,7 @@
 // Socket setup based on tutorial: https://javascript.info/websocket
 
+// This file controls the connection between the client and the debugger container
+
 import * as constants from "/honours/webapp/view/js/debugger/app/debuggerConstants.js";
 import Request from "/honours/webapp/view/js/debugger/request.js";
 

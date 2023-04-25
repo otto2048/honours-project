@@ -1,3 +1,5 @@
+//js for delete confirmation modal
+
 window.onload = preparePage();
 
 function preparePage()

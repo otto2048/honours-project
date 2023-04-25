@@ -22,6 +22,7 @@
 
         const RESULT_VECTOR_MAX_LENGTH = 50;
 
+        // validate a whole db entry
         public function validate($modelClassType, &$jsonData, &$errorMessageJson)
         {
             switch ($modelClassType)
@@ -48,6 +49,7 @@
             return false;
         }
 
+        // validate the primary key of db entry
         public function validatePK($modelClassType, &$jsonData)
         {
             switch ($modelClassType)

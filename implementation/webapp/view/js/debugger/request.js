@@ -1,3 +1,5 @@
+//API request class
+
 class Request {
     constructor(sender_) {
         this.sender = sender_;

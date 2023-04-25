@@ -1,3 +1,5 @@
+//TODO: delete file?
+
 window.onload = preparePage();
 
 var inputCounter = 1;

@@ -17,6 +17,8 @@
     --bs-body-color: #000;
 }
 
+/* general styles */
+
 .theme {
     background-color: var(--green);
 }
@@ -62,10 +64,7 @@
     white-space: pre-wrap;
 }
 
-.max-height-box {
-    height: var(--default-height);
-}
-
+/* alerts */
 [data-bs-theme=light] .alert-dark p {
     color: #000;
 }
@@ -106,6 +105,7 @@
     color: #FFF;
 }
 
+/* survey questions */
 .likert li {
     float: left;
     list-style-type: none;
@@ -127,6 +127,10 @@
 .readOnlyMessage {
     background-color: var(--bs-warning);
     color: black;
+}
+
+.max-height-box {
+    height: var(--default-height);
 }
 
 /* variables */

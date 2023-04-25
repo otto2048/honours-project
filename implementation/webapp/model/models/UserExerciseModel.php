@@ -4,6 +4,7 @@
 
     class UserExerciseModel extends Model
     {
+        //create user data
         public function createData($jsonData)
         {
             $this->sqlStmt = 'INSERT INTO honours_user_exercise (userId, codeId, mark, completed, result_vector) VALUES (?, ?, ?, ?, ?)';
@@ -13,9 +14,9 @@
             return parent::create($jsonData, $paramTypes);
         }
 
+        //get the result vector for a user
         public function getExerciseResultVector($userId, $codeId)
         {
-            //get user points for this exercise
             $this->sqlStmt = 'SELECT result_vector FROM honours_user_exercise WHERE userId = ? AND codeId = ?';
 
             $variables = new \stdClass();

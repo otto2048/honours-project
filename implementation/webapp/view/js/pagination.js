@@ -1,3 +1,5 @@
+//js for managing pagination functionality
+
 window.onload = preparePage();
 
 function preparePage()

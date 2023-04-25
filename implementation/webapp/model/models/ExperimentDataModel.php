@@ -174,6 +174,7 @@
     }
 
     // need to change server permissions to run this code
+    // write all experiment data to csv files
     $test = new ExperimentDataModel();
 
     $json = $test->getExperimentData();

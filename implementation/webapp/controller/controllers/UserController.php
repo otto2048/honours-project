@@ -7,8 +7,6 @@
 
     class UserController extends Controller
     {
-        //function to handle user login
-        //return void
         public function loginUser($usernameInput, $passwordInput)
         {
             $username = $this->validationObj->cleanInput($usernameInput);
