@@ -171,19 +171,68 @@
 
             return json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
         }
+
+        public function getDetailedSurveyData()
+        {
+            $userModel = new UserModel();
+            $userPermissions = new PermissionLevels();
+
+            $userSurveyModel = new UserSurveyModel();
+
+            // get all users
+            $jsonUserData = $userModel->getAllUsers();
+
+            $data = array();
+
+            if ($jsonUserData)
+            {
+                $userData = json_decode($jsonUserData, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                if (!isset($userData["isempty"]))
+                {
+                    foreach ($userData as $user)
+                    {
+                        $userAnswersJson = $userSurveyModel->getUserAnswers($user["userId"]);
+
+                        if ($userAnswersJson)
+                        {
+                            $userAnswers = json_decode($userAnswersJson, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                            if (!isset($userAnswers["isempty"]))
+                            {
+                                foreach ($userAnswers as $answer)
+                                {
+                                    $obj = new \stdClass;
+                                    $obj -> username = $user["username"];
+                                    $obj -> permission = $userPermissions->getPermissionLevel($user["permissionLevel"]);
+                                    $obj -> questionId = $answer["questionId"];
+                                    $obj -> contents = $answer["contents"];
+                                    $obj -> answer = $answer["answer"];
+
+                                    array_push($data, $obj);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+
+        }
     }
 
     // need to change server permissions to run this code
     // write all experiment data to csv files
     $test = new ExperimentDataModel();
 
-    $json = $test->getExperimentData();
+    $json = $test->getDetailedSurveyData();
 
     $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
 
-    $fp = fopen('experiment.csv', 'w');
+    $fp = fopen('survey_details.csv', 'w');
 
-    fputcsv($fp, array('user','group','exercise', 'exercise type', 'points', 'total'));
+    fputcsv($fp, array('username','permission','questionId', 'contents', 'answer'));
 
     foreach ($actual as $fields) {
         fputcsv($fp,$fields);
@@ -191,17 +240,31 @@
 
     fclose($fp);
 
-    $json = $test->getSurveyData();
+    // $json = $test->getExperimentData();
 
-    $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
+    // $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
 
-    $fp = fopen('survey.csv', 'w');
+    // $fp = fopen('experiment.csv', 'w');
 
-    fputcsv($fp, array('user','group','sus', 'further comments'));
+    // fputcsv($fp, array('user','group','exercise', 'exercise type', 'points', 'total'));
 
-    foreach ($actual as $fields) {
-        fputcsv($fp,$fields);
-    }
+    // foreach ($actual as $fields) {
+    //     fputcsv($fp,$fields);
+    // }
 
-    fclose($fp);
+    // fclose($fp);
+
+    // $json = $test->getSurveyData();
+
+    // $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
+
+    // $fp = fopen('survey.csv', 'w');
+
+    // fputcsv($fp, array('user','group','sus', 'further comments'));
+
+    // foreach ($actual as $fields) {
+    //     fputcsv($fp,$fields);
+    // }
+
+    // fclose($fp);
 ?>
