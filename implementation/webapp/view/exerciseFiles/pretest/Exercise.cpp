@@ -7,6 +7,7 @@ float Exercise::average(float a, float b)
 }
 
 // find the highest number out of three integers
+// adapted from Ettles et al. (2018)
 int Exercise::highest(int a, int b, int c)
 {
     if (a < b && a < c)

@@ -34,7 +34,8 @@ function preparePage() {
     })
 }
 
-//SOURCE: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+//source: stackoverflow (2015)
+//accessed from: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 // dec2hex :: Integer -> String
 // i.e. 0-255 -> '00'-'ff'
 function dec2hex (dec) {

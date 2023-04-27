@@ -424,5 +424,3 @@ function launchGDB(obj, ws)
         progProcess = null;
     });
 }
-
-//TODO: output program exit code

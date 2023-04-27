@@ -51,6 +51,7 @@ int Exercise::range(int array[], int arraySize)
     return smallest - largest;
 }
 
+// adapted from Ettles et al. (2018)
 // a good dinner is where you eat between 10 and 20 pizzas (inclusive),
 //   unless its the weekend, in which case there is no upper bound on the number of pizzas
 // this function determines if it was a good dinner or not
@@ -74,6 +75,8 @@ bool Exercise::goodDinner(int pizzasEaten, bool weekend)
     return true;
 }
 
+// adapted from learneroo (no date)
+// accessed from: https://www.learneroo.com/modules/20/nodes/157
 // filter a number out of some data
 // replace any element that is divisible by the filter or includes any part of the filter
 void Exercise::filterData(int filter, int replacement, int data[], int dataSize)

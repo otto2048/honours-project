@@ -54,7 +54,8 @@ function accept(req, res) {
 
 http.createServer(accept).listen(8080);
 
-//https://stackoverflow.com/questions/2956966/javascript-telling-setinterval-to-only-fire-x-amount-of-times
+//source: stackoverflow (2010)
+//accessed from: https://stackoverflow.com/questions/2956966/javascript-telling-setinterval-to-only-fire-x-amount-of-times
 function checkUserContainerStatus(delay, repetitions, callback, callbackFailure, callbackSuccess, value)
 {
     var x = 0;
@@ -188,7 +189,6 @@ function stopContainer(clientId, containerId)
     //set container state to stopping
     clients[clientId].containerState = CONTAINER_STOPPING;
 
-    //TODO: handle errors
     command = "docker stop " + containerId;
     exec(command, (error, stdout, stderr) => {
         if (error) {

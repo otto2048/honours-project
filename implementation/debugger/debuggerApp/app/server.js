@@ -100,7 +100,9 @@ function onConnect(ws) {
         }
         else if (clientMsg.operation == OP_COMPILE)
         {
-            //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //source: stackoverflow (2014)
+            //accessed from: https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //create all files from input
             async.each(clientMsg.value.filesData, function(file, callback) {
                 var fname = file[0];
                 var content = file[1];
@@ -233,7 +235,9 @@ function onConnect(ws) {
         }
         else if (clientMsg.operation == OP_TEST)
         {
-            //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //source: stackoverflow (2014)
+            //accessed from: https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //create all files from input
             async.each(clientMsg.value, function(file, callback) {
                 //create files for testing
                 var fname_ = file[0];
@@ -310,7 +314,9 @@ function onConnect(ws) {
     });
 }
 
-//https://stackoverflow.com/questions/40292837/can-multiple-fs-write-to-append-to-the-same-file-guarantee-the-order-of-executio
+//source: stackoverflow (2016)
+//accessed from: https://stackoverflow.com/questions/40292837/can-multiple-fs-write-to-append-to-the-same-file-guarantee-the-order-of-executio
+//write to a file with Promise
 function writeFile(fileName, content)
 {
     return new Promise((resolve, reject) =>  {
@@ -321,6 +327,7 @@ function writeFile(fileName, content)
     });
 }
 
+//append a file with Promise
 function appendFile(fileName, content)
 {
     return new Promise((resolve, reject) =>  {
