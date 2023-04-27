@@ -1,6 +1,6 @@
 import gdb
 
-# define handlers
+# define GDB event handlers
 def exit_handler (event):
     
     print("FOR_SERVER")

@@ -2,8 +2,6 @@ import gdb
 import json
 import networkx as nx
 
-#TODO: handle nested functions (multiple frames), also test on recursion
-
 # custom next command
 class StepOver(gdb.Command):
 
@@ -189,7 +187,8 @@ def getVariables():
     names = set()
     variables = []
 
-    #https://stackoverflow.com/questions/30013252/get-all-global-variables-local-variables-in-gdbs-python-interface/31231722#31231722
+    # source: stackoverflow (2015)
+    # accessed from: https://stackoverflow.com/questions/30013252/get-all-global-variables-local-variables-in-gdbs-python-interface/31231722#31231722
     while block:
         for symbol in block:
             if (symbol.is_argument or symbol.is_variable):

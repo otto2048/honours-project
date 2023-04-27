@@ -4,13 +4,28 @@
 
     class UserExerciseModel extends Model
     {
+        //create user data
         public function createData($jsonData)
         {
-            $this->sqlStmt = 'INSERT INTO honours_user_exercise (userId, codeId, mark, completed) VALUES (?, ?, ?, ?)';
+            $this->sqlStmt = 'INSERT INTO honours_user_exercise (userId, codeId, mark, completed, result_vector) VALUES (?, ?, ?, ?, ?)';
 
-            $paramTypes = "iiii";
+            $paramTypes = "iiiis";
 
             return parent::create($jsonData, $paramTypes);
+        }
+
+        //get the result vector for a user
+        public function getExerciseResultVector($userId, $codeId)
+        {
+            $this->sqlStmt = 'SELECT result_vector FROM honours_user_exercise WHERE userId = ? AND codeId = ?';
+
+            $variables = new \stdClass();
+            $variables -> userId = $userId;
+            $variables -> codeId = $codeId;
+
+            $paramTypes = "ii";
+
+            return parent::retrieve(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
 
         //get a users mark for an exercise

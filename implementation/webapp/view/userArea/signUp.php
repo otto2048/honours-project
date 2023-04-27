@@ -46,15 +46,15 @@
 
                 <h3><u>Do I have to take part?</u></h3>
                 <p>This form has been written to help you decide if you would like to take part. It is up to you and you alone whether you wish to take part. If you do decide to take part you will be free to withdraw at any time without providing a reason and without penalty.
-<br><br>The data from this survey will be fully anonymised from the outset of its collection, meaning that it will be impossible to withdraw your data if submit your answers to the survey (as you will not be able to be identified within the dataset)
+<br><br>The data from this study will be fully anonymised from the outset of its collection, meaning that it will be impossible to withdraw your data if submit your answers to the study (as you will not be able to be identified within the dataset)
 <br><br>If you do not wish for your data to be stored and used within the study, you can still take part and use the training tool under a guest account. Your data will be stored temporarily (this is required for the training tool to function) but your data will be deleted when you logout from the tool</p>
 
                 <h3><u>What will I be required to do?</u></h3>
                 <p>Your participation will involve:
                     <ul>
-                        <li>watching video(s) relating to the training tool</li>
                         <li>the completion of debugging exercises - you will be given some code and you must fix the bugs within the code</li>
-                        <li>completing a System Usability Survey to evaluate the usability of the training tool</li>
+                        <li>watching videos relating to the training tool</li>
+                        <li>completing a System Usability Scale survey to evaluate the usability of the training tool</li>
                     </ul>
                 </p>
 
@@ -112,6 +112,8 @@
                     </div>
                         
                     <div id="getUserDetails">
+                        <br>
+                        <p>Enter a password and take note of your login details incase you need to re-login to the training tool</p>
                         <div class="form-group">
                             <label for="password">Enter Password:</label>
                             <input type="password" class="form-control" name="password" id="password" required />

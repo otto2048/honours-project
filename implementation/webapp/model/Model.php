@@ -134,8 +134,6 @@
                 }
             }
 
-            //return json_encode(array("isempty"=>$emptyMessage), JSON_INVALID_UTF8_SUBSTITUTE);
-
             return null;
         }
 

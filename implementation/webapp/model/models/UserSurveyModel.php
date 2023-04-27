@@ -97,5 +97,19 @@
 
             return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
+
+        //get a certain type of answer
+        public function filterUserAnswerByType($userId, $type)
+        {
+            $this->sqlStmt = 'SELECT honours_user_survey.questionId, honours_user_survey.answer, honours_survey_question.contents, honours_survey_question.type FROM honours_user_survey INNER JOIN honours_survey_question ON honours_user_survey.questionId = honours_survey_question.questionId WHERE userId = ? AND type = ?';
+
+            $WHERE_variables = new \stdClass();
+            $WHERE_variables -> userId = $userId;
+            $WHERE_variables -> type = $type;
+
+            $paramTypes = "ii";
+
+            return parent::retrieve(json_encode($WHERE_variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
+        }
     }
 ?>

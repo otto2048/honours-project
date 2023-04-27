@@ -1,3 +1,5 @@
+// api Response class
+
 class Response {
     constructor(sender_) {
         this.sender = sender_;

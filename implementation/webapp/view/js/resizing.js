@@ -1,8 +1,11 @@
+//js for resizing elementss
+
 window.onload = preparePage();
 
 function preparePage()
 {
-    //https://interactjs.io/
+    //source (interact js, no date)
+    //accessed from: https://interactjs.io/
     interact('.resize').resizable({
         // resize from right and bottom
         edges: { right: true, bottom: true },

@@ -1,7 +1,4 @@
-//users need to be able to:
-    //create a cpp file through this server
-    //create an executable through this server
-    //run the executable through this server, sending input and getting output
+// A NodeJS file that lets users compile their code and run their program through a GDB process
 
 // Socket setup based on tutorial: https://javascript.info/websocket
 //include required modules
@@ -12,6 +9,7 @@ const exec = require('child_process').exec;
 const Response = require('./response.js');
 const tail = require("tail").Tail;
 
+// constants
 const OP_INPUT = "INPUT";
 const OP_COMPILE = "COMPILE";
 const OP_TEST = "TEST";
@@ -19,7 +17,6 @@ const OP_TEST = "TEST";
 const EVENT_ON_BREAK = "EVENT_ON_BREAK";
 const EVENT_ON_CONTINUE = "EVENT_ON_CONTINUE";
 const EVENT_ON_INFERIOR_EXIT = "EVENT_ON_PROG_EXIT";
-const EVENT_ON_INFERIOR_EXIT_END = "EVENT_ON_PROG_EXIT_END";
 const EVENT_ON_STEP = "EVENT_ON_STEP";
 const EVENT_ON_STDOUT = 1;
 const EVENT_ON_COMPILE_SUCCESS = 2;
@@ -103,7 +100,9 @@ function onConnect(ws) {
         }
         else if (clientMsg.operation == OP_COMPILE)
         {
-            //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //source: stackoverflow (2014)
+            //accessed from: https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //create all files from input
             async.each(clientMsg.value.filesData, function(file, callback) {
                 var fname = file[0];
                 var content = file[1];
@@ -149,8 +148,6 @@ function onConnect(ws) {
                         if (stderr)
                         {
                             //give compilation errors
-                            // stderr = stderr.replace(' << "'+ GDB_OUTPUT_STRING + " " + PROGRAM_OUTPUT_STRING + '"', "");
-                            // stderr = stderr.replace(' << " ' + PROGRAM_OUTPUT_STRING_END + '"', "");
                             obj.value = "Failed to compile\nErrors:\n" + stderr;
                             obj.event = EVENT_ON_COMPILE_FAILURE;
                             ws.send(JSON.stringify(obj));
@@ -238,7 +235,9 @@ function onConnect(ws) {
         }
         else if (clientMsg.operation == OP_TEST)
         {
-            //https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //source: stackoverflow (2014)
+            //accessed from: https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //create all files from input
             async.each(clientMsg.value, function(file, callback) {
                 //create files for testing
                 var fname_ = file[0];
@@ -282,15 +281,17 @@ function onConnect(ws) {
 
                     logger.info(fileString_);
 
-                    var command_ = "g++ -Wall -g -pthread " + fileString_ + " /usr/local/lib/libgtest.a -o unitTest";
+                    var command_ = "g++ -g -pthread " + fileString_ + " /usr/local/lib/libgtest.a -o unitTest";
 
                     exec(command_, function(err, stdout, stderr)
                     {
                         if (stderr)
                         {
                             logger.info(stderr);
-                            //if compilation failures, submission fails
-                            obj.event = EVENT_ON_TEST_FAILURE;
+
+                            //if compilation failures, submit score of 0
+                            obj.value = "DEBUGGING_TOOL_RESULT: 0";
+                            obj.event = EVENT_ON_TEST_SUCCESS;
                             ws.send(JSON.stringify(obj));
                         }
                         else
@@ -313,7 +314,9 @@ function onConnect(ws) {
     });
 }
 
-//https://stackoverflow.com/questions/40292837/can-multiple-fs-write-to-append-to-the-same-file-guarantee-the-order-of-executio
+//source: stackoverflow (2016)
+//accessed from: https://stackoverflow.com/questions/40292837/can-multiple-fs-write-to-append-to-the-same-file-guarantee-the-order-of-executio
+//write to a file with Promise
 function writeFile(fileName, content)
 {
     return new Promise((resolve, reject) =>  {
@@ -324,6 +327,7 @@ function writeFile(fileName, content)
     });
 }
 
+//append a file with Promise
 function appendFile(fileName, content)
 {
     return new Promise((resolve, reject) =>  {
@@ -522,8 +526,3 @@ function getMessageContents(flag, element)
         return null;
     }
 }
-
-//TODO: output program exit code
-
-//TODO: tail only outputs a line after endl
-//TODO: sometimes exit code is printed before output

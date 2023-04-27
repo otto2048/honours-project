@@ -149,6 +149,10 @@
                                         <label for="availablePoints">Available points:</label>
                                         <input type="text" class="form-control" name="availablePoints" id="availablePoints" value="<?php echo $exerciseData[0]["availablePoints"]; ?>">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="time_limit">Time limit:</label>
+                                        <input type="text" class="form-control" name="time_limit" required id="time_limit" value="<?php echo $exerciseData[0]["time_limit"] ?>">
+                                    </div>
                                     <button class="btn btn-primary float-end mt-2" type="submit">Submit</button>
                                 </form>
                             

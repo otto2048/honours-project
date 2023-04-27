@@ -106,21 +106,37 @@
 
                     ?>
 
+                    <span class="d-none" aria-hidden="true" id="exerciseTimeLimit"><?php echo $exerciseData[0]["time_limit"] ?></span>
+
                     <div class="mt-5 mb-5">
                         <h1>Exercise: <?php echo $exerciseData[0]["title"] ?></h1>
                         <p><?php echo $exerciseData[0]["description"] ?></p>
                         <hr>
-                        <h2>General Instructions</h2>
-                        <p>You can view the files for this exercise in the editor below by clicking on the file names</p>
-                        <p>Once you have completed the exercise, press the submit button below.</p>
+                        <h2>The Environment</h2>
+                        <p>This environment is a simplified IDE. It lets you compile and run code within your browser. Additionally, it comes with some debugger functionality (breakpoints, stepping and viewing variable values)</p>
+                        <p>The code files available to you are in the editor, you can edit any of these files (unless they are marked as Read Only)</p>
+                        <p>Any compilation output will be in the Output window at the bottom left of the screen (i.e., compilation messages and program return messages)</p>
+                        <p>The output of your program will be in console window at the bottom right of the screen</p>
+                        <hr>
+                        <h2>Completing the exercise</h2>
+                        <p>The exercise will require you to <b>fix bugs within the code.</b> All bugs are in the Exercise.cpp file. You can call functions from Exercise.cpp in the main.cpp file</p>
+                        <p><b>The environment will time you out if you are inactive and you will lose all progress in the exercise</b></p>
+                        <p><b>Once you have completed the exercise, press the submit button below.</b> (or the exercise will submit automatically once the Time Remaining timer reaches 0)</p>
+                        <br>
                         <button type="button" class="btn btn-primary debugger-control on-connected" disabled aria-disabled=true id="complete-btn">Submit</button>
+                        <hr>
+                    </div>
+
+                    <div class="alert alert-danger show d-flex align-items-center timerContainer" role="alert">
+                        <p class="pe-1 m-0"><b>Time remaining: </b></p>
+                        <p id="timerText" class="m-0"><?php echo $exerciseData[0]["time_limit"] ?>:00</p>
                     </div>
 
                     <span id="exerciseFileLocation" class="d-none"><?php echo "/honours/webapp/view/exerciseFiles/".$exerciseData[0]["exerciseFile"] ?></span>
 
                     <div class="row pt-1 pb-1 ">
                         <div class="col-8">
-                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control on-connected ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Start Debugging</button>
+                            <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control on-connected ms-1" id="play-btn"><span class="mdi mdi-play me-2"></span>Run program</button>
                             <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="continue-btn"><span class="mdi mdi-play me-2"></span>Continue</button>
                             <button type="button" disabled aria-disabled=true class="btn btn-dark theme debugger-control debugger-live-control d-none ms-1" id="stop-btn" aria-label="Stop"><span class="mdi mdi-stop" title="stop"></span></button>
                         </div>
@@ -235,7 +251,7 @@
                         <div class="col-sm mt-2 border pb-3 me-3">
                             <h2 class="h4 ps-2 pt-3">Output</h2>
                             <hr>
-                            <p class="ps-2">See debugger output messages here</p>
+                            <p class="ps-2">See environment output messages here</p>
                             <div class="overflow-auto resize max-height-box" id="compilation-messages-box">
                                 <ul class="list-unstyled list-group">
                                     
@@ -246,6 +262,7 @@
                         <div class="col-sm mt-2 border ms-sm-3">
                             <h2 class="h4 ps-2 pt-3">Program Output</h2>
                             <hr>
+                            <p>Output will only appear if it is followed by a newline (std::endl)</p>
                             <!-- container for terminal -->
                             <div id="code-output"></div>
                             <div class="d-flex justify-content-center mt-3 mb-3">

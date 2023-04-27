@@ -1,8 +1,4 @@
-// javascript for controlling an exercise, client side
-
-// need to launch docker container to complete exercise in
-
-// need to handle instruction file if it exists
+// This file controls the connection between the client and the host WSS
 
 import * as constants from "/honours/webapp/view/js/debugger/host/hostConstants.js";
 import * as debug from "/honours/webapp/view/js/debugger/app/client.js"
@@ -22,7 +18,7 @@ $(document).ready(function(){
 });
 
 //web socket to connect to the host server
-let socketHost = new WebSocket("ws://44.209.40.106:8080");
+let socketHost = new WebSocket("ws://34.234.3.95:8080");
 
 //set up sockets
 
@@ -81,10 +77,53 @@ socketHost.onmessage = function(event) {
             $("#debugger-load-message")[0].innerHTML = message.message;
             //successfully launched environment
             //connect to the container wss
-            debug.socketObj.socket = new WebSocket("ws://44.209.40.106:" + message.value);
+            debug.socketObj.socket = new WebSocket("ws://34.234.3.95:" + message.value);
 
             debug.socketObj.socket.onopen = function(e) {
                 console.log("Connection established with compiler");
+
+                //set timeout for the exercise
+                //source: https://stackoverflow.com/questions/1191865/code-for-a-simple-javascript-countdown-timer/1192001#1192001:~:text=21-,Here,-is%20another%20one
+                var mins = parseInt($("#exerciseTimeLimit").text());
+                var secs = mins * 60;
+                var currentSeconds = 0;
+                var currentMinutes = 0;
+
+                setTimeout(Decrement,1000); 
+
+                function Decrement() {
+                    currentMinutes = Math.floor(secs / 60);
+                    currentSeconds = secs % 60;
+
+                    //handle leading zero on seconds
+                    if(currentSeconds <= 9)
+                    {
+                        currentSeconds = "0" + currentSeconds;
+                    }
+                    
+                    secs--;
+                    document.getElementById("timerText").innerHTML = currentMinutes + ":" + currentSeconds; //Set the element id you need the time put into.
+                    
+                    if(secs !== -1 && connected)
+                    {
+                        setTimeout(Decrement,1000);
+                    }
+                    else
+                    {
+                        //submit user answer
+                        if (connected)
+                        {
+                            $("#submitting-exercise-message")[0].innerHTML = "Submitting exercise...";
+                            $("#spinner-exercise").show();
+                            $("#submitting-exercise-status")[0].innerHTML = "Submitting...";
+                            $("#submit-exercise-modal").modal("show");
+                
+                            //submit user answer
+                            debug.testProgram();
+                            socketHost.send(JSON.stringify(pingHostObj));
+                        }
+                    }
+                }
 
                 //client on onopen function
                 debug.on_open();
@@ -163,7 +202,8 @@ socketHost.onmessage = function(event) {
 function preparePage()
 {
     //disable ctrl+s shortcut
-    //https://ej2.syncfusion.com/documentation/rich-text-editor/how-to/save/
+    //source: Syncfusion (2023)
+    //accessed from: https://ej2.syncfusion.com/documentation/rich-text-editor/how-to/save/
     $(document)[0].addEventListener("keydown",function(e) {
         if(e.key === 's' && e.ctrlKey===true){
               e.preventDefault(); // to prevent default ctrl+s action

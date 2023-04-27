@@ -155,7 +155,8 @@ export function displayMoreVariableDetail(data)
         }
     }
 
-    //https://stackoverflow.com/questions/21987909/how-to-get-the-difference-between-two-arrays-of-objects-in-javascript
+    //source stackoverflow (2018)
+    //accessed from: https://stackoverflow.com/questions/21987909/how-to-get-the-difference-between-two-arrays-of-objects-in-javascript
     //find the elements that are not in current variables
     var newVariables = links.filter(function(objOne) {
         return !currentVariableData.some(function(objTwo) {

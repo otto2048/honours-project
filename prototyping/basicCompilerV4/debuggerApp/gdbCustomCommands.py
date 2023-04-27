@@ -1,7 +1,5 @@
 import gdb
 
-#TODO: handle nested functions (multiple frames), also test on recursion
-
 class StepOver(gdb.Command):
 
     def __init__(self):

@@ -64,6 +64,15 @@
             return parent::retrieve(json_encode($variables, JSON_INVALID_UTF8_SUBSTITUTE), $paramTypes);
         }
 
+        // get all users
+        public function getAllUsers()
+        {
+            $this->sqlStmt = 'SELECT honours_user.userId, honours_user.username, honours_user.permissionLevel, honours_user.SUS_Score
+                FROM honours_user';
+
+            return parent::retrieve();
+        }
+
         //delete a user
         public function deleteData($jsonData)
         {
