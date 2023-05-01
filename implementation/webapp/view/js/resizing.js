@@ -4,8 +4,7 @@ window.onload = preparePage();
 
 function preparePage()
 {
-    //source (interact js, no date)
-    //accessed from: https://interactjs.io/
+    //source (interact.js, no date)
     interact('.resize').resizable({
         // resize from right and bottom
         edges: { right: true, bottom: true },

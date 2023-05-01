@@ -1,6 +1,6 @@
 // A NodeJS file that lets users compile their code and run their program through a GDB process
 
-// Socket setup based on tutorial: https://javascript.info/websocket
+// Socket setup based on tutorial in JavaScript.Info (2022)
 //include required modules
 const http = require('http');
 const ws = require('ws');
@@ -48,10 +48,6 @@ const winston = require("winston");
 const logger = winston.createLogger({
     level: 'info',
     transports: [
-      //
-      // - Write all logs with importance level of `error` or less to `error.log`
-      // - Write all logs with importance level of `info` or less to `combined.log`
-      //
       new winston.transports.File({ filename: 'error.log', level: 'error' }),
       new winston.transports.File({ filename: 'combined.log' }),
     ],
@@ -100,8 +96,7 @@ function onConnect(ws) {
         }
         else if (clientMsg.operation == OP_COMPILE)
         {
-            //source: stackoverflow (2014)
-            //accessed from: https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //source: (Erdosi, 2014)
             //create all files from input
             async.each(clientMsg.value.filesData, function(file, callback) {
                 var fname = file[0];
@@ -235,8 +230,7 @@ function onConnect(ws) {
         }
         else if (clientMsg.operation == OP_TEST)
         {
-            //source: stackoverflow (2014)
-            //accessed from: https://stackoverflow.com/questions/26413329/multiple-writefile-in-nodejs
+            //source: (Erdosi, 2014)
             //create all files from input
             async.each(clientMsg.value, function(file, callback) {
                 //create files for testing
@@ -314,8 +308,7 @@ function onConnect(ws) {
     });
 }
 
-//source: stackoverflow (2016)
-//accessed from: https://stackoverflow.com/questions/40292837/can-multiple-fs-write-to-append-to-the-same-file-guarantee-the-order-of-executio
+//source: (nem035, 2016)
 //write to a file with Promise
 function writeFile(fileName, content)
 {

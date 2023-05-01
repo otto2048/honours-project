@@ -187,8 +187,7 @@ def getVariables():
     names = set()
     variables = []
 
-    # source: stackoverflow (2015)
-    # accessed from: https://stackoverflow.com/questions/30013252/get-all-global-variables-local-variables-in-gdbs-python-interface/31231722#31231722
+    # source: (Santilli, 2015)
     while block:
         for symbol in block:
             if (symbol.is_argument or symbol.is_variable):

@@ -73,7 +73,7 @@ socketHost.onmessage = function(event) {
 
             debug.socketObj.socket.onopen = function(e) {
                 //set timeout for the exercise
-                //source: https://stackoverflow.com/questions/1191865/code-for-a-simple-javascript-countdown-timer/1192001#1192001:~:text=21-,Here,-is%20another%20one
+                //source: (Everson, 2013)
                 var mins = parseInt($("#exerciseTimeLimit").text());
                 var secs = mins * 60;
                 var currentSeconds = 0;
@@ -190,8 +190,7 @@ socketHost.onmessage = function(event) {
 function preparePage()
 {
     //disable ctrl+s shortcut
-    //source: Syncfusion (2023)
-    //accessed from: https://ej2.syncfusion.com/documentation/rich-text-editor/how-to/save/
+    //source: (Syncfusion, 2023)
     $(document)[0].addEventListener("keydown",function(e) {
         if(e.key === 's' && e.ctrlKey===true){
               e.preventDefault(); // to prevent default ctrl+s action

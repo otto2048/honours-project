@@ -1,6 +1,6 @@
 // manage user containers
 
-// Socket setup based on tutorial: https://javascript.info/websocket
+// Socket setup based on tutorial in JavaScript.Info (2022)
 //include required modules
 const http = require('http');
 const ws = require('ws');
@@ -54,8 +54,7 @@ function accept(req, res) {
 
 http.createServer(accept).listen(8080);
 
-//source: stackoverflow (2010)
-//accessed from: https://stackoverflow.com/questions/2956966/javascript-telling-setinterval-to-only-fire-x-amount-of-times
+//source: (Vassallo, 2010)
 function checkUserContainerStatus(delay, repetitions, callback, callbackFailure, callbackSuccess, value)
 {
     var x = 0;

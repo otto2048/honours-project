@@ -1,4 +1,4 @@
-// Socket setup based on tutorial: https://javascript.info/websocket
+// Socket setup based on tutorial in JavaScript.Info (2022)
 
 // This file controls the connection between the client and the debugger container
 

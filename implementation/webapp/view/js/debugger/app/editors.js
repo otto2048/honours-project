@@ -177,8 +177,7 @@ function setUpEditors(breakpointFunc)
     }
 
     //set up breakpoint events
-    //source: codemirror (no date)
-    //accessed from: https://codemirror.net/5/demo/marker.html
+    //source: (CodeMirror, no date)
     for (var i=0; i<editors.length; i++)
     (function(i) {
         editors[i]["editor"].on("gutterClick", function(cm, n) {
@@ -243,8 +242,7 @@ function addTracker(file, lineNum)
     }
 }
 
-//source: stackoverflow, 2017
-//accessed from: https://stackoverflow.com/questions/10575343/codemirror-is-it-possible-to-scroll-to-a-line-so-that-it-is-in-the-middle-of-w
+//source: (Grivilers, 2014)
 function jumpToLine(i, editor) { 
     var t = editor.charCoords({line: i, ch: 0}, "local").top; 
     var middleHeight = editor.getScrollerElement().offsetHeight / 2; 

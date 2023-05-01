@@ -1,8 +1,7 @@
 import gdb
 
 # pretty printer to handle strings
-# source: (gdb, no date)
-# source found at: https://sourceware.org/gdb/onlinedocs/gdb/Writing-a-Pretty_002dPrinter.html
+# source: (GDB, no date)
 class StringPrettyPrinter(object):
     def __init__(self, val):
         self.val = val

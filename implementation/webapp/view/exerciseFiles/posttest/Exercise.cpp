@@ -75,8 +75,7 @@ bool Exercise::goodDinner(int pizzasEaten, bool weekend)
     return true;
 }
 
-// adapted from learneroo (no date)
-// accessed from: https://www.learneroo.com/modules/20/nodes/157
+// adapted from Learneroo (no date)
 // filter a number out of some data
 // replace any element that is divisible by the filter or includes any part of the filter
 void Exercise::filterData(int filter, int replacement, int data[], int dataSize)
