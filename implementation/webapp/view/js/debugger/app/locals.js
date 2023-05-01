@@ -90,9 +90,7 @@ function hideVariableDropdown(source, topLevel = true) {
     //find parent id
     var parentId = findInitialParent(source);
 
-    visibleVariableLevels.set(parentId, maxDepth(parentId));   
-
-    console.log(visibleVariableLevels);
+    visibleVariableLevels.set(parentId, maxDepth(parentId));
 }
 
 function maxDepth(parent)

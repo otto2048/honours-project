@@ -63,8 +63,6 @@ export function prepareDebuggerClient(breakpointFunc)
 
             currentFile = content;
 
-            console.log("refresh editors");
-
             for (var j=0; j<editors.length; j++)
             {
                 editors[j]["editor"].refresh();
@@ -106,10 +104,6 @@ export function moveTracker(newFile, lineNum)
 
         $("#" + start + end + "File").on("shown.bs.tab", function(e)
         {
-            console.log("shown");
-
-            console.log("refresh");
-
             for (var j=0; j<editors.length; j++)
             {
                 editors[j]["editor"].refresh();
@@ -237,8 +231,6 @@ function addTracker(file, lineNum)
     {
         if (editors[i]["fileName"] == file)
         {
-            console.log("scrolling into view");
-
             //scroll to line
             jumpToLine(lineNum, editors[i]["editor"]);
 

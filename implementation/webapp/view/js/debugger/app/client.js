@@ -207,7 +207,7 @@ export function on_message(messageEvent)
                 success: function(data) {
                     if (data != 0)
                     {
-                        console.log("ajax succeed");
+                        //ajax succeeded
 
                         $("#submitting-exercise-message")[0].innerHTML = "Successfully submitted exercise";
                         $("#spinner-exercise").hide();
@@ -218,7 +218,8 @@ export function on_message(messageEvent)
                     }
                     else
                     {
-                        console.log("ajax failed");
+                        //ajax failed
+                        
                         $("#submitting-exercise-message")[0].innerHTML = "Failed to submit exercise. Try again?";
                         $("#spinner-exercise").hide();
                         $("#submitting-exercise-status")[0].innerHTML = "Failed";
@@ -228,7 +229,6 @@ export function on_message(messageEvent)
             });
             break;
         case constants.EVENT_ON_TEST_FAILURE:
-            console.log("server failed");
             $("#submitting-exercise-message")[0].innerHTML = "Failed to submit exercise. Try again?";
             $("#spinner-exercise").hide();
             $("#submitting-exercise-status")[0].innerHTML = "Failed";

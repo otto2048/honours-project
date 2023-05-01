@@ -6,7 +6,7 @@ let socket = new WebSocket("ws://192.168.17.50:8080");
 
 //set up socket
 socket.onopen = function(e) {
-    console.log("Connection established");
+    //console.log("Connection established");
 };
 
 socket.onmessage = function(event) {
@@ -19,14 +19,14 @@ socket.onmessage = function(event) {
 
 socket.onclose = function(event) {
     if (event.wasClean) {
-        console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
+        //console.log("Connection closed cleanly, code=${event.code} reason=${event.reason}");
     } else {
-        console.log("Connection died");
+        //console.log("Connection died");
     }
 };
 
 socket.onerror = function(error) {
-    console.log("[error]");
+    //console.log("[error]");
 };
 
 function preparePage()

@@ -25,16 +25,12 @@ let socketHost = new WebSocket("ws://34.234.3.95:8080");
 var connected = false;
 
 socketHost.onopen = function(e) {
-    console.log("Connection established with host");
-
     //ask the host to launch a compiler for us
     getUsername().then(function(data)
     {
         var obj = new Request(constants.SENDER_USER);
         obj.operation = constants.OP_LAUNCH_DEBUGGER;
         obj.value = data.username;
-
-        console.log(obj);
 
         socketHost.send(JSON.stringify(obj));
     })   
@@ -66,12 +62,8 @@ socketHost.onclose = function(event)
 socketHost.onmessage = function(event) {
     var message = JSON.parse(event.data);
 
-    console.log(message);
-
     if (message.operation == constants.OP_LAUNCH_DEBUGGER)
     {
-        console.log(startedLaunching);
-
         if (message.status == constants.ENV_SUCCESS)
         {
             $("#debugger-load-message")[0].innerHTML = message.message;
@@ -80,8 +72,6 @@ socketHost.onmessage = function(event) {
             debug.socketObj.socket = new WebSocket("ws://34.234.3.95:" + message.value);
 
             debug.socketObj.socket.onopen = function(e) {
-                console.log("Connection established with compiler");
-
                 //set timeout for the exercise
                 //source: https://stackoverflow.com/questions/1191865/code-for-a-simple-javascript-countdown-timer/1192001#1192001:~:text=21-,Here,-is%20another%20one
                 var mins = parseInt($("#exerciseTimeLimit").text());
@@ -180,8 +170,6 @@ socketHost.onmessage = function(event) {
             $("#debugger-load-message")[0].innerHTML = message.message;
 
             //failed to launch environment
-            console.log("Failed to init compiler");
-
             $("#spinner")[0].remove();
             $("#debugger-load-status")[0].innerHTML = "Failed";
         }
@@ -313,8 +301,6 @@ function preparePage()
             var obj = new Request(constants.SENDER_USER);
             obj.operation = constants.OP_MOVE_ACTIVE_SESSION;
             obj.value = data.username;
-
-            console.log(obj);
 
             socketHost.send(JSON.stringify(obj));
 

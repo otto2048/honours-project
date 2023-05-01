@@ -40,18 +40,15 @@ function onConnect(ws) {
             progProcess = spawn('./executable');
 
             progProcess.stdout.on('data', function (data) {
-                console.log('stdout: ' + data.toString());
                 ws.send(data.toString());
             });
 
             progProcess.stderr.on('data', function (data) {
-                console.log('stderr: ' + data.toString());
 				ws.send(data.toString());
             });
 
             progProcess.on('exit', function (code) {
 				var data = 'Program exited with code ' + code.toString();
-                console.log();
 				ws.send(data);
             });
         }
