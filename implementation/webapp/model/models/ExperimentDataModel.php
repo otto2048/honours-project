@@ -226,6 +226,7 @@
     // write all experiment data to csv files
     $test = new ExperimentDataModel();
 
+    //get detailed survey data
     $json = $test->getDetailedSurveyData();
 
     $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
@@ -240,31 +241,33 @@
 
     fclose($fp);
 
-    // $json = $test->getExperimentData();
+    //get experiement data
+    $json = $test->getExperimentData();
 
-    // $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
+    $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
 
-    // $fp = fopen('experiment.csv', 'w');
+    $fp = fopen('experiment.csv', 'w');
 
-    // fputcsv($fp, array('user','group','exercise', 'exercise type', 'points', 'total'));
+    fputcsv($fp, array('user','group','exercise', 'exercise type', 'points', 'total'));
 
-    // foreach ($actual as $fields) {
-    //     fputcsv($fp,$fields);
-    // }
+    foreach ($actual as $fields) {
+        fputcsv($fp,$fields);
+    }
 
-    // fclose($fp);
+    fclose($fp);
 
-    // $json = $test->getSurveyData();
+    //get basic survey data
+    $json = $test->getSurveyData();
 
-    // $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
+    $actual = json_decode($json, JSON_INVALID_UTF8_SUBSTITUTE);
 
-    // $fp = fopen('survey.csv', 'w');
+    $fp = fopen('survey.csv', 'w');
 
-    // fputcsv($fp, array('user','group','sus', 'further comments'));
+    fputcsv($fp, array('user','group','sus', 'further comments'));
 
-    // foreach ($actual as $fields) {
-    //     fputcsv($fp,$fields);
-    // }
+    foreach ($actual as $fields) {
+        fputcsv($fp,$fields);
+    }
 
-    // fclose($fp);
+    fclose($fp);
 ?>
