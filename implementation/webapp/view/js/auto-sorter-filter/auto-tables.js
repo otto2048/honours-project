@@ -1,3 +1,4 @@
+//source: (Rickgauer, no date)
 const SORT_TYPES = {
   INT: "int",
   STRING: "string",
