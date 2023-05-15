@@ -6,9 +6,11 @@ class coord {
             int value;
 
             point();
+            point(int);
         };
 
         point points[2];
 
         coord();
+        coord(int, int);
 };

@@ -1,23 +1,29 @@
+#include "ship.h"
+#include &lt;cstdlib&gt; //random numbers header file
+#include &lt;ctime&gt;   //get date and time info
 #include &lt;iostream&gt;
 #include &lt;string&gt;
-#include "ship.h"
 
 using namespace std;
 
-int main()
-{
-    int arr[5];
-    
-    ship ship("Titanic");
+int main() {
+	srand(time(0)); // initialise random number generator with time
 
-    
-  	ship.shipName = "test";
-  ship.shipName = "test2";
-  ship.shipName = "test3";
-  ship.shipName = "test4";
+	int arr[5];
 
+	int a = 5;
+	int *pointerTest = &a;
 
-    cout << "ship name: " << ship.shipName << endl;
+	ship ship("Titanic");
 
-    return 0;
+	ship.setRandomShipPositions();
+
+	ship.shipName = "test";
+	ship.shipName = "test2";
+	ship.shipName = "test3";
+	ship.shipName = "test4";
+
+	cout << "ship name: " << ship.shipName << endl;
+
+	return 0;
 }
